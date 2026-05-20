@@ -35,20 +35,12 @@ export const {
               credentials
             );
 
-          console.log(
-            "validatedFields",
-            validatedFields
-          );
 
           const data =
             await loginService(
               validatedFields
             );
 
-          console.log(
-            "BACKEND DATA",
-            data
-          );
 
           return {
             id:
