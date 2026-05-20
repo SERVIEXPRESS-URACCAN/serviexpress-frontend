@@ -6,6 +6,17 @@ from "@/auth";
 import { AuthError }
 from "next-auth";
 
+import { auth }
+from "@/auth";
+
+import { redirect }
+from "next/navigation";
+
+import {
+  isAdmin,
+  isOwner,
+} from "@/lib/permissions";
+
 export type LoginState = {
   error?: string;
 };
@@ -15,22 +26,48 @@ export async function loginAction(
   formData: FormData
 ): Promise<LoginState> {
   try {
-    await signIn("credentials", {
-      email:
-        formData.get("email"),
+    await signIn(
+      "credentials",
+      {
+        email:
+          formData.get(
+            "email"
+          ),
 
-      password:
-        formData.get("password"),
+        password:
+          formData.get(
+            "password"
+          ),
 
-      redirectTo: "/",
-    });
+        redirect: false,
+      }
+    );
 
-    return {};
+    const session =
+      await auth();
+
+    const roles =
+      session?.user.roles ?? [];
+
+    if (isAdmin(roles)) {
+      redirect("/admin");
+    }
+
+    if (isOwner(roles)) {
+      redirect("/owner");
+    }
+
+    return {
+      error:
+        "No tienes permisos para acceder al dashboard",
+    };
   } catch (error) {
     if (
       error instanceof AuthError
     ) {
-      switch (error.type) {
+      switch (
+        error.type
+      ) {
         case "CredentialsSignin":
           return {
             error:
@@ -45,9 +82,6 @@ export async function loginAction(
       }
     }
 
-    return {
-      error:
-        "Algo salió mal",
-    };
+    throw error;
   }
 }
