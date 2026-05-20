@@ -1,13 +1,13 @@
 import { Role } from "@/constants/roles";
 
-export interface LoginResponse {
+export type LoginResponse = {
   id: number;
   email: string;
   roles: Role[];
   access_token: string;
 }
 
-export interface SessionUser {
+export type SessionUser = {
   id: string;
   email: string;
   roles: Role[];
