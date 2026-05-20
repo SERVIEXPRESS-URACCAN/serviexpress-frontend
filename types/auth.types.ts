@@ -1,11 +1,16 @@
 import { Role } from "@/constants/roles";
 
 export type LoginResponse = {
-  id: number;
-  email: string;
-  roles: Role[];
+  message: string;
+
+  user: {
+    id: number;
+    email: string;
+    roles: Role[];
+  };
+
   access_token: string;
-}
+};
 
 export type SessionUser = {
   id: string;
