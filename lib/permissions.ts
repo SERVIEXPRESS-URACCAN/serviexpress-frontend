@@ -1,9 +1,21 @@
+import { ROLES }
+from "@/constants/roles";
+
 import type { Role }
 from "@/constants/roles";
 
-export function hasRole(
-  roles: Role[],
-  role: Role
+export function isAdmin(
+  roles: Role[]
 ) {
-  return roles.includes(role);
+  return roles.includes(
+    ROLES.ADMIN
+  );
+}
+
+export function isOwner(
+  roles: Role[]
+) {
+  return roles.includes(
+    ROLES.OWNER
+  );
 }
