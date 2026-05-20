@@ -1,14 +1,14 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import NextAuth
+from "next-auth";
 
-import { ZodError } from "zod";
+import Credentials
+from "next-auth/providers/credentials";
 
 import { LoginSchema }
 from "@/schemas/login.schema";
 
-import type { LoginResponse }
-from "@/types/auth.types";
-import { Role } from "@/constants/roles";
+import { loginService }
+from "@/services/auth.service";
 
 export const {
   handlers,
@@ -23,96 +23,37 @@ export const {
         password: {},
       },
 
-      async authorize(credentials) {
+      async authorize(
+        credentials
+      ) {
         try {
-          const {
-            email,
-            password,
-          } =
+          const validatedFields =
             await LoginSchema.parseAsync(
               credentials
             );
 
-          const response =
-            await fetch(
-              `${process.env.API_URL}/auth/login`,
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json",
-                },
-
-                body: JSON.stringify({
-                  email,
-                  password,
-                }),
-              }
+          const data =
+            await loginService(
+              validatedFields
             );
 
-          if (!response.ok) {
-            return null;
-          }
-
-          const user:
-            LoginResponse =
-              await response.json();
-
           return {
-            id: user.id.toString(),
+            id:
+              data.user.id.toString(),
 
-            email: user.email,
+            email:
+              data.user.email,
 
-            roles: user.roles,
+            roles:
+              data.user.roles,
 
             accessToken:
-              user.access_token,
+              data.access_token,
           };
-        } catch (error) {
-          if (
-            error instanceof ZodError
-          ) {
-            return null;
-          }
-
+        } catch {
           return null;
         }
       },
     }),
   ],
-
-  session: {
-    strategy: "jwt",
-  },
-
-  callbacks: {
-  async jwt({ token, user }) {
-    if (user) {
-      token.roles =
-        user.roles;
-
-      token.accessToken =
-        user.accessToken;
-    }
-
-    return token;
-  },
-
-  async session({
-    session,
-    token,
-  }) {
-    session.user.roles =
-      token.roles as Role[];
-
-    session.accessToken =
-      token.accessToken as string;
-
-    return session;
-  },
-},
-  pages: {
-    signIn: "/login",
-  },
 });
