@@ -38,7 +38,7 @@ export const ADMIN_SIDEBAR_SECTIONS = [
       {
         id: 'businesses',
         title: 'Negocios',
-        href: '/admin/negocios',
+        href: '/admin/business',
         icon: BriefcaseBusiness
       },
 

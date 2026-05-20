@@ -12,6 +12,7 @@ import { ADMIN_SIDEBAR_SECTIONS } from '@/constants/sidebar-links'
 
 import UserMenu from './user-menu'
 
+import Logo from '../shared/logo'
 import ThemeToggle from '../shared/theme-toggle'
 
 export default function Sidebar() {
@@ -19,8 +20,9 @@ export default function Sidebar() {
 
   return (
     <aside className="flex w-72 flex-col border-r bg-white dark:bg-zinc-950">
-      <div className="flex h-16 items-center border-b px-6">
-        <h1 className="text-xl font-bold">ServiExpress</h1>
+      <div className="flex h-24 items-center justify-center border-b px-6">
+        {' '}
+        <Logo />
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-6">
