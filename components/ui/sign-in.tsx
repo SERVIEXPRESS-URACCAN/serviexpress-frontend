@@ -14,10 +14,8 @@ from "next-auth/react";
 import { loginAction }
 from "@/app/(auth)/login/actions";
 
-import {
-  isAdmin,
-  isOwner,
-} from "@/lib/permissions";
+import { getRedirectByRole }
+from "@/lib/redirect-by-role";
 
 const initialState = {
   error: "",
@@ -36,23 +34,16 @@ export function SignInForm() {
     );
 
   useEffect(() => {
+    if (!state.success) return;
+
     if (!session) return;
 
-    const roles =
-      session.user.roles;
-
-    if (isAdmin(roles)) {
-      router.replace("/admin");
-      return;
-    }
-
-    if (isOwner(roles)) {
-      router.replace("/owner");
-      return;
-    }
-
-    router.replace("/unauthorized");
-  }, [session, router]);
+    router.replace(
+      getRedirectByRole(
+        session.user.roles
+      )
+    );
+  }, [state.success, session, router]);
 
   return (
     <form
