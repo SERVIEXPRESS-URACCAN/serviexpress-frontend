@@ -86,7 +86,7 @@ export const ADMIN_SIDEBAR_SECTIONS = [
       {
         id: 'cities',
         title: 'Ciudades',
-        href: '/admin/city',
+        href: '/admin/cities',
         icon: MapPinned
       }
     ]
