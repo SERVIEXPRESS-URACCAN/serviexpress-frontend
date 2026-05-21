@@ -1,21 +1,58 @@
 "use client";
 
-import { useActionState }
-from "react";
+import {
+  useActionState,
+  useEffect,
+} from "react";
+
+import { useRouter }
+from "next/navigation";
+
+import { useSession }
+from "next-auth/react";
 
 import { loginAction }
 from "@/app/(auth)/login/actions";
+
+import {
+  isAdmin,
+  isOwner,
+} from "@/lib/permissions";
 
 const initialState = {
   error: "",
 };
 
 export function SignInForm() {
+  const router = useRouter();
+
+  const { data: session } =
+    useSession();
+
   const [state, formAction] =
     useActionState(
       loginAction,
       initialState
     );
+
+  useEffect(() => {
+    if (!session) return;
+
+    const roles =
+      session.user.roles;
+
+    if (isAdmin(roles)) {
+      router.replace("/admin");
+      return;
+    }
+
+    if (isOwner(roles)) {
+      router.replace("/owner");
+      return;
+    }
+
+    router.replace("/unauthorized");
+  }, [session, router]);
 
   return (
     <form
