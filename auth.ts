@@ -18,7 +18,14 @@ export const {
   auth,
   signIn,
   signOut,
-} = NextAuth({
+} = NextAuth({pages: {
+    signIn: "/login",
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60,    
+    updateAge: 60 * 60,
+  },
   providers: [
     Credentials({
       credentials: {
