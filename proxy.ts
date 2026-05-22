@@ -21,11 +21,11 @@ export async function proxy(request: NextRequest) {
   const roles = session.user?.roles || [];
 
   if (pathname.startsWith("/admin") && !isAdmin(roles)) {
-    return NextResponse.redirect(new URL("/unauthorized", request.url));
+    return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
   if (pathname.startsWith("/owner") && !isOwner(roles)) {
-    return NextResponse.redirect(new URL("/unauthorized", request.url));
+    return NextResponse.redirect(new URL("/not-found", request.url));
   }
 
   return NextResponse.next();
