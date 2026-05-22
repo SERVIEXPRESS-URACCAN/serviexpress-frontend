@@ -23,27 +23,17 @@ const initialState = {
 
 export function SignInForm() {
   const router = useRouter();
-
-  const { data: session } =
-    useSession();
-
-  const [state, formAction] =
-    useActionState(
-      loginAction,
-      initialState
-    );
+  const { data: session, update } = useSession();
+  const [state, formAction] = useActionState(loginAction, initialState);
 
   useEffect(() => {
     if (!state.success) return;
 
-    if (!session) return;
-
-    router.replace(
-      getRedirectByRole(
-        session.user.roles
-      )
-    );
-  }, [state.success, session, router]);
+    update().then((updatedSession) => {
+      if (!updatedSession) return;
+      router.replace(getRedirectByRole(updatedSession.user.roles));
+    });
+  }, [state.success]);
 
   return (
     <form

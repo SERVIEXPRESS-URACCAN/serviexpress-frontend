@@ -7,7 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { ThemeProvider } from '@/components/shared/theme-provider'
 
 import './globals.css'
-import { SessionProvider } from 'next-auth/react'
+import { AuthProvider } from '@/components/providers/session-provider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,11 +31,11 @@ export default function RootLayout({
       className={`${inter.variable} h-full`}
     >
       <body className="min-h-full font-sans antialiased">
-        <SessionProvider>
+        <AuthProvider>
         <ThemeProvider>
           <TooltipProvider>{children}</TooltipProvider>
           </ThemeProvider>
-          </SessionProvider>
+          </AuthProvider>
       </body>
     </html>
   )
