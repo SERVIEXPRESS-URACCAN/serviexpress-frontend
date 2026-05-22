@@ -1,9 +1,10 @@
 import type { LoginResponse } from '@/types/auth.types'
 
+import { API_URL } from '@/config/config'
 import type { LoginType } from '@/schemas/login.schema'
 
 export async function loginService(data: LoginType): Promise<LoginResponse> {
-  const response = await fetch(`${process.env.API_URL}/auth/login`, {
+  const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
 
     headers: {
