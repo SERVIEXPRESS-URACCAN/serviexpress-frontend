@@ -30,7 +30,10 @@ export function LoginForm({ className, ...props }: Props) {
   const { update } = useAuth()
 
   const [state, formAction] = useActionState(loginAction, initialState)
-
+  const [form, setForm] = useState({
+    email: '',
+    password: ''
+  })
   const [errors, setErrors] = useState({
     email: '',
     password: ''
@@ -107,6 +110,13 @@ export function LoginForm({ className, ...props }: Props) {
                   id="email"
                   name="email"
                   type="email"
+                  value={form.email}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      email: e.target.value
+                    })
+                  }
                   placeholder="Ingresa tu correo"
                 />
 
@@ -122,6 +132,13 @@ export function LoginForm({ className, ...props }: Props) {
                   <Input
                     id="password"
                     name="password"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        password: e.target.value
+                      })
+                    }
                     type={showPassword ? 'text' : 'password'}
                   />
 
@@ -143,7 +160,6 @@ export function LoginForm({ className, ...props }: Props) {
                 )}
               </Field>
 
-              {/* ERROR BACKEND */}
               {state.error && (
                 <p className="text-sm text-red-400 font-medium">
                   {state.error}
