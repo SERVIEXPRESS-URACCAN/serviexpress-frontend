@@ -2,9 +2,9 @@ import { CategoriesProductsTable } from "@/components/admin/categories-products.
 import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog"
 import { getCategoryProducts } from "@/services/categories-products.service"
 
-type Props = {
+type Props = Readonly<{
   searchParams: Promise<{ page?: string }>
-}
+}>
 
 export default async function CategoryProductPage({ searchParams }: Props) {
   const { page } = await searchParams
