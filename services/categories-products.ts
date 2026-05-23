@@ -64,8 +64,14 @@ export const deleteCategoryProduct = async (
   )
 
   if (!response.ok) {
-    throw new Error(`Error deleting category product with id ${id}: `)
+    const errorText = await response.text()
+
+
+    throw new Error(
+      `Error deleting category product with id ${id}: ${errorText}`
+    )
   }
 
   return response.json()
+
 }
