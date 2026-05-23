@@ -1,6 +1,6 @@
 'use client'
 
-import { getCategoryProducts } from '@/services/categories-products'
+import { getCategoryProducts } from '@/services/categories-products.service'
 import { CategoryProduct } from '@/types/categories-products'
 import { useEffect, useState } from 'react'
 

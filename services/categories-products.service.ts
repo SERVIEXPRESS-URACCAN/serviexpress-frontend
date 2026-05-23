@@ -1,16 +1,13 @@
 import { API_URL } from '@/config/config'
-import { CategoryProduct, CreateCategoryProductDto,UpdateCategoryProductDto } from '@/types/categories-products'
+import { CategoryProduct, CategoryProductResponse, CreateCategoryProductDto,UpdateCategoryProductDto } from '@/types/categories-products'
 
-export const getCategoryProducts = async (): Promise<CategoryProduct[]> => {
+export const getCategoryProducts = async (): Promise<CategoryProductResponse> => {
   const response = await fetch(`${API_URL}/categories-products`)
-
   if (!response.ok) {
-    throw new Error(`Error fetching categories: `)
+    throw new Error(`Error fetching categories`)
   }
-
   return response.json()
 }
-
 export const createCategoryProduct = async (data: CreateCategoryProductDto, token: string): Promise<CategoryProduct> => {
   const response = await fetch(`${API_URL}/categories-products`, {
     method: 'POST',

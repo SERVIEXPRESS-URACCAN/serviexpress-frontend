@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 
 import { CategoryProduct } from '@/types/categories-products'
 
-import { deleteCategoryProduct } from '@/services/categories-products'
+import { deleteCategoryProduct } from '@/services/categories-products.service'
 import { useAuth } from '@/hooks/useAuth'
 
 
@@ -56,7 +56,7 @@ export const DeleteCategoryProductDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>
             Eliminar categoría de producto

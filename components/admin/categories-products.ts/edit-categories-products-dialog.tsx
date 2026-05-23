@@ -10,7 +10,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { CategoryProduct, UpdateCategoryProductDto } from '@/types/categories-products'
-import { updateCategoryProduct } from '@/services/categories-products'
+import { updateCategoryProduct } from '@/services/categories-products.service'
 import { CategoryProductForm } from './categories-products-form'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -45,7 +45,7 @@ export const EditCategoryProductDialog = ({ categoryProduct, open, onOpenChangeA
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Editar categoría de producto</DialogTitle>
         </DialogHeader>
