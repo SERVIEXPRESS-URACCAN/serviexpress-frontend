@@ -6,7 +6,7 @@ import { LogoutButton } from "@/components/shared/logout-button";
 export default async function OwnerPage() {
   const session = await auth();
   if (!session) redirect("/login");
-  if (!isOwner(session.user.roles)) redirect("/unauthorized");
+  if (!isOwner(session.user.roles)) redirect("/not-found");
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">

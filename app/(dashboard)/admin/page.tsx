@@ -10,7 +10,7 @@ export default async function AdminPage() {
   if (!session) redirect("/login");
 
   if (!isAdmin(session.user.roles)) {
-    redirect("/unauthorized");
+    redirect("/not-found");
   }
   return (
     <div>
