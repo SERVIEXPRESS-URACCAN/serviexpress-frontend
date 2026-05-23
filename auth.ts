@@ -1,29 +1,34 @@
 import NextAuth
-from "next-auth";
+, { CredentialsSignin }  from "next-auth";
 
 import Credentials
-from "next-auth/providers/credentials";
+  from "next-auth/providers/credentials";
 
 import { LoginSchema }
-from "@/schemas/login.schema";
+  from "@/schemas/login.schema";
 
 import { loginService }
   from "@/services/auth.service";
 
-  import type { Role }
-from "@/constants/roles";
+import { ROLES, type Role }
+  from "@/constants/roles";
+
+  class InvalidCredentialsError extends CredentialsSignin {
+  code = "invalid_credentials";
+}
 
 export const {
   handlers,
   auth,
   signIn,
   signOut,
-} = NextAuth({pages: {
+} = NextAuth({
+  pages: {
     signIn: "/login",
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60,    
+    maxAge: 60 * 60,
     updateAge: 60 * 60,
   },
   providers: [
@@ -33,37 +38,27 @@ export const {
         password: {},
       },
 
-      async authorize(
-        credentials
-      ) {
+      async authorize(credentials) {
         try {
-          const validatedFields =
-            await LoginSchema.parseAsync(
-              credentials
-            );
+          const validatedFields = await LoginSchema.parseAsync(credentials);
+          const data = await loginService(validatedFields);
 
+          const hasValidRole = data.user.roles.some(
+            (role) => role === ROLES.ADMIN || role === ROLES.OWNER
+          );
 
-          const data =
-            await loginService(
-              validatedFields
-            );
-
+          if (!hasValidRole) {
+            throw new InvalidCredentialsError();
+          }
 
           return {
-            id:
-              data.user.id.toString(),
-
-            email:
-              data.user.email,
-
-            roles:
-              data.user.roles,
-
-            accessToken:
-              data.access_token,
+            id: data.user.id.toString(),
+            email: data.user.email,
+            roles: data.user.roles,
+            accessToken: data.access_token,
           };
         } catch {
-          return null;
+          throw new InvalidCredentialsError();
         }
       },
     }),

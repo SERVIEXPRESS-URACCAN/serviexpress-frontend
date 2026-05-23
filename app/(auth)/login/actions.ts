@@ -1,7 +1,7 @@
 "use server";
-
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 export type LoginState = {
   error?: string;
@@ -16,30 +16,19 @@ export async function loginAction(
     await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-
       redirect: false,
     });
 
-    return {
-      success: true,
-    };
+    revalidatePath("/");
+    return { success: true };
+
   } catch (error) {
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return {
-            error: "Credenciales inválidas",
-          };
-
-        default:
-          return {
-            error: "Algo salió mal",
-          };
+      if (error.type === "CredentialsSignin") {
+        return { error: "Credenciales inválidas" };
       }
+      return { error: "Algo salió mal" };
     }
-
-    return {
-      error: "Credenciales inválidas",
-    };
+    return { error: "error inesperado" };
   }
 }

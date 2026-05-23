@@ -1,38 +1,41 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { isAdmin, isOwner } from "@/lib/permissions";
 
-const publicRoutes = ["/login", "/register", "/unauthorized"];
+const publicRoutes = [
+  "/",
+  "/login",
+  "/register",
+];
 
-export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export const proxy = auth((req) => {
+  const { pathname } = req.nextUrl;
 
-  if (publicRoutes.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next();
+  // Home pública
+  if (pathname === "/") {
+    return;
   }
 
-  const session = await auth();
-
-  if (!session) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // Rutas públicas
+  if (
+    publicRoutes.some((route) =>
+      pathname.startsWith(route)
+    )
+  ) {
+    return;
   }
 
-  const roles = session.user?.roles || [];
-
-  if (pathname.startsWith("/admin") && !isAdmin(roles)) {
-    return NextResponse.redirect(new URL("/not-found", request.url));
+  // No autenticado
+  if (!req.auth) {
+    return Response.redirect(
+      new URL(
+        "/login",
+        req.nextUrl.origin
+      )
+    );
   }
-
-  if (pathname.startsWith("/owner") && !isOwner(roles)) {
-    return NextResponse.redirect(new URL("/not-found", request.url));
-  }
-
-  return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/auth/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    String.raw`/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)`,
   ],
 };
