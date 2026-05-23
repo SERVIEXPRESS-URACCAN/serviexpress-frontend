@@ -1,20 +1,13 @@
 import { auth } from "@/auth";
-import { redirect, notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { isOwner } from "@/lib/permissions";
 import { LogoutButton } from "@/components/shared/logout-button";
 
 export default async function OwnerPage() {
   const session = await auth();
+  if (!session) redirect("/login");
+  if (!isOwner(session.user.roles)) redirect("/not-found");
 
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (
-    !isOwner(session.user.roles)
-  ) {
-    notFound();
-  }
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <h1 className="text-2xl font-bold">Owner Dashboard</h1>
