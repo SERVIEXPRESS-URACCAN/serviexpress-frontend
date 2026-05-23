@@ -1,18 +1,21 @@
 import PageHeader from '@/components/admin/page-header'
 import StatsCard from '@/components/admin/stats-card'
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { isAdmin } from "@/lib/permissions";
 
 export default async function AdminPage() {
   const session = await auth();
 
-  if (!session) redirect("/login");
-
-  if (!isAdmin(session.user.roles)) {
-    redirect("/unauthorized");
+  if (!session) {
+    redirect("/login");
   }
-  return (
+
+  if (
+    !isAdmin(session.user.roles)
+  ) {
+    notFound();
+  }  return (
     <div>
       <PageHeader title="Dashboard" description="Resumen general del sistema" />
 
