@@ -13,7 +13,7 @@ import {
 
 import { Button } from '@/components/ui/button'
 
-import { createCity } from '@/services/city.services'
+import { createCity } from '@/services/city.service'
 
 import { CityForm } from './city-form'
 
