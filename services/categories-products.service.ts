@@ -1,8 +1,8 @@
 import { API_URL } from '@/config/config'
 import { CategoryProduct, CategoryProductResponse, CreateCategoryProductDto,UpdateCategoryProductDto } from '@/types/categories-products'
 
-export const getCategoryProducts = async (): Promise<CategoryProductResponse> => {
-  const response = await fetch(`${API_URL}/categories-products`)
+export const getCategoryProducts = async (page = 1): Promise<CategoryProductResponse> => {
+  const response = await fetch(`${API_URL}/categories-products?page=${page}&limit=10`)
   if (!response.ok) {
     throw new Error(`Error fetching categories`)
   }
