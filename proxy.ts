@@ -9,12 +9,9 @@ const publicRoutes = [
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
-  // Home pública
   if (pathname === "/") {
     return;
   }
-
-  // Rutas públicas
   if (
     publicRoutes.some((route) =>
       pathname.startsWith(route)
@@ -23,7 +20,6 @@ export const proxy = auth((req) => {
     return;
   }
 
-  // No autenticado
   if (!req.auth) {
     return Response.redirect(
       new URL(
