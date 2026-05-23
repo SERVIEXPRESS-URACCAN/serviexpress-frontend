@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { LogoutButton } from '../shared/logout-button'
 
 export default function UserMenu() {
   return (
@@ -20,7 +21,7 @@ export default function UserMenu() {
 
       <DropdownMenuContent align="end">
         <DropdownMenuItem>Perfil</DropdownMenuItem>
-        <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
+        <DropdownMenuItem><LogoutButton/></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
