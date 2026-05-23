@@ -4,3 +4,11 @@ export type City = {
   createdAt: string
   updatedAt: string
 }
+
+export type CreateCityDto = {
+  name: string
+}
+
+export type UpdateCityDto = {
+  name?: string
+}

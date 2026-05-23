@@ -1,20 +1,21 @@
-'use client'
+import { CitiesTable, CreateCityDialog } from '@/components/admin/cities'
 
-import CityList from '@/components/admin/cities/CityList'
-import { useCities } from '@/hooks/useCities'
+import { getCities } from '@/services/city.services'
 
-export default function CitiesPage() {
-  const { cities, loading } = useCities()
-
-  if (loading) {
-    return <p>Cargando...</p>
-  }
+export default async function CitiesPage() {
+  const cities = await getCities()
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Ciudades</h1>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Ciudades</h1>
+        </div>
 
-      <CityList cities={cities} />
+        <CreateCityDialog />
+      </div>
+
+      <CitiesTable cities={cities} />
     </div>
   )
 }
