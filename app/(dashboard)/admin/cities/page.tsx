@@ -1,6 +1,6 @@
 import { CitiesTable, CreateCityDialog } from '@/components/admin/cities'
 
-import { getCities } from '@/services/city.services'
+import { getCities } from '@/services/city.service'
 
 export default async function CitiesPage() {
   const cities = await getCities()

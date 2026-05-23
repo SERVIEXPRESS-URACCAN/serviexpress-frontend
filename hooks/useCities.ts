@@ -1,6 +1,6 @@
 'use client'
 
-import { getCities } from '@/services/city.services'
+import { getCities } from '@/services/city.service'
 import { City } from '@/types/city.types'
 import { useEffect, useState } from 'react'
 

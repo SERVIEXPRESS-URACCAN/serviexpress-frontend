@@ -43,7 +43,7 @@ export const ADMIN_SIDEBAR_SECTIONS = [
       },
 
       {
-        id: 'owners',
+        id: 'propietarios',
         title: 'Propietarios',
         href: '/admin/propietarios',
         icon: UserRoundKey

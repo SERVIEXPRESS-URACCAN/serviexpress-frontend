@@ -12,7 +12,7 @@ import {
 
 import { City, UpdateCityDto } from '@/types/city.types'
 
-import { updateCity } from '@/services/city.services'
+import { updateCity } from '@/services/city.service'
 
 import { CityForm } from './city-form'
 
