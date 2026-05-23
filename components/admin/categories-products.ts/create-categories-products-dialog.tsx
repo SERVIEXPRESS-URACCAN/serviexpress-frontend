@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 
 import { CategoryProductForm } from './categories-products-form'
-import { createCategoryProduct } from '@/services/categories-products'
+import { createCategoryProduct } from '@/services/categories-products.service'
 import { useAuth } from '@/hooks/useAuth'
 
 
@@ -47,7 +47,7 @@ export const CreateCategoryProductDialog = () => {
         <Button>Nueva categoría de producto</Button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Crear categoría de producto</DialogTitle>
         </DialogHeader>

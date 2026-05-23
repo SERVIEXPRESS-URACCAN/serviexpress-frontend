@@ -1,6 +1,6 @@
 import { CategoriesProductsTable, } from "@/components/admin/categories-products.ts"
 import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog"
-import { getCategoryProducts } from "@/services/categories-products"
+import { getCategoryProducts } from "@/services/categories-products.service"
 
 export default async function CategoryProductPage() {
   const categoryProducts = await getCategoryProducts()
