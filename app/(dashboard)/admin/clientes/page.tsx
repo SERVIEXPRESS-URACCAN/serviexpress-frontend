@@ -1,24 +1,30 @@
-'use client'
 import { ClientesTable } from '@/components/admin/clients/clients-table'
-import { useClientes } from '@/hooks/useClients'
-import { useSession } from 'next-auth/react'
+import { getClientes } from '@/services/clients.service'
+import { auth } from '@/auth'
 
-export default function ClientesPage() {
-  const { data: session, status } = useSession()
+type Props = Readonly<{
+  searchParams: Promise<{ page?: string }>
+}>
+
+export default async function ClientesPage({ searchParams }: Props) {
+  const { page } = await searchParams
+  const currentPage = Number(page) || 1
+
+  const session = await auth()
   const token = session?.accessToken ?? ''
 
-  const { clientes, loading, page, totalPages, setPage } = useClientes(token)
+  const clientsData = await getClientes(token, currentPage)
 
-  if (status === 'loading' || loading) return <p>Cargando...</p>
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Clientes</h1>
-
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Clientes</h1>
+        </div>
+      </div>
       <ClientesTable
-        clientes={clientes}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={setPage}
+        clientsData={clientsData}
+        currentPage={currentPage}
       />
     </div>
   )
