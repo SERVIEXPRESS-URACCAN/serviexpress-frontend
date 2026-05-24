@@ -26,6 +26,7 @@ export const ClientesTable = ({ clientes, page, totalPages, onPageChange }: Prop
               <TableHead>ID</TableHead>
               <TableHead>Nombre</TableHead>
               <TableHead>Apellido</TableHead>
+              <TableHead>Gender</TableHead>
               <TableHead>Teléfono</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Estado</TableHead>
@@ -36,9 +37,10 @@ export const ClientesTable = ({ clientes, page, totalPages, onPageChange }: Prop
             {clientes.map((cliente) => (
               <TableRow key={cliente.id}>
                 <TableCell>{cliente.id}</TableCell>
-                <TableCell>{cliente.name ?? 'Sin nombre'}</TableCell>
-                <TableCell>{cliente.lastName ?? 'Sin apellido'}</TableCell>
-                <TableCell>{cliente.cellphone ?? 'Sin teléfono'}</TableCell>
+                <TableCell>{cliente.user?.profile?.name ?? 'Sin nombre'}</TableCell>
+                <TableCell>{cliente.user?.profile?.lastName ?? 'Sin apellido'}</TableCell>
+                <TableCell>{cliente.user?.profile?.gender?.name ?? 'Sin género'}</TableCell>
+                <TableCell>{cliente.user?.profile?.cellphone ?? 'Sin teléfono'}</TableCell>
                 <TableCell>{cliente.user?.email ?? 'Sin email'}</TableCell>
                 <TableCell>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
