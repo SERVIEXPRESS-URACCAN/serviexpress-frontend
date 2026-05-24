@@ -1,3 +1,5 @@
+import { Pagination } from "./pagiantion.types"
+
 export type Clientes = {
   name: string
   lastName: string
@@ -5,3 +7,5 @@ export type Clientes = {
   gender_id: number
   user_id: number
 }
+
+export type ClientesResponse = Pagination<Clientes>
