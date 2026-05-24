@@ -11,6 +11,8 @@ export const useClientes = (token: string) => {
   const limit = 10
 
   useEffect(() => {
+    if (!token) return
+
     const fetchClientes = async () => {
       try {
         const data = await getClientes(token, page, limit)
