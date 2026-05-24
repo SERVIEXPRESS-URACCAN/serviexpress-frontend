@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const CategoryProductTableSkeleton = () => {
+export const CategoryBusinessTableSkeleton = () => {
   return (
     <div className="rounded-md border">
       <div className="border-b p-4">
