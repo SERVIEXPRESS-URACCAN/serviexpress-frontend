@@ -1,11 +1,16 @@
 import { Pagination } from "./pagiantion.types"
 
 export type Clientes = {
+  id: number
   name: string
   lastName: string
   cellphone: string
-  gender_id: number
-  user_id: number
+  image: string | null
+  user: {
+    id: number
+    email: string
+    status: boolean
+  }
 }
 
 export type ClientesResponse = Pagination<Clientes>
