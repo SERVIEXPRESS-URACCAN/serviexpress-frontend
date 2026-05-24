@@ -48,7 +48,6 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         href: '/admin/propietarios',
         icon: UserRoundKey
       },
-
       {
         id: 'delivery-drivers',
         title: 'Mandaderos',
@@ -61,7 +60,16 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         title: 'Motos',
         href: '/admin/motos',
         icon: Motorbike
+      },
+      {
+        id: 'clientes',
+        title: 'Clientes',
+        href: '/admin/clientes',
+        icon: UserRoundKey
       }
+
+
+
     ]
   },
 
