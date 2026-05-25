@@ -30,13 +30,19 @@ export const EditCategorBusinessDialog = ({
   const { session } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
-
   const [error, setError] = useState("");
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setError("");
+    }
+
+    onOpenChangeAction(open);
+  };
 
   const handleUpdate = async (data: UpdateCategoryBusinessDto) => {
     try {
       setIsLoading(true);
-      setError("");
 
       await updateCategoryBusiness(
         CategoryBusiness.id,
@@ -47,11 +53,11 @@ export const EditCategorBusinessDialog = ({
       onOpenChangeAction(false);
 
       router.refresh();
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("Error actualizando categoría");
+        setError("La categoría ya existe");
       }
     } finally {
       setIsLoading(false);
@@ -59,7 +65,8 @@ export const EditCategorBusinessDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {" "}
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Editar categoría de negocio</DialogTitle>
