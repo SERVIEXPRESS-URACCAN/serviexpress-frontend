@@ -65,18 +65,26 @@ export const updateCategoryProduct = async (
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-       Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   })
 
+  if (response.status === 409) {
+    const error = await response.json()
+    throw new CategoryConflictException({
+      message: error.message,
+      canRestore: error.canRestore ?? false,
+      id: error.id,
+    })
+  }
+
   if (!response.ok) {
-    throw new Error(`Error updating category product with id ${id} `)
+    throw new Error(`Error updating category product with id ${id}`)
   }
 
   return response.json()
 }
-
 export const deleteCategoryProduct = async (
   id: number,
   token: string
