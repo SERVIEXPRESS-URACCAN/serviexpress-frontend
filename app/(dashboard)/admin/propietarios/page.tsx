@@ -4,7 +4,7 @@ import { OwnerTable } from '@/components/admin/owner/owner-table'
 import { useOwners } from '@/hooks/useOwner'
 
 export default function OwnersPage() {
-  const { owners, loading } = useOwners()
+  const { owners, loading, fetchOwners } = useOwners()
 
   if (loading) return <p>Cargando...</p>
 
@@ -14,7 +14,7 @@ export default function OwnersPage() {
         <h1 className="text-2xl font-bold">Owners</h1>
       </div>
 
-      <OwnerTable owners={owners} />
+      <OwnerTable owners={owners} onUpdated={fetchOwners} />
     </div>
   )
 }
