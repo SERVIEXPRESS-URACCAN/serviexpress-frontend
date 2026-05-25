@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CategoryBusinessResponse } from "../types/categories-business";
 import { getCategoryBusiness } from "@/services/categories-business.service";
+import { CategoryBusinessResponse } from "@/types/categories-business";
 
 export const useCategoryBusiness = () => {
   const [data, setData] = useState<CategoryBusinessResponse | null>(null);

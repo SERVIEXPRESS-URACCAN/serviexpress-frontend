@@ -1,31 +1,22 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { CategoryBusiness } from "../../../types/categories-business";
-import { Button } from "@/components/ui/button";
 import { deleteCategoryBusiness } from "@/services/categories-business.service";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
+import Swal, { SweetAlertOptions } from "sweetalert2";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
+const fireSwal = (options: SweetAlertOptions) =>
+  new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
+    setTimeout(() => resolve(Swal.fire(options)), 300);
+  });
 type Props = {
   CategoryBusiness: CategoryBusiness;
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
 };
 
-export const DeleteCategoryBusinessDialog = ({
-  CategoryBusiness,
-  open,
-  onOpenChangeAction,
-}: Props) => {
+export const DeleteCategoryBusinessDialog = ({ CategoryBusiness }: Props) => {
   const router = useRouter();
 
   const { session } = useAuth();
@@ -33,28 +24,39 @@ export const DeleteCategoryBusinessDialog = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
+    const result = await fireSwal({
+      title: "¿Estás seguro?",
+      text: `Se eliminará la categoría "${CategoryBusiness.name}"`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc2626",
+      theme: "auto",
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       setIsLoading(true);
 
       await deleteCategoryBusiness(CategoryBusiness.id, session!.accessToken);
 
-      onOpenChangeAction(false);
       router.refresh();
-
-      Swal.fire({
-        title: "¡Eliminado!",
-        text: `La categoría "${CategoryBusiness.name}" se eliminó correctamente.`,
+      await fireSwal({
+        title: "Eliminado",
+        text: "La categoría fue eliminada correctamente",
         icon: "success",
         timer: 2000,
         showConfirmButton: false,
+        theme: "auto",
       });
-    } catch (error) {
-      console.error(error);
-
-      Swal.fire({
-        title: "Oops...",
+    } catch {
+      await fireSwal({
+        title: "Error",
         text: "No se pudo eliminar la categoría",
         icon: "error",
+        theme: "auto",
       });
     } finally {
       setIsLoading(false);
@@ -62,35 +64,12 @@ export const DeleteCategoryBusinessDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>Eliminar categoría de negocio</DialogTitle>
-
-          <DialogDescription>
-            ¿Estás seguro de eliminar la categoría de negocio{" "}
-            {CategoryBusiness.name}?
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="flex justify-end gap-2">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChangeAction(false)}
-            disabled={isLoading}
-          >
-            Cancelar
-          </Button>
-
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isLoading}
-          >
-            {isLoading ? "Eliminando..." : "Eliminar"}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <DropdownMenuItem
+      onClick={handleDelete}
+      disabled={isLoading}
+      className="text-red-500 focus:text-red-500"
+    >
+      {isLoading ? "Eliminando..." : "Eliminar"}
+    </DropdownMenuItem>
   );
 };
