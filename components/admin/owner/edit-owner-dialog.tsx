@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import {
@@ -19,11 +18,16 @@ type Props = {
   owner: Owner
   open: boolean
   onOpenChangeAction: (open: boolean) => void
+  onUpdated: () => Promise<void>
 }
 
-export const EditOwnerDialog = ({ owner, open, onOpenChangeAction }: Props) => {
+export const EditOwnerDialog = ({
+  owner,
+  open,
+  onOpenChangeAction,
+  onUpdated
+}: Props) => {
   const { session } = useAuth()
-  const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -32,10 +36,10 @@ export const EditOwnerDialog = ({ owner, open, onOpenChangeAction }: Props) => {
       setIsLoading(true)
 
       if (!session?.accessToken) return
-      await updateOwner(owner.id, data, session.accessToken)
+      await updateOwner(owner.id, data, session?.accessToken)
 
       onOpenChangeAction(false)
-      router.refresh()
+      await onUpdated()
     } finally {
       setIsLoading(false)
     }
@@ -50,8 +54,10 @@ export const EditOwnerDialog = ({ owner, open, onOpenChangeAction }: Props) => {
 
         <OwnerForm
           defaultValues={{
-            razonSocial: owner.razonSocial
-            // gmail: owner.user?.email ?? ''
+            razonSocial: owner.razonSocial,
+            name: owner.user?.profile?.name ?? '',
+            lastName: owner.user?.profile?.lastName ?? '',
+            cellphone: owner.user?.profile?.cellphone ?? ''
           }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}
