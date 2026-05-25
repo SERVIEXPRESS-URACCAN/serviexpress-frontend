@@ -8,12 +8,14 @@ import {
 import { Owner } from '@/types/owner.types'
 import { MoreVertical } from 'lucide-react'
 import { useState } from 'react'
+import { EditOwnerDialog } from './edit-owner-dialog'
 
 type Props = {
   owner: Owner
+  onUpdated: () => Promise<void>
 }
 
-export const OwnerActions = ({ owner }: Props) => {
+export const OwnerActions = ({ owner, onUpdated }: Props) => {
   const [editOpen, setEditOpen] = useState(false)
   return (
     <>
@@ -35,11 +37,12 @@ export const OwnerActions = ({ owner }: Props) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* <EditCityDialog
-        city={city}
+      <EditOwnerDialog
+        owner={owner}
         open={editOpen}
         onOpenChangeAction={setEditOpen}
-      /> */}
+        onUpdated={onUpdated}
+      />
     </>
   )
 }
