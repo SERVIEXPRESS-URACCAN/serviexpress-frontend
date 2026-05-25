@@ -1,0 +1,6 @@
+export * from './categories-products-table'
+export * from './categories-products-actions'
+export * from './categories-products-form'
+export * from './create-categories-products-dialog'
+export * from './edit-categories-products-dialog'
+export * from './delete-categories-products'
