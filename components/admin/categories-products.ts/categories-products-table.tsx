@@ -6,19 +6,20 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import {  CategoryProductResponse } from '@/types/categories-products'
+import { CategoryProductResponse } from '@/types/categories-products'
 import { CategoryProductActions } from './categories-products-actions'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 type Props = {
   categoryProduct: CategoryProductResponse
-  currentPage:number
+  currentPage: number
 }
 
 export const CategoriesProductsTable = ({ categoryProduct, currentPage }: Props) => {
   const { pagination } = categoryProduct
 
-return (
+  return (
     <div className="space-y-4">
       <div className="rounded-md border">
         <Table>
@@ -56,16 +57,29 @@ return (
           Página {currentPage} de {pagination.lastPage}
         </p>
         <div className="flex gap-2">
-          <a href={`?page=${currentPage - 1}`}>
-            <Button variant="outline" size="sm" disabled={currentPage <= 1}>
+          {currentPage > 1 ? (
+            <Link href={`?page=${currentPage - 1}`}>
+              <Button variant="outline" size="sm">
+                Anterior
+              </Button>
+            </Link>
+          ) : (
+            <Button variant="outline" size="sm" disabled>
               Anterior
             </Button>
-          </a>
-          <a href={`?page=${currentPage + 1}`}>
-            <Button variant="outline" size="sm" disabled={!pagination.hasNextPage}>
+          )}
+
+          {pagination.hasNextPage ? (
+            <Link href={`?page=${currentPage + 1}`}>
+              <Button variant="outline" size="sm">
+                Siguiente
+              </Button>
+            </Link>
+          ) : (
+            <Button variant="outline" size="sm" disabled>
               Siguiente
             </Button>
-          </a>
+          )}
         </div>
       </div>
     </div>
