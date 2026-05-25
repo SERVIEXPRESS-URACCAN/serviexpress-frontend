@@ -24,7 +24,6 @@ type Props = {
 
 export const CategoryProductActions = ({ categoryProduct }: Props) => {
   const [editOpen, setEditOpen] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
 
  return (
     <>
@@ -44,12 +43,9 @@ export const CategoryProductActions = ({ categoryProduct }: Props) => {
             Editar
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => setDeleteOpen(true)}
-            className="text-red-500 focus:text-red-500"
-          >
-            Eliminar
-          </DropdownMenuItem>
+          <DeleteCategoryProductDialog
+            categoryProduct={categoryProduct}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -59,11 +55,6 @@ export const CategoryProductActions = ({ categoryProduct }: Props) => {
         onOpenChangeAction={setEditOpen}
       />
 
-      <DeleteCategoryProductDialog
-        categoryProduct={categoryProduct}
-        open={deleteOpen}
-        onOpenChangeAction={setDeleteOpen}
-      />
     </>
   )
 

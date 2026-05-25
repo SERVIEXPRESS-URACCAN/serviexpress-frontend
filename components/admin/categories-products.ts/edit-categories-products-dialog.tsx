@@ -1,8 +1,7 @@
 'use client'
-
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-
+import Swal, { SweetAlertOptions } from 'sweetalert2'
 import {
   Dialog,
   DialogContent,
@@ -10,12 +9,15 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { CategoryProduct, UpdateCategoryProductDto } from '@/types/categories-products'
-import { updateCategoryProduct } from '@/services/categories-products.service'
+import { updateCategoryProduct, restoreCategoryProduct } from '@/services/categories-products.service'
+import { CategoryConflictException } from '@/types/api-errors.types'
 import { CategoryProductForm } from './categories-products-form'
 import { useAuth } from '@/hooks/useAuth'
 
-
-
+const fireSwal = (options: SweetAlertOptions) =>
+  new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
+    setTimeout(() => resolve(Swal.fire(options)), 300)
+  })
 
 type Props = {
   categoryProduct: CategoryProduct
@@ -25,19 +27,69 @@ type Props = {
 
 export const EditCategoryProductDialog = ({ categoryProduct, open, onOpenChangeAction }: Props) => {
   const router = useRouter()
-  const { session } = useAuth();
-
+  const { session } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+
+  const handleConflict = async (error: CategoryConflictException) => {
+    if (!error.data.canRestore) {
+      await fireSwal({
+        icon: 'error',
+        title: 'Categoría duplicada',
+        text: error.message,
+        theme:'auto',
+      })
+      return
+    }
+
+    const result = await fireSwal({
+      icon: 'question',
+      title: '¿Restaurar categoría?',
+      text: error.data.message,
+      showCancelButton: true,
+      confirmButtonText: 'Sí, restaurar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#dc2626',
+      theme:'auto',
+    })
+
+    if (!result.isConfirmed) return
+
+    try {
+      await restoreCategoryProduct(error.data.id, session!.accessToken)
+      router.refresh()
+      await fireSwal({
+        icon: 'success',
+        title: 'Categoría restaurada',
+        timer: 2000,
+        showConfirmButton: false,
+        theme:'auto',
+      })
+    } catch (restoreError) {
+      const message = restoreError instanceof Error ? restoreError.message : 'Error al restaurar la categoría'
+      await fireSwal({ icon: 'error', title: 'Error', text: message, theme:'auto' })
+    }
+  }
 
   const handleUpdate = async (data: UpdateCategoryProductDto) => {
     try {
       setIsLoading(true)
-
-      await updateCategoryProduct(categoryProduct.id, data, session!.accessToken )
-
+      await updateCategoryProduct(categoryProduct.id, data, session!.accessToken)
       onOpenChangeAction(false)
-
       router.refresh()
+      await fireSwal({
+        icon: 'success',
+        title: 'Categoría actualizada',
+        text: `La categoría "${data.name}" fue actualizada exitosamente.`,
+        timer: 2000,
+        showConfirmButton: false,
+        theme:'auto',
+      })
+    } catch (error) {
+      onOpenChangeAction(false)
+      if (error instanceof CategoryConflictException) {
+        await handleConflict(error)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -49,11 +101,8 @@ export const EditCategoryProductDialog = ({ categoryProduct, open, onOpenChangeA
         <DialogHeader>
           <DialogTitle>Editar categoría de producto</DialogTitle>
         </DialogHeader>
-
         <CategoryProductForm
-          defaultValues={{
-            name: categoryProduct.name
-          }}
+          defaultValues={{ name: categoryProduct.name }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}
         />
