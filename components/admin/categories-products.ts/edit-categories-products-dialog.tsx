@@ -145,11 +145,19 @@ export const EditCategoryProductDialog = ({
       setIsLoading(false)
     }
   }
+    const handleOpenChange = (value: boolean) => {
+    onOpenChangeAction(value)
+
+    if (!value) {
+      setServerError(null)
+    }
+  }
+
 
   return (
     <Dialog
       open={open}
-      onOpenChange={onOpenChangeAction}
+      onOpenChange={handleOpenChange}
     >
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
