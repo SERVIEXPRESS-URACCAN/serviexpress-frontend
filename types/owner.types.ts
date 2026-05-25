@@ -1,6 +1,6 @@
 import { User } from './user.type'
 
-export interface Owner {
+export type Owner = {
   id: number
 
   user?: User
@@ -8,4 +8,8 @@ export interface Owner {
   razonSocial: string
 
   identificationCardImage: string
+}
+
+export type UpdateOwner = {
+  razonSocial?: string
 }
