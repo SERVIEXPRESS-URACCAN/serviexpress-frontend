@@ -2,26 +2,29 @@ import {
   CategoriesBusinessTable,
   CreateCategoryBusinessDialog,
 } from "@/components/admin/categories-business.ts";
-
+import { CategoryBusinessSearch } from "@/components/admin/categories-business.ts/categories-business-search";
 import { getCategoryBusiness } from "@/services/categories-business.service";
 
-type Props = Readonly<{
-  searchParams: Promise<{ page?: string }>;
-}>;
+export default async function CategoriesBusinessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; search?: string }>;
+}) {
+  const params = await searchParams;
 
-export default async function CategoriesBusinessPage({ searchParams }: Props) {
-  const { page } = await searchParams;
-  const currentPage = Number(page) || 1;
-  const categoriesBusiness = await getCategoryBusiness(currentPage);
+  const currentPage = Number(params.page) || 1;
+  const search = params.search || "";
+
+  const categoriesBusiness = await getCategoryBusiness(currentPage, search);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
-        </div>
+        <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
         <CreateCategoryBusinessDialog />
       </div>
+
+      <CategoryBusinessSearch />
 
       <CategoriesBusinessTable
         categoriesBusiness={categoriesBusiness}

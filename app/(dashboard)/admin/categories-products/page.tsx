@@ -1,15 +1,18 @@
-import { CategoriesProductsTable } from "@/components/admin/categories-products.ts"
-import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog"
-import { getCategoryProducts } from "@/services/categories-products.service"
+import { CategoriesProductsTable } from "@/components/admin/categories-products.ts";
+import { CategoryProductSearch } from "@/components/admin/categories-products.ts/categories-product-search";
+import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog";
+import { getCategoryProducts } from "@/services/categories-products.service";
 
-type Props = Readonly<{
-  searchParams: Promise<{ page?: string }>
-}>
+export default async function CategoryProductPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; search?: string }>;
+}) {
+  const params = await searchParams;
 
-export default async function CategoryProductPage({ searchParams }: Props) {
-  const { page } = await searchParams
-  const currentPage = Number(page) || 1
-  const categoryProducts = await getCategoryProducts(currentPage)
+  const currentPage = Number(params.page) || 1;
+  const search = params.search || "";
+  const categoryProducts = await getCategoryProducts(currentPage, search);
 
   return (
     <div className="space-y-6">
@@ -19,10 +22,11 @@ export default async function CategoryProductPage({ searchParams }: Props) {
         </div>
         <CreateCategoryProductDialog />
       </div>
+      <CategoryProductSearch />
       <CategoriesProductsTable
         categoryProduct={categoryProducts}
         currentPage={currentPage}
       />
     </div>
-  )
+  );
 }

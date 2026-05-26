@@ -4,19 +4,21 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import { CategoryProductResponse } from '@/types/categories-products'
-import { CategoryProductActions } from './categories-products-actions'
-import { TablePagination } from '@/components/shared/table-pagination'
-
+  TableRow,
+} from "@/components/ui/table";
+import { CategoryProductResponse } from "@/types/categories-products";
+import { CategoryProductActions } from "./categories-products-actions";
+import { TablePaginationInput } from "@/components/shared/table-pagination";
 type Props = {
-  categoryProduct: CategoryProductResponse
-  currentPage: number
-}
+  categoryProduct: CategoryProductResponse;
+  currentPage: number;
+};
 
-export const CategoriesProductsTable = ({ categoryProduct, currentPage }: Props) => {
-  const { pagination } = categoryProduct
+export const CategoriesProductsTable = ({
+  categoryProduct,
+  currentPage,
+}: Props) => {
+  const { pagination } = categoryProduct;
 
   return (
     <div className="space-y-4">
@@ -53,12 +55,13 @@ export const CategoriesProductsTable = ({ categoryProduct, currentPage }: Props)
 
       <div className="flex items-center justify-between px-2">
         <p className="text-sm text-muted-foreground whitespace-nowrap">
-          Página {currentPage} de {pagination.lastPage}</p>
-        <TablePagination
+          Página {currentPage} de {pagination.lastPage}
+        </p>
+        <TablePaginationInput
           currentPage={currentPage}
-          totalPages={pagination.lastPage}
+          lastPage={pagination.lastPage}
         />
       </div>
     </div>
-  )
-}
+  );
+};

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { error } from "console";
 
 type Props = {
   defaultValues?: {
@@ -16,10 +15,10 @@ type Props = {
 };
 
 export const CategoryBusinessForm = ({
-  error,
   defaultValues,
   onSubmitAction,
   isLoading,
+  error,
 }: Props) => {
   const [name, setName] = useState(defaultValues?.name || "");
 
@@ -35,14 +34,17 @@ export const CategoryBusinessForm = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Nombre</Label>
+
         <Input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Nombre de la categoría del negocio"
         />
-        {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
+
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Guardando..." : "Guardar"}
       </Button>
