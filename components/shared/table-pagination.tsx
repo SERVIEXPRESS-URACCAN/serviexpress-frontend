@@ -1,137 +1,60 @@
-'use client'
+"use client";
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/ui/pagination'
+type Props = {
+  currentPage: number;
+  lastPage: number;
+};
 
-type Props = Readonly<{
-  currentPage: number
-  totalPages: number
-}>
+export const TablePaginationInput = ({ currentPage, lastPage }: Props) => {
+  const router = useRouter();
 
-export function TablePagination({
-  currentPage,
-  totalPages
-}: Props) {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  const createPageURL = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    params.set('page', page.toString())
-
-    return `${pathname}?${params.toString()}`
-  }
-
-  const generatePages = () => {
-    type PageItem =
-      | { type: 'page'; value: number }
-      | { type: 'ellipsis'; id: string }
-
-    const pages: PageItem[] = []
-
-    pages.push({ type: 'page', value: 1 })
-
-    if (currentPage > 2) {
-      pages.push({
-        type: 'ellipsis',
-        id: 'left-ellipsis'
-      })
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= lastPage) {
+      router.push(`?page=${page}`);
     }
-
-    for (
-      let i = Math.max(2, currentPage - 1);
-      i <= Math.min(totalPages - 1, currentPage + 1);
-      i++
-    ) {
-      pages.push({
-        type: 'page',
-        value: i
-      })
-    }
-
-    if (currentPage < totalPages - 2) {
-      pages.push({
-        type: 'ellipsis',
-        id: 'right-ellipsis'
-      })
-    }
-
-    if (totalPages > 1) {
-      pages.push({
-        type: 'page',
-        value: totalPages
-      })
-    }
-
-    return pages
-  }
-
-  const pages = generatePages()
+  };
 
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href={
-              currentPage > 1
-                ? createPageURL(currentPage - 1)
-                : '#'
-            }
-            className={
-              currentPage === 1
-                ? 'pointer-events-none opacity-50'
-                : ''
-            }
-          />
-        </PaginationItem>
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goToPage(currentPage - 1)}
+        disabled={currentPage <= 1}
+      >
+        Anterior
+      </Button>
 
-        {pages.map((page) => {
-          if (page.type === 'ellipsis') {
-            return (
-              <PaginationItem key={page.id}>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )
+      <Input
+        type="number"
+        min={1}
+        max={lastPage}
+        defaultValue={currentPage}
+        key={currentPage}
+        className="w-20"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            const value = parseInt(e.currentTarget.value, 10);
+
+            if (value >= 1 && value <= lastPage) {
+              goToPage(value);
+            }
           }
+        }}
+      />
 
-          return (
-            <PaginationItem key={page.value}>
-              <PaginationLink
-                href={createPageURL(page.value)}
-                isActive={currentPage === page.value}
-              >
-                {page.value}
-              </PaginationLink>
-            </PaginationItem>
-          )
-        })}
-
-        <PaginationItem>
-          <PaginationNext
-            href={
-              currentPage < totalPages
-                ? createPageURL(currentPage + 1)
-                : '#'
-            }
-            className={
-              currentPage === totalPages
-                ? 'pointer-events-none opacity-50'
-                : ''
-            }
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
-  )
-}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goToPage(currentPage + 1)}
+        disabled={currentPage >= lastPage}
+      >
+        Siguiente
+      </Button>
+    </div>
+  );
+};
