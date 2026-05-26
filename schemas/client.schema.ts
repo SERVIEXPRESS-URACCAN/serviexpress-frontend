@@ -21,8 +21,16 @@ export const createClientSchema = z.object({
       .string()
       .min(8, 'El teléfono es inválido'),
 
-    gender_id: z.number().min(1,{
+    gender_id: z.coerce.number().min(1,{
       message: 'Seleccione un género'
     })
   })
 })
+
+export type CreateUserDto = z.infer<
+  typeof createClientSchema
+>
+
+export type CreateUserInput = z.input<
+  typeof createClientSchema
+>

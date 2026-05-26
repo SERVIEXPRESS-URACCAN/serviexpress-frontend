@@ -19,8 +19,8 @@ import { ClientForm } from './client-form'
 
 import { createClient } from '@/services/clients.service'
 
-import { CreateUserDto } from '@/types/user.type'
 import { Gender } from '@/types/gender.type'
+import { CreateUserDto } from '@/schemas/client.schema'
 
 const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>(
@@ -34,7 +34,10 @@ type Props = {
   genders: Gender[]
 }
 
-export const CreateClientDialog = ({ token, genders }: Props) => {
+export const CreateClientDialog = ({
+  token,
+  genders
+}: Props) => {
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
@@ -54,12 +57,18 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
 
     if (!value) {
       setServerError(null)
+      setFieldErrors({})
     }
   }
 
-  const handleCreate = async (data: CreateUserDto) => {
+  const handleCreate = async (
+    data: CreateUserDto
+  ) => {
     try {
       setIsLoading(true)
+
+      setServerError(null)
+      setFieldErrors({})
 
       await createClient(data, token)
 
@@ -71,19 +80,33 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
         icon: 'success',
         title: 'Cliente creado',
         text: `El cliente "${data.profile.name}" fue creado exitosamente.`,
-        timer: 2000,
-        showConfirmButton: false,
         theme: 'auto'
       })
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Error al crear el cliente'
+      let err
 
-      if (message.toLowerCase().includes('email')) {
-        setFieldErrors({ email: 'El correo ya está en uso' })
-      } else {
-        setServerError(message)
+      if (error instanceof Error) {
+        try {
+          err = JSON.parse(error.message)
+        } catch {
+          err = null
+        }
       }
+
+      if (err?.field) {
+        setFieldErrors({
+          [err.field]: err.message
+        })
+
+        return
+      }
+
+
+      const message =
+        err?.message ||
+        'Error al crear el cliente'
+
+      setServerError(message)
 
       await fireSwal({
         icon: 'error',
@@ -97,9 +120,14 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={handleOpenChange}
+    >
       <DialogTrigger asChild>
-        <Button>Nuevo cliente</Button>
+        <Button>
+          Nuevo cliente
+        </Button>
       </DialogTrigger>
 
       <DialogContent
@@ -107,7 +135,9 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
         className="sm:max-w-2xl"
       >
         <DialogHeader>
-          <DialogTitle>Crear cliente</DialogTitle>
+          <DialogTitle>
+            Crear cliente
+          </DialogTitle>
         </DialogHeader>
 
         <ClientForm

@@ -1,13 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+
+import { useForm } from 'react-hook-form'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-import { CreateUserDto } from '@/types/user.type'
 import { Gender } from '@/types/gender.type'
+
+import { createClientSchema, CreateUserDto, CreateUserInput } from '@/schemas/client.schema'
 
 type Props = {
   genders: Gender[]
@@ -17,7 +22,6 @@ type Props = {
   fieldErrors?: {
     email?: string
   }
-
 }
 
 export const ClientForm = ({
@@ -27,50 +31,81 @@ export const ClientForm = ({
   serverError,
   fieldErrors
 }: Props) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-  const [name, setName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [cellphone, setCellphone] = useState('')
-  const [genderId, setGenderId] = useState<number | ''>('')
-
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    await onSubmitAction({
-      email,
-      password,
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors }
+  } = useForm<CreateUserInput>({
+    resolver: zodResolver(createClientSchema),
+    defaultValues: {
+      email: '',
+      password: '',
       profile: {
-        name,
-        lastName,
-        cellphone,
-        gender_id: Number(genderId)
+        name: '',
+        lastName: '',
+        cellphone: '',
+        gender_id: 0
       }
-    })
-  }
+    }
+  })
+
+  useEffect(() => {
+    if (fieldErrors?.email) {
+      setError('email', {
+        type: 'server',
+        message: fieldErrors.email
+      })
+    }
+  }, [fieldErrors, setError])
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmitAction)}
+      className="space-y-4"
+    >
       {serverError && (
-        <p className="text-sm text-red-500">{serverError}</p>
+        <p className="text-sm text-red-500">
+          {serverError}
+        </p>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label>Nombre</Label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+
+          <Input {...register('profile.name')} />
+
+          {errors.profile?.name && (
+            <p className="text-sm text-red-500">
+              {errors.profile.name.message}
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
           <Label>Apellido</Label>
-          <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+
+          <Input {...register('profile.lastName')} />
+
+          {errors.profile?.lastName && (
+            <p className="text-sm text-red-500">
+              {errors.profile.lastName.message}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="space-y-2">
         <Label>Teléfono</Label>
-        <Input value={cellphone} onChange={(e) => setCellphone(e.target.value)} />
+
+        <Input {...register('profile.cellphone')} />
+
+        {errors.profile?.cellphone && (
+          <p className="text-sm text-red-500">
+            {errors.profile.cellphone.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -78,36 +113,60 @@ export const ClientForm = ({
 
         <select
           className="w-full border rounded-md p-2"
-          value={genderId}
-          onChange={(e) =>
-            setGenderId(e.target.value ? Number(e.target.value) : '')
-          }
+          {...register('profile.gender_id', {
+          })}
         >
           <option value="">Selecciona un género</option>
 
-          {(genders ?? []).map((g) => (
+          {genders.map((g) => (
             <option key={g.id} value={g.id}>
               {g.name}
             </option>
           ))}
         </select>
+
+        {errors.profile?.gender_id && (
+          <p className="text-sm text-red-500">
+            {errors.profile.gender_id.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
         <Label>Email</Label>
-        <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />{fieldErrors?.email && (
+
+        <Input
+          type="email"
+          {...register('email')}
+        />
+
+        {errors.email && (
           <p className="text-sm text-red-500">
-            {fieldErrors.email}
+            {errors.email.message}
           </p>
         )}
       </div>
 
       <div className="space-y-2">
         <Label>Contraseña</Label>
-        <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+        <Input
+          type="password"
+          {...register('password')}
+        />
+
+        {errors.password && (
+          <p className="text-sm text-red-500">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading || !genderId}>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isLoading}
+      >
         {isLoading ? 'Guardando...' : 'Guardar'}
       </Button>
     </form>

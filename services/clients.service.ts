@@ -1,6 +1,6 @@
 import { API_URL } from '@/config/config'
+import { CreateUserDto } from '@/schemas/client.schema'
 import { Clients, ClientesResponse } from '@/types/clients'
-import { CreateUserDto } from '@/types/user.type'
 
 export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientesResponse> => {
   const response = await fetch(`${API_URL}/profiles?page=${page}&limit=${limit}`, {
@@ -27,10 +27,9 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
     },
     body: JSON.stringify(data)
   })
-
-  if (!response.ok) {
-    throw new Error(`Error creating Client: `)
+  const result = await response.json()
+if (!response.ok) {
+    throw new Error(JSON.stringify(result))
   }
-
-  return response.json()
+  return result
 }
