@@ -1,8 +1,8 @@
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 import { ClientesResponse } from '@/types/clients'
+import { TablePaginationInput } from '@/components/shared/table-pagination'
 // import { ClientesActions } from './clients-actions'
 
 type Props = {
@@ -64,21 +64,13 @@ export const ClientesTable = ({ clientsData, currentPage }: Props) => {
         </Table>
       </div>
       <div className="flex items-center justify-between px-2">
-        <p className="text-sm text-muted-foreground">
-          Página {currentPage} de {pagination.lastPage}
-        </p>
-        <div className="flex gap-2">
-          <a href={`?page=${currentPage - 1}`}>
-            <Button variant="outline" size="sm" disabled={currentPage <= 1}>
-              Anterior
-            </Button>
-          </a>
-          <a href={`?page=${currentPage + 1}`}>
-            <Button variant="outline" size="sm" disabled={!pagination.hasNextPage}>
-              Siguiente
-            </Button>
-          </a>
-        </div>
+        <p className="text-sm text-muted-foreground whitespace-nowrap">
+                  Página {currentPage} de {pagination.lastPage}
+                </p>
+                <TablePaginationInput
+                  currentPage={currentPage}
+                  lastPage={pagination.lastPage}
+                />
       </div>
     </div>
   )
