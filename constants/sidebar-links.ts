@@ -64,7 +64,7 @@ export const ADMIN_SIDEBAR_SECTIONS = [
       {
         id: 'clientes',
         title: 'Clientes',
-        href: '/admin/clientes',
+        href: '/admin/clients',
         icon: UserRoundKey
       }
 
