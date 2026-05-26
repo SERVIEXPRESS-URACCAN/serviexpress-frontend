@@ -9,7 +9,7 @@ import {
 
 import { CategoryBusinessResponse } from "@/types/categories-business";
 import { CategoryBusinessActions } from "./categories-business-actions";
-import { Button } from "@/components/ui/button";
+import { TablePaginationInput } from "@/components/shared/table-pagination";
 
 type Props = {
   categoriesBusiness: CategoryBusinessResponse;
@@ -59,22 +59,10 @@ export const CategoriesBusinessTable = ({
         <p className="text-sm text-muted-foreground">
           Página {currentPage} de {pagination.lastPage}
         </p>
-        <div className="flex gap-2">
-          <a href={`?page=${currentPage - 1}`}>
-            <Button variant="outline" size="sm" disabled={currentPage <= 1}>
-              Anterior
-            </Button>
-          </a>
-          <a href={`?page=${currentPage + 1}`}>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage >= pagination.lastPage + 1}
-            >
-              Siguiente
-            </Button>
-          </a>
-        </div>
+        <TablePaginationInput
+          currentPage={currentPage}
+          lastPage={pagination.lastPage}
+        />
       </div>
     </div>
   );
