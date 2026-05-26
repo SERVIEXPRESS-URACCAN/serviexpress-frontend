@@ -1,22 +1,32 @@
-import { API_URL } from '@/config/config'
-import { CategoryConflictException } from '@/types/api-errors.types'
-import { CategoryProduct, CategoryProductResponse, CreateCategoryProductDto,UpdateCategoryProductDto } from '@/types/categories-products'
+import { API_URL } from "@/config/config";
+import { CategoryConflictException } from "@/types/api-errors.types";
+import {
+  CategoryProduct,
+  CategoryProductResponse,
+  CreateCategoryProductDto,
+  UpdateCategoryProductDto,
+} from "@/types/categories-products";
 
-export const getCategoryProducts = async (page = 1): Promise<CategoryProductResponse> => {
-  const response = await fetch(`${API_URL}/categories-products?page=${page}&limit=10`)
+export const getCategoryProducts = async (
+  page = 1,
+  search?: string,
+): Promise<CategoryProductResponse> => {
+  const response = await fetch(
+    `${API_URL}/categories-products?page=${page}&limit=10${search ? `&search=${search}` : ""}`,
+  );
   if (!response.ok) {
-    throw new Error(`Error fetching categories`)
+    throw new Error(`Error fetching categories`);
   }
-  return response.json()
-}
+  return response.json();
+};
 export const restoreCategoryProduct = async (
   id: number,
-  token: string
+  token: string,
 ): Promise<{ message: string; id: number }> => {
   const response = await fetch(`${API_URL}/categories-products/${id}/restore`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -29,85 +39,80 @@ export const restoreCategoryProduct = async (
 };
 export const createCategoryProduct = async (
   data: CreateCategoryProductDto,
-  token: string
+  token: string,
 ): Promise<CategoryProduct> => {
   const response = await fetch(`${API_URL}/categories-products`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  })
+  });
 
   if (response.status === 409) {
-    const error = await response.json()
+    const error = await response.json();
     throw new CategoryConflictException({
       message: error.message,
       canRestore: error.canRestore ?? false,
       id: error.id,
-    })
+    });
   }
 
   if (!response.ok) {
-    throw new Error('Error creating category product')
+    throw new Error("Error creating category product");
   }
 
-  return response.json()
-}
+  return response.json();
+};
 
 export const updateCategoryProduct = async (
   id: number,
   data: UpdateCategoryProductDto,
-  token: string
+  token: string,
 ): Promise<CategoryProduct> => {
   const response = await fetch(`${API_URL}/categories-products/${id}`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
-  })
+  });
 
   if (response.status === 409) {
-    const error = await response.json()
+    const error = await response.json();
     throw new CategoryConflictException({
       message: error.message,
       canRestore: error.canRestore ?? false,
       id: error.id,
-    })
+    });
   }
 
   if (!response.ok) {
-    throw new Error(`Error updating category product with id ${id}`)
+    throw new Error(`Error updating category product with id ${id}`);
   }
 
-  return response.json()
-}
+  return response.json();
+};
 export const deleteCategoryProduct = async (
   id: number,
-  token: string
+  token: string,
 ): Promise<void> => {
-  const response = await fetch(
-    `${API_URL}/categories-products/${id}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  const response = await fetch(`${API_URL}/categories-products/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
-    const errorText = await response.text()
-
+    const errorText = await response.text();
 
     throw new Error(
-      `Error deleting category product with id ${id}: ${errorText}`
-    )
+      `Error deleting category product with id ${id}: ${errorText}`,
+    );
   }
 
-  return response.json()
-
-}
+  return response.json();
+};
