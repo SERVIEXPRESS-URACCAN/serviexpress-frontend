@@ -1,4 +1,5 @@
 import { API_URL } from "@/config/config";
+import { CategoryConflictException } from "@/types/api-errors.types";
 import {
   CategoryBusiness,
   CategoryBusinessResponse,
@@ -8,9 +9,10 @@ import {
 
 export const getCategoryBusiness = async (
   page = 1,
+  search?: string,
 ): Promise<CategoryBusinessResponse> => {
   const response = await fetch(
-    `${API_URL}/categories-business?page=${page}&limit=10`,
+    `${API_URL}/categories-business?page=${page}&limit=10${search ? `&search=${search}` : ""}`,
   );
   if (!response.ok) {
     throw new Error(`Error fetching categories business`);
@@ -32,11 +34,34 @@ export const createCategoryBusiness = async (
   });
 
   if (!response.ok) {
-    throw new Error(`Error creating category business`);
+    const errorData = await response.json().catch(() => ({}));
+
+    throw new CategoryConflictException({
+      message: errorData.message,
+      canRestore: errorData.canRestore,
+      id: errorData.id,
+    });
   }
   return response.json();
 };
+export const restoreCategoryBusiness = async (
+  id: number,
+  token: string,
+): Promise<{ message: string; id: number }> => {
+  const response = await fetch(`${API_URL}/categories-business/${id}/restore`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
+  if (!response.ok) {
+    throw new Error(`Error restoring category business with id ${id}`);
+  }
+
+  return response.json();
+};
 export const updateCategoryBusiness = async (
   id: number,
   data: UpdateCategoryBusinessDto,
