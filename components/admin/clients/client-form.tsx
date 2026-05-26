@@ -36,7 +36,7 @@ export const ClientForm = ({
     handleSubmit,
     setError,
     formState: { errors }
-  } = useForm<CreateUserInput>({
+  } = useForm<CreateUserInput, unknown,CreateUserDto>({
     resolver: zodResolver(createClientSchema),
     defaultValues: {
       email: '',
@@ -116,7 +116,7 @@ export const ClientForm = ({
           {...register('profile.gender_id', {
           })}
         >
-          <option value="">Selecciona un género</option>
+          <option value={0}>Selecciona un género</option>
 
           {genders.map((g) => (
             <option key={g.id} value={g.id}>

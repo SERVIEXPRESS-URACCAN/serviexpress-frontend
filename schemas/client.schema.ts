@@ -6,7 +6,7 @@ export const createClientSchema = z.object({
 
   password: z
     .string()
-    .min(8, 'La contraseña debe tener mínimo 6 caracteres'),
+    .min(8, 'La contraseña debe tener mínimo 8 caracteres'),
 
   profile: z.object({
     name: z
