@@ -2,7 +2,7 @@ import { Gender } from "./gender.type"
 import { Pagination } from "./pagiantion.types"
 import { User } from "./user.type"
 
-export type Clientes = {
+export type Clients = {
   id: number
   name: string
   lastName: string
@@ -19,4 +19,4 @@ export type CreateClientDto = {
   gender_id: number
 }
 
-export type ClientesResponse = Pagination<Clientes>
+export type ClientesResponse = Pagination<Clients>

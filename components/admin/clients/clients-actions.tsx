@@ -6,12 +6,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { Clientes } from '@/types/clients'
+import { Clients } from '@/types/clients'
 import { MoreVertical } from 'lucide-react'
 import { useState } from 'react'
 
 type Props = {
-  cliente: Clientes
+  cliente: Clients
 }
 
 export const ClientesActions = ({ cliente }: Props) => {
