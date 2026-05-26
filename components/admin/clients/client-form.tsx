@@ -30,7 +30,7 @@ export const ClientForm = ({
   const [cellphone, setCellphone] = useState('')
   const [genderId, setGenderId] = useState<number | ''>('')
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     await onSubmitAction({
