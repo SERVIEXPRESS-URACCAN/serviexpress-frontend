@@ -8,8 +8,7 @@ import {
 } from '@/components/ui/table'
 import { CategoryProductResponse } from '@/types/categories-products'
 import { CategoryProductActions } from './categories-products-actions'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import { TablePagination } from '@/components/shared/table-pagination'
 
 type Props = {
   categoryProduct: CategoryProductResponse
@@ -53,34 +52,12 @@ export const CategoriesProductsTable = ({ categoryProduct, currentPage }: Props)
       </div>
 
       <div className="flex items-center justify-between px-2">
-        <p className="text-sm text-muted-foreground">
-          Página {currentPage} de {pagination.lastPage}
-        </p>
-        <div className="flex gap-2">
-          {currentPage > 1 ? (
-            <Link href={`?page=${currentPage - 1}`}>
-              <Button variant="outline" size="sm">
-                Anterior
-              </Button>
-            </Link>
-          ) : (
-            <Button variant="outline" size="sm" disabled>
-              Anterior
-            </Button>
-          )}
-
-          {pagination.hasNextPage ? (
-            <Link href={`?page=${currentPage + 1}`}>
-              <Button variant="outline" size="sm">
-                Siguiente
-              </Button>
-            </Link>
-          ) : (
-            <Button variant="outline" size="sm" disabled>
-              Siguiente
-            </Button>
-          )}
-        </div>
+        <p className="text-sm text-muted-foreground whitespace-nowrap">
+          Página {currentPage} de {pagination.lastPage}</p>
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={pagination.lastPage}
+        />
       </div>
     </div>
   )
