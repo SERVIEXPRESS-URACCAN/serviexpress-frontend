@@ -7,10 +7,16 @@ export type Clientes = {
   name: string
   lastName: string
   cellphone: string
-  gender?:Gender
-
+  gender?: Gender
   user?: User
 
+}
+
+export type CreateClientDto = {
+  name: string
+  lastName: string
+  cellphone: string
+  gender_id: number
 }
 
 export type ClientesResponse = Pagination<Clientes>
