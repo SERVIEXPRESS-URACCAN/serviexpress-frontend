@@ -1,10 +1,10 @@
 'use client'
 import { getClientes } from '@/services/clients.service'
-import { Clientes } from '@/types/clients'
+import { Clients } from '@/types/clients'
 import { useEffect, useState } from 'react'
 
 export const useClientes = (token: string) => {
-  const [clientes, setClientes] = useState<Clientes[]>([])
+  const [clientes, setClientes] = useState<Clients[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
@@ -14,6 +14,7 @@ export const useClientes = (token: string) => {
     if (!token) return
 
     const fetchClientes = async () => {
+       setLoading(true)
       try {
         const data = await getClientes(token, page, limit)
         setClientes(data.data)

@@ -14,13 +14,18 @@ type Props = {
   onSubmitAction: (data: CreateUserDto) => Promise<void>
   isLoading?: boolean
   serverError?: string | null
+  fieldErrors?: {
+    email?: string
+  }
+
 }
 
 export const ClientForm = ({
   genders,
   onSubmitAction,
   isLoading,
-  serverError
+  serverError,
+  fieldErrors
 }: Props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -30,7 +35,7 @@ export const ClientForm = ({
   const [cellphone, setCellphone] = useState('')
   const [genderId, setGenderId] = useState<number | ''>('')
 
-const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     await onSubmitAction({
@@ -74,11 +79,13 @@ const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         <select
           className="w-full border rounded-md p-2"
           value={genderId}
-          onChange={(e) => setGenderId(Number(e.target.value))}
+          onChange={(e) =>
+            setGenderId(e.target.value ? Number(e.target.value) : '')
+          }
         >
           <option value="">Selecciona un género</option>
 
-          {(genders??[]).map((g) => (
+          {(genders ?? []).map((g) => (
             <option key={g.id} value={g.id}>
               {g.name}
             </option>
@@ -88,7 +95,11 @@ const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
 
       <div className="space-y-2">
         <Label>Email</Label>
-        <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />{fieldErrors?.email && (
+          <p className="text-sm text-red-500">
+            {fieldErrors.email}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">

@@ -31,7 +31,7 @@ const fireSwal = (options: SweetAlertOptions) =>
 
 type Props = {
   token: string
-  genders:Gender[]
+  genders: Gender[]
 }
 
 export const CreateClientDialog = ({ token, genders }: Props) => {
@@ -44,6 +44,10 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
   const [serverError, setServerError] = useState<
     string | null
   >(null)
+
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string
+  }>({})
 
   const handleOpenChange = (value: boolean) => {
     setOpen(value)
@@ -73,11 +77,13 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
       })
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : 'Error al crear el cliente'
+        error instanceof Error ? error.message : 'Error al crear el cliente'
 
-      setServerError(message)
+      if (message.toLowerCase().includes('email')) {
+        setFieldErrors({ email: 'El correo ya está en uso' })
+      } else {
+        setServerError(message)
+      }
 
       await fireSwal({
         icon: 'error',
@@ -109,6 +115,7 @@ export const CreateClientDialog = ({ token, genders }: Props) => {
           onSubmitAction={handleCreate}
           isLoading={isLoading}
           serverError={serverError}
+          fieldErrors={fieldErrors}
         />
       </DialogContent>
     </Dialog>
