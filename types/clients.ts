@@ -13,3 +13,10 @@ export type Clients = {
 }
 
 export type ClientesResponse = Pagination<Clients>
+
+export type UpdateClientDto = {
+  name: string
+  lastName: string
+  cellphone: string
+  gender_id: number
+}
