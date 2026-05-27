@@ -65,7 +65,7 @@ export const ClientForm = ({
       className="space-y-4"
     >
       {serverError && (
-        <p className="text-sm text-red-500">
+        <p className="text-sm text-destructive">
           {serverError}
         </p>
       )}
@@ -77,7 +77,7 @@ export const ClientForm = ({
           <Input {...register('profile.name')} />
 
           {errors.profile?.name && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-destructive">
               {errors.profile.name.message}
             </p>
           )}
@@ -89,7 +89,7 @@ export const ClientForm = ({
           <Input {...register('profile.lastName')} />
 
           {errors.profile?.lastName && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-destructive">
               {errors.profile.lastName.message}
             </p>
           )}
@@ -102,7 +102,7 @@ export const ClientForm = ({
         <Input {...register('profile.cellphone')} />
 
         {errors.profile?.cellphone && (
-          <p className="text-sm text-red-500">
+          <p className="text-sm text-destructive">
             {errors.profile.cellphone.message}
           </p>
         )}
@@ -126,7 +126,7 @@ export const ClientForm = ({
         </select>
 
         {errors.profile?.gender_id && (
-          <p className="text-sm text-red-500">
+          <p className="text-sm text-destructive">
             {errors.profile.gender_id.message}
           </p>
         )}
@@ -141,7 +141,7 @@ export const ClientForm = ({
         />
 
         {errors.email && (
-          <p className="text-sm text-red-500">
+          <p className="text-sm text-destrutive">
             {errors.email.message}
           </p>
         )}
@@ -156,7 +156,7 @@ export const ClientForm = ({
         />
 
         {errors.password && (
-          <p className="text-sm text-red-500">
+          <p className="text-sm text-destructive">
             {errors.password.message}
           </p>
         )}
