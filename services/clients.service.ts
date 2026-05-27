@@ -1,5 +1,5 @@
 import { API_URL } from '@/config/config'
-import { CreateUserDto } from '@/schemas/client.schema'
+import { CreateUserDto, UpdateClientProfileDto } from '@/schemas/client.schema'
 import { Clients, ClientesResponse } from '@/types/clients'
 
 export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientesResponse> => {
@@ -41,4 +41,33 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
 }
 
 return result
+}
+
+
+export const updateClientProfile = async (
+  id: number,
+  data: UpdateClientProfileDto,
+  token: string
+) => {
+  const response = await fetch(
+    `${API_URL}/profiles/${id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },  
+      body: JSON.stringify(data)
+    }
+  )
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(
+      result.message || 'Error updating client'
+    )
+  }
+
+  return result
 }
