@@ -1,21 +1,36 @@
 'use client'
+
+import { useState } from 'react'
+
+import { MoreVertical } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+
 import { Clients } from '@/types/clients'
-import { MoreVertical } from 'lucide-react'
-import { useState } from 'react'
+import { Gender } from '@/types/gender.type'
+
+import { EditClientDialog } from './edit-client-dialog'
 
 type Props = {
-  cliente: Clients
+  client: Clients
+  genders: Gender[]
+  onUpdated: () => Promise<void>
 }
 
-export const ClientesActions = ({ cliente }: Props) => {
-  const [editOpen, setEditOpen] = useState(false)
+export const ClientesActions = ({
+  client,
+  genders,
+  onUpdated
+}: Props) => {
+  const [editOpen, setEditOpen] =
+    useState(false)
 
   return (
     <>
@@ -29,18 +44,23 @@ export const ClientesActions = ({ cliente }: Props) => {
             <MoreVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+          <DropdownMenuItem
+            onClick={() => setEditOpen(true)}
+          >
             Editar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* <EditClienteDialog
-        cliente={cliente}
+      <EditClientDialog
+        client={client}
+        genders={genders}
         open={editOpen}
         onOpenChangeAction={setEditOpen}
-      /> */}
+        onUpdated={onUpdated}
+      />
     </>
   )
 }

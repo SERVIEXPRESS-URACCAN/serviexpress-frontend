@@ -1,34 +1,44 @@
+'use client'
+
 import { ClientesTable } from '@/components/admin/clients/clients-table'
-import { getClientes } from '@/services/clients.service'
-import { auth } from '@/auth'
-import { CreateClientDialog } from '@/components/admin/clients/create-client-dialog'
-import { getGenders } from '@/services/genders.service'
 
-type Props = Readonly<{
-  searchParams: Promise<{ page?: string }>
-}>
+import { useClientes } from '@/hooks/useClients'
+import { useAuth } from '@/hooks/useAuth'
+import { useGenders } from '@/hooks/useGenders'
 
-export default async function ClientsPage({ searchParams }: Props) {
-  const { page } = await searchParams
-  const currentPage = Number(page) || 1
+export default function ClientsPage() {
+  const { session } = useAuth()
 
-  const session = await auth()
   const token = session?.accessToken ?? ''
 
-  const clientsData = await getClientes(token, currentPage)
-  const genders = await getGenders(token)
+  const {
+    clientes,
+    loading,
+    page,
+    totalPages,
+    fetchClientes
+  } = useClientes(token)
+
+  const { genders } = useGenders(token)
+
+  if (loading) {
+    return <p>Cargando...</p>
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Clientes</h1>
-        </div>
-        <CreateClientDialog token={token} genders={genders} />
+        <h1 className="text-2xl font-bold">
+          Clientes
+        </h1>
       </div>
+
       <ClientesTable
-        clientsData={clientsData}
-        currentPage={currentPage}
+        clients={clientes}
+        currentPage={page}
+        totalPages={totalPages}
+        genders={genders}
+        onUpdated={fetchClientes}
       />
     </div>
   )

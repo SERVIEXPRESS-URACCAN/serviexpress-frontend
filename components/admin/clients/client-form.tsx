@@ -49,6 +49,7 @@ export const ClientForm = ({
       }
     }
   })
+  console.log('FORM RENDER')
 
   useEffect(() => {
     if (fieldErrors?.email) {
@@ -59,10 +60,14 @@ export const ClientForm = ({
     }
   }, [fieldErrors, setError])
 
+  const onSubmit = (data: any) => {
+  console.log('SUBMIT FORM:', data)
+  return onSubmitAction(data)
+}
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmitAction)}
-      className="space-y-4"
+onSubmit={handleSubmit(onSubmit)}      className="space-y-4"
     >
       {serverError && (
         <p className="text-sm text-destructive">
