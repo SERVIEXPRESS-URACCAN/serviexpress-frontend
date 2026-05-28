@@ -1,14 +1,22 @@
-import { Gender } from './gender.type'
-import { Pagination } from './pagination.types'
-import { User } from './user.type'
+import { Gender } from "./gender.type"
+import { User } from "./user.type"
 
 export type Clients = {
   id: number
-  name: string
+  name: st
   lastName: string
   cellphone: string
   gender?: Gender
   user?: User
 }
 
-export type ClientesResponse = Pagination<Clients>
+export type ClientsResponse = {
+  data: Clients[]
+  pagination: {
+    total: number
+    page: number
+    limit: number
+    lastPage: number
+    hasNextPage: boolean
+  }
+}

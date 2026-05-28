@@ -30,6 +30,8 @@ export const ClientEditForm = ({
   const {
     register,
     handleSubmit,
+    setValue,
+
     formState: { errors }
   } = useForm<UpdateClientProfileInput, unknown, UpdateClientProfileDto>({
     resolver: zodResolver(updateClientProfileSchema),
@@ -40,7 +42,8 @@ export const ClientEditForm = ({
       cellphone:
         defaultValues?.cellphone || '',
       gender_id:
-        defaultValues?.gender_id || 0
+        defaultValues?.gender_id || 0,
+      profileImage: null
     }
 
   })
@@ -57,6 +60,31 @@ export const ClientEditForm = ({
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label>
+            Imagen de perfil
+          </Label>
+
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file =
+                e.target.files?.[0] || null
+
+              setValue(
+                'profileImage',
+                file
+              )
+            }}
+          />
+
+          {errors.profileImage && (
+            <p className="text-sm text-destructive">
+              {errors.profileImage.message?.toString()}
+            </p>
+          )}
+        </div>
         <div className="space-y-2">
           <Label>Nombre</Label>
 

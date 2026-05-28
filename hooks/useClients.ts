@@ -1,55 +1,36 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-
 import { getClientes } from '@/services/clients.service'
+import { ClientsResponse } from '@/types/clients'
+import { useAuth } from './useAuth'
 
-import { Clients } from '@/types/clients'
+export const useClients = () => {
+    const { session } = useAuth()
+  
+  const [clients, setClients] = useState<ClientsResponse | null>(null)
+  const [loading, setLoading] = useState(true)
 
-export const useClientes = (token: string) => {
-  const [clientes, setClientes] =
-    useState<Clients[]>([])
-
-  const [loading, setLoading] =
-    useState(true)
-
-  const [page, setPage] = useState(1)
-
-  const [totalPages, setTotalPages] =
-    useState(0)
-
-  const limit = 10
-
-  const fetchClientes = async () => {
-    if (!token) return
+  const fetchClients = async () => {
+    if (!session?.accessToken) return
+    
 
     try {
-      const response = await getClientes(
-        token,
-        page,
-        limit
-      )
+      const response = await getClientes(session.accessToken)
 
-      setClientes(response.data)
-
-      setTotalPages(
-        response.pagination.lastPage
-      )
+      setClients(response)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchClientes()
-  }, [token, page])
+    fetchClients()
+  }, [session])
 
   return {
-    clientes,
+    clients,
     loading,
-    page,
-    totalPages,
-    setPage,
-    fetchClientes
+    fetchClients,
   }
 }
