@@ -1,3 +1,4 @@
+import { Gender } from './gender.type'
 
 export type Profile = {
   id: number
@@ -5,4 +6,5 @@ export type Profile = {
   lastName: string
   cellphone: string
   image?: string
+  gender?: Gender
 }

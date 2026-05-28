@@ -11,10 +11,3 @@ export type Owner = {
 
   identificationCardImage: string
 }
-
-export type UpdateOwner = {
-  name?: string
-  lastName?: string
-  cellphone?: string
-  razonSocial?: string
-}

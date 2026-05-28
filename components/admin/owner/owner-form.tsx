@@ -1,22 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import {
+  UpdateOwnerInput,
+  updateOwnerSchema,
+  type UpdateOwner
+} from '@/schemas/owner.schema'
 
-import { UpdateOwner } from '@/types/owner.types'
+import { useAuth } from '@/hooks/useAuth'
+import { useGenders } from '@/hooks/useGenders'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type Props = {
-  defaultValues?: {
-    razonSocial: string
-    name: string
-    lastName: string
-    cellphone: string
-  }
+  defaultValues?: UpdateOwnerInput
 
   onSubmitAction: (data: UpdateOwner) => Promise<void>
+
   isLoading?: boolean
 }
 
@@ -25,38 +35,30 @@ export const OwnerForm = ({
   onSubmitAction,
   isLoading
 }: Props) => {
-  const [razonSocial, setRazonSocial] = useState(
-    defaultValues?.razonSocial || ''
-  )
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<UpdateOwnerInput, unknown, UpdateOwner>({
+    resolver: zodResolver(updateOwnerSchema),
+    defaultValues
+  })
 
-  const [name, setName] = useState(defaultValues?.name || '')
+  const { session } = useAuth()
 
-  const [lastName, setLastName] = useState(defaultValues?.lastName || '')
-
-  const [cellphone, setCellphone] = useState(defaultValues?.cellphone || '')
-
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    await onSubmitAction({
-      razonSocial,
-      name,
-      lastName,
-      cellphone
-    })
-  }
+  const { genders } = useGenders(session?.accessToken ?? '')
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Nombre</Label>
 
-        <Input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre"
-        />
+        <Input id="name" placeholder="Nombre" {...register('profile.name')} />
+
+        {errors.profile?.name && (
+          <p className="text-sm text-red-400">{errors.profile.name.message}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -64,10 +66,15 @@ export const OwnerForm = ({
 
         <Input
           id="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
           placeholder="Apellido"
+          {...register('profile.lastName')}
         />
+
+        {errors.profile?.lastName && (
+          <p className="text-sm text-red-400">
+            {errors.profile.lastName.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -75,10 +82,15 @@ export const OwnerForm = ({
 
         <Input
           id="cellphone"
-          value={cellphone}
-          onChange={(e) => setCellphone(e.target.value)}
           placeholder="Teléfono"
+          {...register('profile.cellphone')}
         />
+
+        {errors.profile?.cellphone && (
+          <p className="text-sm text-red-400">
+            {errors.profile.cellphone.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -86,10 +98,45 @@ export const OwnerForm = ({
 
         <Input
           id="razonSocial"
-          value={razonSocial}
-          onChange={(e) => setRazonSocial(e.target.value)}
-          placeholder="Razón social del owner"
+          placeholder="Razón social"
+          {...register('razonSocial')}
         />
+
+        {errors.razonSocial && (
+          <p className="text-sm text-red-400">{errors.razonSocial.message}</p>
+        )}
+      </div>
+      <div className="space-y-2">
+        <Label>Género</Label>
+
+        <Controller
+          control={control}
+          name="profile.genderId"
+          render={({ field }) => (
+            <Select
+              value={field.value?.toString()}
+              onValueChange={(value) => field.onChange(Number(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccione un género" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {genders.map((gender) => (
+                  <SelectItem key={gender.id} value={gender.id.toString()}>
+                    {gender.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+
+        {errors.profile?.genderId && (
+          <p className="text-sm text-red-400">
+            {errors.profile.genderId.message}
+          </p>
+        )}
       </div>
 
       <Button type="submit" className="w-full" disabled={isLoading}>

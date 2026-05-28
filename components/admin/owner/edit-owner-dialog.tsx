@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/dialog'
 
 import { useAuth } from '@/hooks/useAuth'
+import { UpdateOwner } from '@/schemas/owner.schema'
 import { updateOwner } from '@/services/owner.service'
-import { Owner, UpdateOwner } from '@/types/owner.types'
+import { Owner } from '@/types/owner.types'
 import { OwnerForm } from './owner-form'
 
 type Props = {
@@ -36,10 +37,14 @@ export const EditOwnerDialog = ({
       setIsLoading(true)
 
       if (!session?.accessToken) return
-      await updateOwner(owner.id, data, session?.accessToken)
+
+      await updateOwner(owner.id, data, session.accessToken)
 
       onOpenChangeAction(false)
+
       await onUpdated()
+    } catch (error) {
+      console.error(error)
     } finally {
       setIsLoading(false)
     }
@@ -55,9 +60,12 @@ export const EditOwnerDialog = ({
         <OwnerForm
           defaultValues={{
             razonSocial: owner.razonSocial,
-            name: owner.user?.profile?.name ?? '',
-            lastName: owner.user?.profile?.lastName ?? '',
-            cellphone: owner.user?.profile?.cellphone ?? ''
+            profile: {
+              name: owner.user?.profile?.name ?? '',
+              lastName: owner.user?.profile?.lastName ?? '',
+              cellphone: owner.user?.profile?.cellphone ?? '',
+              genderId: owner.user?.profile?.gender?.id ?? 0
+            }
           }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}

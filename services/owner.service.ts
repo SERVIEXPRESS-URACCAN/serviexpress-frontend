@@ -1,5 +1,6 @@
 import { API_URL } from '@/config/config'
-import { Owner, UpdateOwner } from '@/types/owner.types'
+import { UpdateOwner } from '@/schemas/owner.schema'
+import { Owner } from '@/types/owner.types'
 
 export const getOwner = async (token: string) => {
   const response = await fetch(`${API_URL}/owner`, {
