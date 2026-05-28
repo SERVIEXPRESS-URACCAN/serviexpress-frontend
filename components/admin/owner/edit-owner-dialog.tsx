@@ -59,7 +59,7 @@ export const EditOwnerDialog = ({
 
         <OwnerForm
           defaultValues={{
-            razonSocial: owner.razonSocial,
+            razonSocial: owner.razonSocial ?? '',
             profile: {
               name: owner.user?.profile?.name ?? '',
               lastName: owner.user?.profile?.lastName ?? '',
