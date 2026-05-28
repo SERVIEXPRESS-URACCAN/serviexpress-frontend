@@ -12,7 +12,7 @@ export const useCategoryProducts = () => {
     const fetchCategoryProducts = async () => {
       try {
         const data = await getCategoryProducts()
-        setCategoryProducts(data)
+        setCategoryProducts(data.data)
       } catch (error) {
         console.error(error)
       } finally {
