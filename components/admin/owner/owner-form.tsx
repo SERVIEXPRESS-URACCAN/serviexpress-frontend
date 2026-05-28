@@ -118,7 +118,7 @@ export const OwnerForm = ({
               onValueChange={(value) => field.onChange(Number(value))}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Seleccione un género" />
+                <SelectValue placeholder="Seleccione un genero" />
               </SelectTrigger>
 
               <SelectContent>

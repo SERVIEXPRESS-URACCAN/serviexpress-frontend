@@ -2,21 +2,20 @@ import { API_URL } from '@/config/config'
 import { UpdateOwner } from '@/schemas/owner.schema'
 import { Owner } from '@/types/owner.types'
 
-export const getOwner = async (token: string) => {
-  const response = await fetch(`${API_URL}/owner`, {
+export const getOwner = async (token: string, page = 1) => {
+  const response = await fetch(`${API_URL}/owner?page=${page}&limit=10`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   })
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(errorText)
-  }
-
   const result = await response.json()
 
-  return result.data
+  if (!response.ok) {
+    throw new Error(result.message)
+  }
+
+  return result
 }
 
 export const updateOwner = async (

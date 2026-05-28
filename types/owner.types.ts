@@ -11,3 +11,14 @@ export type Owner = {
 
   identificationCardImage: string
 }
+
+export type OwnerResponse = {
+  data: Owner[]
+  pagination: {
+    total: number
+    page: number
+    limit: number
+    lastPage: number
+    hasNextPage: boolean
+  }
+}

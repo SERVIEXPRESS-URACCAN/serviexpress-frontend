@@ -1,12 +1,15 @@
 import { getOwner } from '@/services/owner.service'
-import { Owner } from '@/types/owner.types'
+import { OwnerResponse } from '@/types/owner.types'
+
 import { useEffect, useState } from 'react'
+
 import { useAuth } from './useAuth'
 
 export const useOwners = () => {
   const { session } = useAuth()
 
-  const [owners, setOwners] = useState<Owner[]>([])
+  const [owners, setOwners] = useState<OwnerResponse | null>(null)
+
   const [loading, setLoading] = useState(true)
 
   const fetchOwners = async () => {

@@ -13,8 +13,13 @@ export default function OwnersPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Owners</h1>
       </div>
-
-      <OwnerTable owners={owners} onUpdated={fetchOwners} />
+      {owners && (
+        <OwnerTable
+          owners={owners}
+          currentPage={owners.pagination.page}
+          onUpdated={fetchOwners}
+        />
+      )}{' '}
     </div>
   )
 }
