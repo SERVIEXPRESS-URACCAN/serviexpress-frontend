@@ -51,7 +51,15 @@ export const updateClientProfileSchema = z.object({
 
   gender_id: z.coerce.number().min(1, {
     message: 'Seleccione un género'
-  })
+  }),
+  profileImage: z
+  .custom<File>(
+    (file) =>
+      file instanceof File,
+    'Seleccione una imagen válida'
+  )
+  .optional()
+  .nullable()
 })
 
 export type UpdateClientProfileDto = z.infer<

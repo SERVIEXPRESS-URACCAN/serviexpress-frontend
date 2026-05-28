@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 
 import {
@@ -14,20 +13,16 @@ import {
 } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
-
 import { ClientForm } from './client-form'
 
 import { createClient } from '@/services/clients.service'
-
 import { Gender } from '@/types/gender.type'
 import { CreateUserDto } from '@/schemas/client.schema'
 
 const fireSwal = (options: SweetAlertOptions) =>
-  new Promise<Awaited<ReturnType<typeof Swal.fire>>>(
-    (resolve) => {
-      setTimeout(() => resolve(Swal.fire(options)), 300)
-    }
-  )
+  new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
+    setTimeout(() => resolve(Swal.fire(options)), 300)
+  })
 
 type Props = {
   token: string
@@ -41,39 +36,25 @@ export const CreateClientDialog = ({
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
-
   const [isLoading, setIsLoading] = useState(false)
-
-  const [serverError, setServerError] = useState<
-    string | null
-  >(null)
-
-  const [fieldErrors, setFieldErrors] = useState<{
-    email?: string
-  }>({})
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const handleOpenChange = (value: boolean) => {
     setOpen(value)
 
     if (!value) {
       setServerError(null)
-      setFieldErrors({})
     }
   }
 
-  const handleCreate = async (
-    data: CreateUserDto
-  ) => {
+  const handleCreate = async (data: CreateUserDto) => {
     try {
       setIsLoading(true)
-
       setServerError(null)
-      setFieldErrors({})
 
       await createClient(data, token)
 
       setOpen(false)
-
       router.refresh()
 
       await fireSwal({
@@ -82,8 +63,9 @@ export const CreateClientDialog = ({
         text: `El cliente "${data.profile.name}" fue creado exitosamente.`,
         theme: 'auto'
       })
+
     } catch (error) {
-      let err
+      let err: any = null
 
       if (error instanceof Error) {
         try {
@@ -93,18 +75,7 @@ export const CreateClientDialog = ({
         }
       }
 
-      if (err?.field) {
-        setFieldErrors({
-          [err.field]: err.message
-        })
-
-        return
-      }
-
-
-      const message =
-        err?.message ||
-        'Error al crear el cliente'
+      const message = err?.message || 'Error al crear cliente'
 
       setServerError(message)
 
@@ -114,30 +85,21 @@ export const CreateClientDialog = ({
         text: message,
         theme: 'auto'
       })
+
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={handleOpenChange}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button>
-          Nuevo cliente
-        </Button>
+        <Button>Nuevo cliente</Button>
       </DialogTrigger>
 
-      <DialogContent
-        aria-describedby={undefined}
-        className="sm:max-w-2xl"
-      >
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            Crear cliente
-          </DialogTitle>
+          <DialogTitle>Crear cliente</DialogTitle>
         </DialogHeader>
 
         <ClientForm
@@ -145,7 +107,6 @@ export const CreateClientDialog = ({
           onSubmitAction={handleCreate}
           isLoading={isLoading}
           serverError={serverError}
-          fieldErrors={fieldErrors}
         />
       </DialogContent>
     </Dialog>
