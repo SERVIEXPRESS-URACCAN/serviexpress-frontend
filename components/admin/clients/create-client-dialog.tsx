@@ -88,7 +88,7 @@ export const CreateClientDialog = ({
         <Button>Nuevo cliente</Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Crear cliente</DialogTitle>
         </DialogHeader>
