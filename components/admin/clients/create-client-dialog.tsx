@@ -26,13 +26,13 @@ const fireSwal = (options: SweetAlertOptions) =>
 type Props = {
   token: string
   genders: Gender[]
-  onCreated:() => void
+  onCreatedAction:() => void
 }
 
 export const CreateClientDialog = ({
   token,
   genders,
-  onCreated
+  onCreatedAction
 }: Props) => {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -54,7 +54,7 @@ export const CreateClientDialog = ({
       await createClient(data, token)
 
       setOpen(false)
-      onCreated()
+      onCreatedAction()
 
       await fireSwal({
         icon: 'success',
