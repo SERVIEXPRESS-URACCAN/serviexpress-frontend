@@ -66,7 +66,7 @@ export const updateClientProfile = async (
   )
 
   formData.append(
-    'gender_id',
+    'genderId',
     String(data.gender_id)
   )
 
