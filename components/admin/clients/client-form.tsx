@@ -14,6 +14,8 @@ import {
   CreateUserInput
 } from '@/schemas/client.schema'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 type Props = {
   genders: Gender[]
@@ -53,13 +55,15 @@ export const ClientForm = ({
   const onSubmit = async (data: CreateUserDto) => {
     await onSubmitAction(data)
   }
+  const [showPassword, setShowPassword] = useState(false)
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor='name'>Nombre</Label>
         <Input
-        id='name'
+          id='name'
           {...register('profile.name')}
           className={errors.profile?.name ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -83,7 +87,7 @@ export const ClientForm = ({
       <div className="space-y-2">
         <Label htmlFor='cellphone'>Teléfono</Label>
         <Input
-        id='cellphone'
+          id='cellphone'
           {...register('profile.cellphone')}
           className={errors.profile?.cellphone ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -141,12 +145,25 @@ export const ClientForm = ({
 
       <div className="space-y-2">
         <Label htmlFor='password'>Contraseña</Label>
-        <Input
-          id='password'
-          type="password"
-          {...register('password')}
-          className={errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}
-        />
+        <div className='relative'>
+          <Input
+            id='password'
+            type={showPassword ? "text" : "password"}
+            {...register('password')}
+            className={errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}
+          />
+          <button
+            type="button"
+            className="absolute right-2 top-2 text-muted-foreground hover:text-foreground"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        </div>
         {errors.password && (
           <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
