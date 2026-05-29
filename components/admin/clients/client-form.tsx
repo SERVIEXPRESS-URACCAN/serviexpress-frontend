@@ -19,13 +19,16 @@ type Props = {
   onSubmitAction: (data: CreateUserDto) => Promise<void>
   isLoading?: boolean
   serverError?: string | null
+  onClearServerError?: () => void
+  
 }
 
 export const ClientForm = ({
   genders,
   onSubmitAction,
   isLoading,
-  serverError
+  serverError,
+  onClearServerError
 }: Props) => {
   const {
     register,
@@ -103,7 +106,9 @@ export const ClientForm = ({
       <div className="space-y-2">
         <Label>Email</Label>
         <Input
-          {...register('email')}
+          {...register('email', {
+            onChange: () => onClearServerError?.()
+          })}
           className={errors.email ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
         {errors.email && (
