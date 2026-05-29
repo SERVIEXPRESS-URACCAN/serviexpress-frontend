@@ -78,14 +78,6 @@ export const CreateClientDialog = ({
       const message = err?.message || 'Error al crear cliente'
 
       setServerError(message)
-
-      await fireSwal({
-        icon: 'error',
-        title: 'Error',
-        text: message,
-        theme: 'auto'
-      })
-
     } finally {
       setIsLoading(false)
     }
