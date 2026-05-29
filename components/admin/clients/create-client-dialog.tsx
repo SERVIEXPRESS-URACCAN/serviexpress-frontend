@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 
@@ -27,14 +26,14 @@ const fireSwal = (options: SweetAlertOptions) =>
 type Props = {
   token: string
   genders: Gender[]
+  onCreated:() => void
 }
 
 export const CreateClientDialog = ({
   token,
-  genders
+  genders,
+  onCreated
 }: Props) => {
-  const router = useRouter()
-
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -55,7 +54,7 @@ export const CreateClientDialog = ({
       await createClient(data, token)
 
       setOpen(false)
-      router.refresh()
+      onCreated()
 
       await fireSwal({
         icon: 'success',

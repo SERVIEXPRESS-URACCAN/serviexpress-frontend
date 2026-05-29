@@ -6,18 +6,18 @@ import { useClients } from '@/hooks/useClients'
 import { useGenders } from '@/hooks/useGenders'
 
 export default function ClientsPage() {
- const { session, isLoading: authLoading } = useAuth()
+  const { session, isLoading: authLoading } = useAuth()
 
   const token = session?.accessToken ?? ''
 
-    const {
+  const {
     clients,
     loading,
     fetchClients,
   } = useClients()
 
   const { genders, loading: loadingGenders } = useGenders(token)
-  
+
   const isLoading =
     authLoading || loading || loadingGenders
 
@@ -29,7 +29,8 @@ export default function ClientsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Clientes</h1>
 
-        <CreateClientDialog token={token} genders={genders} />
+        <CreateClientDialog token={token} genders={genders} onCreated={fetchClients}
+        />
       </div>
 
       <ClientesTable
