@@ -29,7 +29,7 @@ export default function ClientsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Clientes</h1>
 
-        <CreateClientDialog token={token} genders={genders} onCreated={fetchClients}
+        <CreateClientDialog token={token} genders={genders} onCreatedAction={fetchClients}
         />
       </div>
 
