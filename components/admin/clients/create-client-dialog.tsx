@@ -99,6 +99,7 @@ export const CreateClientDialog = ({
           onSubmitAction={handleCreate}
           isLoading={isLoading}
           serverError={serverError}
+          onClearServerError={() => setServerError(null)}
         />
       </DialogContent>
     </Dialog>
