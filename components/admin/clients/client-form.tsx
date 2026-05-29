@@ -1,6 +1,6 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,7 @@ import {
   CreateUserDto,
   CreateUserInput
 } from '@/schemas/client.schema'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Props = {
   genders: Gender[]
@@ -20,7 +21,7 @@ type Props = {
   isLoading?: boolean
   serverError?: string | null
   onClearServerErrorAction?: () => void
-  
+
 }
 
 export const ClientForm = ({
@@ -32,6 +33,7 @@ export const ClientForm = ({
 }: Props) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors }
   } = useForm<CreateUserInput, unknown, CreateUserDto>({
@@ -55,8 +57,9 @@ export const ClientForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
-        <Label>Nombre</Label>
+        <Label htmlFor='name'>Nombre</Label>
         <Input
+        id='name'
           {...register('profile.name')}
           className={errors.profile?.name ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -66,8 +69,9 @@ export const ClientForm = ({
       </div>
 
       <div className="space-y-2">
-        <Label>Apellido</Label>
+        <Label htmlFor='lastName'>Apellido</Label>
         <Input
+          id='lastName'
           {...register('profile.lastName')}
           className={errors.profile?.lastName ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -77,8 +81,9 @@ export const ClientForm = ({
       </div>
 
       <div className="space-y-2">
-        <Label>Teléfono</Label>
+        <Label htmlFor='cellphone'>Teléfono</Label>
         <Input
+        id='cellphone'
           {...register('profile.cellphone')}
           className={errors.profile?.cellphone ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -89,23 +94,38 @@ export const ClientForm = ({
 
       <div className="space-y-2">
         <Label>Género</Label>
-        <select
-          className={`w-full border rounded-md p-2 ${errors.profile?.gender_id ? 'border-destructive' : ''}`}
-          {...register('profile.gender_id')}
-        >
-          <option value={0}>Selecciona un género</option>
-          {genders.map((g) => (
-            <option key={g.id} value={g.id}>{g.name}</option>
-          ))}
-        </select>
+        <Controller
+          control={control}
+          name="profile.gender_id"
+          render={({ field }) => (
+            <Select
+              value={field.value?.toString()}
+              onValueChange={(value) => field.onChange(Number(value))}
+            >
+              <SelectTrigger
+                className={errors.profile?.gender_id ? 'border-destructive focus-visible:ring-destructive' : ''}
+              >
+                <SelectValue placeholder="Selecciona un género" />
+              </SelectTrigger>
+              <SelectContent>
+                {genders.map((g) => (
+                  <SelectItem key={g.id} value={g.id.toString()}>
+                    {g.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.profile?.gender_id && (
           <p className="text-sm text-destructive">{errors.profile.gender_id.message}</p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label>Email</Label>
+        <Label htmlFor='email' >Correo</Label>
         <Input
+          id='email'
           {...register('email', {
             onChange: () => onClearServerErrorAction?.()
           })}
@@ -120,8 +140,9 @@ export const ClientForm = ({
       </div>
 
       <div className="space-y-2">
-        <Label>Contraseña</Label>
+        <Label htmlFor='password'>Contraseña</Label>
         <Input
+          id='password'
           type="password"
           {...register('password')}
           className={errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}
