@@ -30,11 +30,7 @@ export const CreateCategoryBusinessDialog = () => {
 
   const handleConflict = async (error: CategoryConflictException) => {
     if (!error.data.canRestore) {
-      await Swal.fire({
-        icon: "error",
-        title: "Categoría duplicada",
-        text: error.message,
-      });
+      setError(error.message);
       return;
     }
 

@@ -40,10 +40,15 @@ export const CategoryBusinessForm = ({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Nombre de la categoría del negocio"
+          className={
+            error
+              ? "border-red-400 focus-visible:border-red-400 focus-visible:ring-0"
+              : ""
+          }
         />
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
 
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Guardando..." : "Guardar"}

@@ -23,7 +23,6 @@ export default async function CategoriesBusinessPage({
         <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
         <CreateCategoryBusinessDialog />
       </div>
-
       <CategoryBusinessSearch />
 
       <CategoriesBusinessTable

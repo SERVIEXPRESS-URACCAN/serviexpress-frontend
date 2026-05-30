@@ -23,6 +23,7 @@ export default async function CategoryProductPage({
         <CreateCategoryProductDialog />
       </div>
       <CategoryProductSearch />
+
       <CategoriesProductsTable
         categoryProduct={categoryProducts}
         currentPage={currentPage}
