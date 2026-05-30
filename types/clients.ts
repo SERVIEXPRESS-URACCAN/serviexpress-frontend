@@ -1,9 +1,9 @@
-import { Gender } from "./gender.type"
-import { User } from "./user.type"
+import { Gender } from './gender.type'
+import { User } from './user.type'
 
 export type Clients = {
   id: number
-  name: st
+  name: string
   lastName: string
   cellphone: string
   gender?: Gender
