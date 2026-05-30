@@ -1,10 +1,7 @@
-// services/owner.service.ts
-
 import { API_URL } from '@/config/config'
+import { Owner } from '@/types/owner.types'
 
 import { CreateOwner, UpdateOwner } from '@/schemas/owner.schema'
-
-import { Owner } from '@/types/owner.types'
 
 export const getOwner = async (token: string, page = 1) => {
   const response = await fetch(`${API_URL}/owner?page=${page}&limit=10`, {

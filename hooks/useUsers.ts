@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useAuth } from '@/hooks/useAuth'
 import { getUsers } from '@/services/users.service'
-
-type User = {
-  id: number
-  email: string
-}
+import { User } from '@/types/user.type'
 
 export const useUsers = () => {
   const [users, setUsers] = useState<User[]>([])
