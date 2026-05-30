@@ -69,7 +69,6 @@ export const CreateOwnerForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-4">
-      {/* Sección propietario */}
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground border-b pb-1">
         Propietario
       </p>
@@ -104,7 +103,6 @@ export const CreateOwnerForm = ({
         )}
       </div>
 
-      {/* Sección negocio — 2 columnas */}
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground border-b pb-1">
         Negocio
       </p>
