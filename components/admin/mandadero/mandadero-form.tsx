@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,16 +7,14 @@ type Props = {
   defaultValues?: {
     name: string;
   };
-  error?: string;
   onSubmitAction: (data: { name: string }) => Promise<void>;
   isLoading?: boolean;
 };
 
-export const CategoryBusinessForm = ({
+export const MandaderoForm = ({
   defaultValues,
   onSubmitAction,
   isLoading,
-  error,
 }: Props) => {
   const [name, setName] = useState(defaultValues?.name || "");
 
@@ -34,22 +30,13 @@ export const CategoryBusinessForm = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Nombre</Label>
-
         <Input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre de la categoría del negocio"
-          className={
-            error
-              ? "border-red-400 focus-visible:border-red-400 focus-visible:ring-0"
-              : ""
-          }
+          placeholder="Nombre del mandadero"
         />
       </div>
-
-      {error && <p className="text-sm text-red-400">{error}</p>}
-
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Guardando..." : "Guardar"}
       </Button>

@@ -13,7 +13,11 @@ export const getCategoryBusiness = async (
 ): Promise<CategoryBusinessResponse> => {
   const response = await fetch(
     `${API_URL}/categories-business?page=${page}&limit=10${search ? `&search=${search}` : ""}`,
+    {
+      cache: "no-store",
+    },
   );
+
   if (!response.ok) {
     throw new Error(`Error fetching categories business`);
   }
