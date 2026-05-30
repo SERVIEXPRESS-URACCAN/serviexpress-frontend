@@ -21,7 +21,7 @@ export default function OwnersPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Propietarios</h1>
 
-        <CreateOwnerDialog users={users} onCreated={fetchOwners} />
+        <CreateOwnerDialog users={users} onCreatedAction={fetchOwners} />
       </div>
 
       {owners && (
