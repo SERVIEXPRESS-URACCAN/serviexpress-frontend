@@ -1,5 +1,3 @@
-// components/admin/owner/create-owner-dialog.tsx
-
 'use client'
 
 import { useState } from 'react'
@@ -20,12 +18,8 @@ import { CreateOwner } from '@/schemas/owner.schema'
 
 import { createOwner } from '@/services/owner.service'
 
+import { User } from '@/types/user.type'
 import { CreateOwnerForm } from './create-owner-form'
-
-type User = {
-  id: number
-  email: string
-}
 
 type Props = {
   users: User[]
@@ -63,7 +57,7 @@ export const CreateOwnerDialog = ({ users, onCreated }: Props) => {
         <Button>Crear propietario</Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Crear propietario</DialogTitle>
         </DialogHeader>
