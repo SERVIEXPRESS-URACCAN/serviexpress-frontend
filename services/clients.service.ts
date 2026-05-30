@@ -1,13 +1,15 @@
 import { API_URL } from '@/config/config'
 import { CreateUserDto, UpdateClientProfileDto } from '@/schemas/client.schema'
-import { Clients, ClientesResponse } from '@/types/clients'
+import { Clients, ClientsResponse } from '@/types/clients'
 
-export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientesResponse> => {
+export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientsResponse> => {
   const response = await fetch(`${API_URL}/profiles?page=${page}&limit=${limit}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
-    }
+    },
+    cache: 'no-store',
+
   })
 
   if (!response.ok) {
@@ -23,24 +25,25 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-       Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
+
     body: JSON.stringify(data)
   })
   const result = await response.json()
 
   if (!response.ok) {
-  if (Array.isArray(result.message)) {
-    result.field = 'email'
-    result.message = result.message[0]
+    if (Array.isArray(result.message)) {
+      result.field = 'email'
+      result.message = result.message[0]
+    }
+
+    throw new Error(
+      JSON.stringify(result)
+    )
   }
 
-  throw new Error(
-    JSON.stringify(result)
-  )
-}
-
-return result
+  return result
 }
 
 
@@ -49,15 +52,39 @@ export const updateClientProfile = async (
   data: UpdateClientProfileDto,
   token: string
 ) => {
+  const formData = new FormData()
+
+  formData.append('name', data.name)
+  formData.append(
+    'lastName',
+    data.lastName
+  )
+
+  formData.append(
+    'cellphone',
+    data.cellphone
+  )
+
+  formData.append(
+    'genderId',
+    String(data.gender_id)
+  )
+
+  if (data.profileImage) {
+    formData.append(
+      'profileImage',
+      data.profileImage
+    )
+  }
+
   const response = await fetch(
     `${API_URL}/profiles/${id}`,
     {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
-      },  
-      body: JSON.stringify(data)
+      },
+      body: formData
     }
   )
 
@@ -65,7 +92,8 @@ export const updateClientProfile = async (
 
   if (!response.ok) {
     throw new Error(
-      result.message || 'Error updating client'
+      result.message ||
+      'Error updating client'
     )
   }
 

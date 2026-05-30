@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Table,
   TableBody,
@@ -11,15 +9,14 @@ import {
 
 import { TablePaginationInput } from '@/components/shared/table-pagination'
 
-import { Clients } from '@/types/clients'
+import { ClientsResponse } from '@/types/clients'
 import { Gender } from '@/types/gender.type'
 
 import { ClientesActions } from './clients-actions'
 
 type Props = {
-  clients: Clients[]
+  clients: ClientsResponse
   currentPage: number
-  totalPages: number
   genders: Gender[]
   onUpdated: () => Promise<void>
 }
@@ -27,10 +24,11 @@ type Props = {
 export const ClientesTable = ({
   clients,
   currentPage,
-  totalPages,
   genders,
   onUpdated
 }: Props) => {
+  const { pagination } = clients;
+
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
@@ -49,7 +47,7 @@ export const ClientesTable = ({
           </TableHeader>
 
           <TableBody>
-            {clients.length === 0 ? (
+            {clients.data.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={8}
@@ -59,7 +57,7 @@ export const ClientesTable = ({
                 </TableCell>
               </TableRow>
             ) : (
-              clients.map((client) => (
+              clients.data.map((client) => (
                 <TableRow key={client.id}>
                   <TableCell>{client.id}</TableCell>
 
@@ -85,11 +83,10 @@ export const ClientesTable = ({
 
                   <TableCell>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        client.user?.status
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${client.user?.status
                           ? 'bg-green-100 text-green-700'
                           : 'bg-red-100 text-red-700'
-                      }`}
+                        }`}
                     >
                       {client.user?.status
                         ? 'Activo'
@@ -113,14 +110,12 @@ export const ClientesTable = ({
 
       <div className="flex items-center justify-between px-2">
         <p className="text-sm text-muted-foreground whitespace-nowrap">
-          Página {currentPage} de {totalPages}
+          Página {currentPage} de {pagination.lastPage}
         </p>
-
         <TablePaginationInput
           currentPage={currentPage}
-          lastPage={totalPages}
-        />
-      </div>
+          lastPage={pagination.lastPage}
+        />      </div>
     </div>
   )
 }

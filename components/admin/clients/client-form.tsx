@@ -1,9 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
-
-import { useForm } from 'react-hook-form'
-
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
@@ -11,17 +8,22 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 import { Gender } from '@/types/gender.type'
-
-import { createClientSchema, CreateUserDto, CreateUserInput } from '@/schemas/client.schema'
+import {
+  createClientSchema,
+  CreateUserDto,
+  CreateUserInput
+} from '@/schemas/client.schema'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 type Props = {
   genders: Gender[]
   onSubmitAction: (data: CreateUserDto) => Promise<void>
   isLoading?: boolean
   serverError?: string | null
-  fieldErrors?: {
-    email?: string
-  }
+  onClearServerErrorAction?: () => void
+
 }
 
 export const ClientForm = ({
@@ -29,14 +31,14 @@ export const ClientForm = ({
   onSubmitAction,
   isLoading,
   serverError,
-  fieldErrors
+  onClearServerErrorAction
 }: Props) => {
   const {
     register,
+    control,
     handleSubmit,
-    setError,
     formState: { errors }
-  } = useForm<CreateUserInput, unknown,CreateUserDto>({
+  } = useForm<CreateUserInput, unknown, CreateUserDto>({
     resolver: zodResolver(createClientSchema),
     defaultValues: {
       email: '',
@@ -49,129 +51,125 @@ export const ClientForm = ({
       }
     }
   })
-  console.log('FORM RENDER')
 
-  useEffect(() => {
-    if (fieldErrors?.email) {
-      setError('email', {
-        type: 'server',
-        message: fieldErrors.email
-      })
-    }
-  }, [fieldErrors, setError])
+  const onSubmit = async (data: CreateUserDto) => {
+    await onSubmitAction(data)
+  }
+  const [showPassword, setShowPassword] = useState(false)
 
-  const onSubmit = (data: any) => {
-  console.log('SUBMIT FORM:', data)
-  return onSubmitAction(data)
-}
 
   return (
-    <form
-onSubmit={handleSubmit(onSubmit)}      className="space-y-4"
-    >
-      {serverError && (
-        <p className="text-sm text-destructive">
-          {serverError}
-        </p>
-      )}
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Nombre</Label>
-
-          <Input {...register('profile.name')} />
-
-          {errors.profile?.name && (
-            <p className="text-sm text-destructive">
-              {errors.profile.name.message}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label>Apellido</Label>
-
-          <Input {...register('profile.lastName')} />
-
-          {errors.profile?.lastName && (
-            <p className="text-sm text-destructive">
-              {errors.profile.lastName.message}
-            </p>
-          )}
-        </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor='name'>Nombre</Label>
+        <Input
+          id='name'
+          {...register('profile.name')}
+          className={errors.profile?.name ? 'border-destructive focus-visible:ring-destructive' : ''}
+        />
+        {errors.profile?.name && (
+          <p className="text-sm text-destructive">{errors.profile.name.message}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label>Teléfono</Label>
+        <Label htmlFor='lastName'>Apellido</Label>
+        <Input
+          id='lastName'
+          {...register('profile.lastName')}
+          className={errors.profile?.lastName ? 'border-destructive focus-visible:ring-destructive' : ''}
+        />
+        {errors.profile?.lastName && (
+          <p className="text-sm text-destructive">{errors.profile.lastName.message}</p>
+        )}
+      </div>
 
-        <Input {...register('profile.cellphone')} />
-
+      <div className="space-y-2">
+        <Label htmlFor='cellphone'>Teléfono</Label>
+        <Input
+          id='cellphone'
+          {...register('profile.cellphone')}
+          className={errors.profile?.cellphone ? 'border-destructive focus-visible:ring-destructive' : ''}
+        />
         {errors.profile?.cellphone && (
-          <p className="text-sm text-destructive">
-            {errors.profile.cellphone.message}
-          </p>
+          <p className="text-sm text-destructive">{errors.profile.cellphone.message}</p>
         )}
       </div>
 
       <div className="space-y-2">
         <Label>Género</Label>
-
-        <select
-          className="w-full border rounded-md p-2"
-          {...register('profile.gender_id', {
-          })}
-        >
-          <option value={0}>Selecciona un género</option>
-
-          {genders.map((g) => (
-            <option key={g.id} value={g.id}>
-              {g.name}
-            </option>
-          ))}
-        </select>
-
+        <Controller
+          control={control}
+          name="profile.gender_id"
+          render={({ field }) => (
+            <Select
+              value={field.value?.toString()}
+              onValueChange={(value) => field.onChange(Number(value))}
+            >
+              <SelectTrigger
+                className={errors.profile?.gender_id ? 'border-destructive focus-visible:ring-destructive' : ''}
+              >
+                <SelectValue placeholder="Selecciona un género" />
+              </SelectTrigger>
+              <SelectContent>
+                {genders.map((g) => (
+                  <SelectItem key={g.id} value={g.id.toString()}>
+                    {g.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.profile?.gender_id && (
-          <p className="text-sm text-destructive">
-            {errors.profile.gender_id.message}
-          </p>
+          <p className="text-sm text-destructive">{errors.profile.gender_id.message}</p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label>Email</Label>
-
+        <Label htmlFor='email' >Correo</Label>
         <Input
-          type="email"
-          {...register('email')}
+          id='email'
+          {...register('email', {
+            onChange: () => onClearServerErrorAction?.()
+          })}
+          className={errors.email ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
-
         {errors.email && (
-          <p className="text-sm text-destrutive">
-            {errors.email.message}
-          </p>
+          <p className="text-sm text-destructive">{errors.email.message}</p>
+        )}        {serverError && (
+          <p className="text-sm text-destructive">{serverError}</p>
         )}
+
       </div>
 
       <div className="space-y-2">
-        <Label>Contraseña</Label>
-
-        <Input
-          type="password"
-          {...register('password')}
-        />
-
+        <Label htmlFor='password'>Contraseña</Label>
+        <div className='relative'>
+          <Input
+            id='password'
+            type={showPassword ? "text" : "password"}
+            {...register('password')}
+            className={errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}
+          />
+          <button
+            type="button"
+            className="absolute right-2 top-2 text-muted-foreground hover:text-foreground"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        </div>
         {errors.password && (
-          <p className="text-sm text-destructive">
-            {errors.password.message}
-          </p>
+          <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
       </div>
 
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={isLoading}
-      >
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Guardando...' : 'Guardar'}
       </Button>
     </form>

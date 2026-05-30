@@ -1,44 +1,44 @@
 'use client'
-
 import { ClientesTable } from '@/components/admin/clients/clients-table'
-
-import { useClientes } from '@/hooks/useClients'
+import { CreateClientDialog } from '@/components/admin/clients/create-client-dialog'
 import { useAuth } from '@/hooks/useAuth'
+import { useClients } from '@/hooks/useClients'
 import { useGenders } from '@/hooks/useGenders'
 
 export default function ClientsPage() {
-  const { session } = useAuth()
+  const { session, isLoading: authLoading } = useAuth()
 
   const token = session?.accessToken ?? ''
 
   const {
-    clientes,
+    clients,
     loading,
-    page,
-    totalPages,
-    fetchClientes
-  } = useClientes(token)
+    fetchClients,
+  } = useClients()
 
-  const { genders } = useGenders(token)
+  const { genders, loading: loadingGenders } = useGenders(token)
 
-  if (loading) {
+  const isLoading =
+    authLoading || loading || loadingGenders
+
+  if (isLoading || !clients) {
     return <p>Cargando...</p>
   }
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          Clientes
-        </h1>
+        <h1 className="text-2xl font-bold">Clientes</h1>
+
+        <CreateClientDialog token={token} genders={genders} onCreatedAction={fetchClients}
+        />
       </div>
 
       <ClientesTable
-        clients={clientes}
-        currentPage={page}
-        totalPages={totalPages}
+        clients={clients}
+        currentPage={clients.pagination.page}
         genders={genders}
-        onUpdated={fetchClientes}
+        onUpdated={fetchClients}
+
       />
     </div>
   )
