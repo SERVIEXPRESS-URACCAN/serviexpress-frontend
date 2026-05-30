@@ -83,6 +83,20 @@ export const UpdateOwnerForm = ({
         <Input
           id="cellphone"
           placeholder="Teléfono"
+          inputMode="numeric"
+          maxLength={8}
+          onKeyDown={(e) => {
+            if (
+              !/\d/.test(e.key) &&
+              e.key !== 'Backspace' &&
+              e.key !== 'Delete' &&
+              e.key !== 'Tab' &&
+              e.key !== 'ArrowLeft' &&
+              e.key !== 'ArrowRight'
+            ) {
+              e.preventDefault()
+            }
+          }}
           {...register('profile.cellphone')}
         />
 
