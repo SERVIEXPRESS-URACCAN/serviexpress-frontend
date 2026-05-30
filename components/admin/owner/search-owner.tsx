@@ -1,5 +1,3 @@
-// components/admin/owner/user-search.tsx
-
 'use client'
 
 import { Check, ChevronsUpDown } from 'lucide-react'
@@ -23,12 +21,8 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 
+import { User } from '@/types/user.type'
 import { useState } from 'react'
-
-type User = {
-  id: number
-  email: string
-}
 
 type Props = {
   users: User[]
