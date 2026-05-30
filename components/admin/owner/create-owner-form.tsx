@@ -76,7 +76,7 @@ export const CreateOwnerForm = ({
           render={({ field }) => (
             <UserSearch
               users={users}
-              value={field.value as number | undefined}
+              value={field.value}
               onChangeAction={field.onChange}
             />
           )}
