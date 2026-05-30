@@ -1,6 +1,6 @@
-import { Gender } from "./gender.type"
-import { Pagination } from "./pagiantion.types"
-import { User } from "./user.type"
+import { Gender } from './gender.type'
+import { Pagination } from './pagination.types'
+import { User } from './user.type'
 
 export type Clients = {
   id: number
@@ -9,7 +9,6 @@ export type Clients = {
   cellphone: string
   gender?: Gender
   user?: User
-
 }
 
 export type ClientesResponse = Pagination<Clients>

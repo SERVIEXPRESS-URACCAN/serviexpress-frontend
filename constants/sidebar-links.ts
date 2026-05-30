@@ -2,12 +2,12 @@ import {
   BriefcaseBusiness,
   ChartBarStacked,
   ChartColumnStacked,
+  CircleUser,
   LayoutDashboard,
   MapPinned,
   Motorbike,
   ReceiptText,
-  UserRoundKey,
-  UserRoundSearch
+  UserStar
 } from 'lucide-react'
 
 export const ADMIN_SIDEBAR_SECTIONS = [
@@ -46,30 +46,27 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         id: 'propietarios',
         title: 'Propietarios',
         href: '/admin/propietarios',
-        icon: UserRoundKey
+        icon: UserStar
       },
       {
         id: 'delivery-drivers',
         title: 'Mandaderos',
         href: '/admin/mandaderos',
-        icon: UserRoundSearch
-      },
-
-      {
-        id: 'motorcycles',
-        title: 'Motos',
-        href: '/admin/motos',
         icon: Motorbike
       },
+
+      // {
+      //   id: 'motorcycles',
+      //   title: 'Motos',
+      //   href: '/admin/motos',
+      //   icon: Motorbike
+      // },
       {
         id: 'clientes',
         title: 'Clientes',
         href: '/admin/clients',
-        icon: UserRoundKey
+        icon: CircleUser
       }
-
-
-
     ]
   },
 

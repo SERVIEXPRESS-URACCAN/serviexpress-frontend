@@ -4,8 +4,7 @@ export interface User {
   id: number
   email: string
 
-  status: boolean
+  status?: boolean
 
   profile?: Profile
 }
-

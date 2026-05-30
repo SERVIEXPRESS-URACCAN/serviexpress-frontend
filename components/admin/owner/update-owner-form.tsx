@@ -30,7 +30,7 @@ type Props = {
   isLoading?: boolean
 }
 
-export const OwnerForm = ({
+export const UpdateOwnerForm = ({
   defaultValues,
   onSubmitAction,
   isLoading
