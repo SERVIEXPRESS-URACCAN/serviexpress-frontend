@@ -2,14 +2,14 @@
 
 import { useSearch } from "@/hooks/useSearch";
 
-export const CategoryProductSearch = () => {
+export const MandaderoSearch = () => {
   const { value, setValue, handleSearch } = useSearch();
 
   return (
     <div className="flex gap-2">
       <input
         type="text"
-        placeholder="Buscar categoría..."
+        placeholder="Buscar mandadero..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {

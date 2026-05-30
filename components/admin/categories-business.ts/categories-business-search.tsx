@@ -1,37 +1,31 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearch } from "@/hooks/useSearch";
 
 export const CategoryBusinessSearch = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const [value, setValue] = useState(searchParams.get("search") || "");
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      if (value) {
-        params.set("search", value);
-      } else {
-        params.delete("search");
-      }
-
-      router.push(`?${params.toString()}`);
-    }, 400);
-
-    return () => clearTimeout(delay);
-  }, [value, router, searchParams]);
+  const { value, setValue, handleSearch } = useSearch();
 
   return (
-    <input
-      type="text"
-      placeholder="Buscar categoria..."
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      className="w-full rounded-md border px-3 py-2"
-    />
+    <div className="flex gap-2">
+      <input
+        type="text"
+        placeholder="Buscar categoría..."
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
+        className="w-full rounded-md border px-3 py-2"
+      />
+
+      <button
+        onClick={handleSearch}
+        className="rounded-md bg-black px-4 py-2 text-white"
+      >
+        Buscar
+      </button>
+    </div>
   );
 };
