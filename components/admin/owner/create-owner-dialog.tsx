@@ -23,10 +23,10 @@ import { CreateOwnerForm } from './create-owner-form'
 
 type Props = {
   users: User[]
-  onCreated: () => Promise<void>
+  onCreatedAction: () => Promise<void>
 }
 
-export const CreateOwnerDialog = ({ users, onCreated }: Props) => {
+export const CreateOwnerDialog = ({ users, onCreatedAction }: Props) => {
   const [open, setOpen] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -43,7 +43,7 @@ export const CreateOwnerDialog = ({ users, onCreated }: Props) => {
 
       setOpen(false)
 
-      await onCreated()
+      await onCreatedAction()
     } catch (error) {
       console.error(error)
     } finally {
