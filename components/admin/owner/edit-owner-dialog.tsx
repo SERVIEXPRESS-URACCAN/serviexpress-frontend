@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { UpdateOwner } from '@/schemas/owner.schema'
 import { updateOwner } from '@/services/owner.service'
 import { Owner } from '@/types/owner.types'
-import { OwnerForm } from './owner-form'
+import { UpdateOwnerForm } from './update-owner-form'
 
 type Props = {
   owner: Owner
@@ -57,9 +57,9 @@ export const EditOwnerDialog = ({
           <DialogTitle>Editar owner</DialogTitle>
         </DialogHeader>
 
-        <OwnerForm
+        <UpdateOwnerForm
           defaultValues={{
-            razonSocial: owner.razonSocial,
+            razonSocial: owner.razonSocial ?? '',
             profile: {
               name: owner.user?.profile?.name ?? '',
               lastName: owner.user?.profile?.lastName ?? '',

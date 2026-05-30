@@ -4,9 +4,9 @@ import { User } from './user.type'
 export type Owner = {
   id: number
 
-  user?: User
+  user: User
 
-  business?: Business
+  business: Business
   razonSocial: string
 
   identificationCardImage: string

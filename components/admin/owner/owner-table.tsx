@@ -29,12 +29,18 @@ export const OwnerTable = ({ owners, currentPage, onUpdated }: Props) => {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
+
               <TableHead>Nombre</TableHead>
+
               <TableHead>Apellido</TableHead>
+
               <TableHead>Telefono</TableHead>
+
               <TableHead>Email</TableHead>
+
               <TableHead>Negocio</TableHead>
-              <TableHead></TableHead>
+
+              <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
 
@@ -64,7 +70,7 @@ export const OwnerTable = ({ owners, currentPage, onUpdated }: Props) => {
 
                   <TableCell>{owner.user?.email ?? 'Sin email'}</TableCell>
 
-                  <TableCell>{owner.business?.name ?? 'Sin negocio'}</TableCell>
+                  <TableCell>{owner.business.name}</TableCell>
 
                   <TableCell>
                     <OwnerActions owner={owner} onUpdated={onUpdated} />
