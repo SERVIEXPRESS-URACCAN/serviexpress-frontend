@@ -64,7 +64,7 @@ export const ClientForm = ({
         <Label htmlFor='name'>Nombre</Label>
         <Input
           id='name'
-        placeholder='nombre'
+          placeholder='nombre'
           {...register('profile.name')}
           className={errors.profile?.name ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -77,7 +77,7 @@ export const ClientForm = ({
         <Label htmlFor='lastName'>Apellido</Label>
         <Input
           id='lastName'
-        placeholder='Apellido'
+          placeholder='Apellido'
           {...register('profile.lastName')}
           className={errors.profile?.lastName ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -90,7 +90,7 @@ export const ClientForm = ({
         <Label htmlFor='cellphone'>Teléfono</Label>
         <Input
           id='cellphone'
-        placeholder='8888-8888'
+          placeholder='8888-8888'
           {...register('profile.cellphone')}
           className={errors.profile?.cellphone ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
@@ -101,23 +101,23 @@ export const ClientForm = ({
 
       <div className="space-y-2">
         <Label>Género</Label>
-        <Controller                                
+        <Controller
           control={control}
           name="profile.gender_id"
           render={({ field }) => (
             <Select
-              value={field.value? String(field.value): ''}
+              value={field.value ? String(field.value) : ''}
               onValueChange={(value) => field.onChange(Number(value))}
             >
               <SelectTrigger
                 className={errors.profile?.gender_id ? 'border-destructive focus-visible:ring-destructive' : ''}
-              > 
+              >
                 <SelectValue placeholder="Selecciona un género" />
               </SelectTrigger>
               <SelectContent>
                 {genders.map((g) => (
                   <SelectItem key={g.id} value={g.id.toString()}>
-                    {g.name}                                                                                                   
+                    {g.name}
                   </SelectItem>
                 ))}
               </SelectContent>
