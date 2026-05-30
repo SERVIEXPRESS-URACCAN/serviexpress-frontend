@@ -34,7 +34,8 @@ export const updateOwnerSchema = z.object({
       .trim()
       .regex(/^\d{8}$/, 'El teléfono debe tener 8 dígitos'),
     genderId: z.coerce.number().min(1, 'El género es requerido')
-  })
+  }),
+  identificationCardImage: z.instanceof(File).optional()
 })
 
 export type UpdateOwnerInput = z.input<typeof updateOwnerSchema>
