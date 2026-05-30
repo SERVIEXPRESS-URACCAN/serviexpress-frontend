@@ -52,11 +52,11 @@ export const EditOwnerDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-m">
+        {' '}
         <DialogHeader>
-          <DialogTitle>Editar owner</DialogTitle>
+          <DialogTitle>Editar propietario</DialogTitle>
         </DialogHeader>
-
         <UpdateOwnerForm
           defaultValues={{
             razonSocial: owner.razonSocial ?? '',
@@ -65,7 +65,8 @@ export const EditOwnerDialog = ({
               lastName: owner.user?.profile?.lastName ?? '',
               cellphone: owner.user?.profile?.cellphone ?? '',
               genderId: owner.user?.profile?.gender?.id ?? 0
-            }
+            },
+            identificationCardImage: undefined
           }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}
