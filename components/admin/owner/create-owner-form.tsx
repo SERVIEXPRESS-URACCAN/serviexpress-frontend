@@ -59,7 +59,7 @@ export const CreateOwnerForm = ({
       business: {
         name: '',
         address: '',
-        phone: '',
+        cellphone: '',
         city: 0
       }
     }
@@ -129,11 +129,26 @@ export const CreateOwnerForm = ({
           <Input
             id="businessPhone"
             placeholder="8888-8888"
-            {...register('business.phone')}
+            inputMode="numeric"
+            type="tel"
+            maxLength={8}
+            onKeyDown={(e) => {
+              if (
+                !/\d/.test(e.key) &&
+                e.key !== 'Backspace' &&
+                e.key !== 'Delete' &&
+                e.key !== 'Tab' &&
+                e.key !== 'ArrowLeft' &&
+                e.key !== 'ArrowRight'
+              ) {
+                e.preventDefault()
+              }
+            }}
+            {...register('business.cellphone')}
           />
-          {errors.business?.phone && (
+          {errors.business?.cellphone && (
             <p className="text-sm text-red-400">
-              {errors.business.phone.message}
+              {errors.business.cellphone.message}
             </p>
           )}
         </div>

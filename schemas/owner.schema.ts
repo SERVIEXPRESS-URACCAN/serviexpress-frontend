@@ -3,11 +3,16 @@ import z from 'zod'
 export const createOwnerSchema = z.object({
   razonSocial: z.string().trim().min(1, 'La razón social es requerida'),
   user: z.coerce.number().min(1, 'El usuario es requerido'),
-  identificationCardImage: z.instanceof(File).optional(),
+  identificationCardImage: z.instanceof(File, {
+    message: 'La imagen es requerida'
+  }),
   business: z.object({
     name: z.string().trim().min(1, 'El nombre del negocio es requerido'),
     address: z.string().trim().min(1, 'La dirección es requerida'),
-    phone: z.string().trim().min(1, 'El teléfono es requerido'),
+    cellphone: z
+      .string()
+      .trim()
+      .regex(/^\d{8}$/, 'El teléfono debe tener 8 dígitos'),
     city: z.coerce.number().min(1, 'La ciudad es requerida')
   })
 })
@@ -24,8 +29,10 @@ export const updateOwnerSchema = z.object({
 
     lastName: z.string().trim().min(1, 'El apellido es requerido'),
 
-    cellphone: z.string().trim().min(1, 'El teléfono es requerido'),
-
+    cellphone: z
+      .string()
+      .trim()
+      .regex(/^\d{8}$/, 'El teléfono debe tener 8 dígitos'),
     genderId: z.coerce.number().min(1, 'El género es requerido')
   })
 })
