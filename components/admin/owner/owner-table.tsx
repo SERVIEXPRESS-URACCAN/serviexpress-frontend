@@ -40,7 +40,7 @@ export const OwnerTable = ({ owners, currentPage, onUpdated }: Props) => {
 
               <TableHead>Negocio</TableHead>
 
-              <TableHead className="w-[80px]"></TableHead>
+              <TableHead className="w-20"></TableHead>
             </TableRow>
           </TableHeader>
 
