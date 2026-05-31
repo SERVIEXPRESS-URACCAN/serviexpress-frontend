@@ -1,4 +1,4 @@
-import { CitiesTableSkeleton } from '@/components/admin/cities'
+import { TableSkeleton } from '@/components/shared/table-skeleton'
 
 export default function Loading() {
   return (
@@ -13,7 +13,7 @@ export default function Loading() {
         <div className="h-10 w-36 rounded bg-muted animate-pulse" />
       </div>
 
-      <CitiesTableSkeleton />
+      <TableSkeleton columns={2} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { ClientesTableSkeleton } from "@/components/admin/clients/clients-table-skeleton";
+import { TableSkeleton } from '@/components/shared/table-skeleton'
 
 export default function Loading() {
   return (
@@ -13,7 +13,7 @@ export default function Loading() {
         <div className="h-10 w-36 rounded bg-muted animate-pulse" />
       </div>
 
-      <ClientesTableSkeleton/>
+      <TableSkeleton columns={7} />
     </div>
   )
 }
