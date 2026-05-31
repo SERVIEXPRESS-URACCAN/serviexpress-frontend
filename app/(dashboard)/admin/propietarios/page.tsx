@@ -4,13 +4,17 @@ import { OwnerTable } from '@/components/admin/owner/owner-table'
 
 import { CreateOwnerDialog } from '@/components/admin/owner/create-owner-dialog'
 
+import { useAvailableUsers } from '@/hooks/owner/useAvailableUsers'
 import { useOwners } from '@/hooks/useOwner'
-import { useUsers } from '@/hooks/useUsers'
 
 export default function OwnersPage() {
   const { owners, loading, fetchOwners } = useOwners()
 
-  const { users, loading: usersLoading } = useUsers()
+  const { users, loading: usersLoading, fetchUsers } = useAvailableUsers()
+
+  const handleCreated = async () => {
+    await Promise.all([fetchOwners(), fetchUsers()])
+  }
 
   if (loading || usersLoading) {
     return <p>Cargando...</p>
@@ -21,7 +25,7 @@ export default function OwnersPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Propietarios</h1>
 
-        <CreateOwnerDialog users={users} onCreatedAction={fetchOwners} />
+        <CreateOwnerDialog users={users} onCreatedAction={handleCreated} />
       </div>
 
       {owners && (
