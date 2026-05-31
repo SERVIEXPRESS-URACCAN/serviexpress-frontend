@@ -9,7 +9,7 @@ export const createOwnerSchema = z.object({
   business: z.object({
     name: z.string().trim().min(1, 'El nombre del negocio es requerido'),
     address: z.string().trim().min(1, 'La dirección es requerida'),
-    cellphone: z
+    phone: z
       .string()
       .trim()
       .regex(/^\d{8}$/, 'El teléfono debe tener 8 dígitos'),
