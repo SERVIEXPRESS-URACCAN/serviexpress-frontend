@@ -1,5 +1,17 @@
 import { User } from "./user.type";
 
+export type Motorcycle = {
+  id: number;
+  licensePlate: string;
+  brand?: string;
+  model?: string;
+  color?: string;
+  circulationImage?: string;
+  insuranceImage?: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+};
 export type Mandadero = {
   id: number;
   available: boolean;
@@ -9,8 +21,8 @@ export type Mandadero = {
   updatedAt: string;
 
   user: User;
+  motorcycle: Motorcycle;
 };
-
 export type MandaderoResponse = {
   data: Mandadero[];
   pagination: {
@@ -32,4 +44,18 @@ export type UpdateMandaderoDto = {
   available?: boolean;
   isActive?: boolean;
   status?: string;
+};
+
+export type CreateMandaderoAdminDto = {
+  userId: number;
+  name: string;
+  lastName: string;
+  cellphone: string;
+  licensePlate: string;
+  brand?: string;
+  model?: string;
+  color?: string;
+  imageIdentification?: File;
+  circulationImage?: File;
+  insuranceImage?: File;
 };
