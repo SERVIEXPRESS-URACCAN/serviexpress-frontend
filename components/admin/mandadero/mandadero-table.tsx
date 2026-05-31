@@ -13,6 +13,8 @@ import { MandaderoActions } from "./mandadero-actions";
 import { useState } from "react";
 import { EditMandaderoDialog } from "./edit-mandadero-dialog";
 import { TablePaginationInput } from "@/components/shared/table-pagination";
+import { Button } from "@/components/ui/button";
+import { CreateMandaderoDialog } from "./create-mandadero-dialog";
 type Props = {
   mandaderos: MandaderoResponse;
   currentPage: number;
@@ -23,10 +25,14 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
     null,
   );
   const [open, setOpen] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
   const { pagination } = mandaderos;
   return (
     <div className="space-y-4">
-      <div className="rounded-md border">
+      <div className="flex justify-end">
+        <Button onClick={() => setOpenCreate(true)}>Crear Mandadero</Button>
+      </div>
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -35,9 +41,14 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
               <TableHead>Apellido</TableHead>
               <TableHead>Telefono</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Disponible</TableHead>
-              <TableHead>Activo</TableHead>
-              <TableHead></TableHead>
+
+              <TableHead>Marca</TableHead>
+              <TableHead>Modelo</TableHead>
+              <TableHead>Color</TableHead>
+              <TableHead>Placa</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead>Disponibilidad</TableHead>
+              <TableHead>Acciones</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -57,16 +68,11 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
                   <TableCell>{mandadero.user?.profile?.cellphone}</TableCell>
                   <TableCell>{mandadero.user?.email}</TableCell>
 
+                  <TableCell>{mandadero.motorcycle?.brand ?? "-"}</TableCell>
+                  <TableCell>{mandadero.motorcycle?.model ?? "-"}</TableCell>
+                  <TableCell>{mandadero.motorcycle?.color ?? "-"}</TableCell>
                   <TableCell>
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-sm transition-colors ${
-                        mandadero.available
-                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                          : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
-                      }`}
-                    >
-                      {mandadero.available ? "Disponible" : "No disponible"}
-                    </span>
+                    {mandadero.motorcycle?.licensePlate ?? "-"}
                   </TableCell>
 
                   <TableCell>
@@ -80,7 +86,17 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
                       {mandadero.isActive ? "Activo" : "Inactivo"}
                     </span>
                   </TableCell>
-
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-sm transition-colors ${
+                        mandadero.available
+                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                          : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                      }`}
+                    >
+                      {mandadero.available ? "Disponible" : "No disponible"}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     <MandaderoActions
                       mandadero={mandadero}
@@ -114,6 +130,11 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
           onOpenChangeAction={setOpen}
         />
       )}
+      <CreateMandaderoDialog
+        key={openCreate ? "open" : "closed"}
+        open={openCreate}
+        onOpenChangeAction={setOpenCreate}
+      />
     </div>
   );
 };
