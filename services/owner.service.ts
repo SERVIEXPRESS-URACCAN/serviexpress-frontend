@@ -59,16 +59,24 @@ export const updateOwner = async (
   data: UpdateOwner,
   token: string
 ): Promise<Owner> => {
+  const formData = new FormData()
+
+  formData.append('razonSocial', data.razonSocial)
+  formData.append('profile[name]', data.profile.name)
+  formData.append('profile[lastName]', data.profile.lastName)
+  formData.append('profile[cellphone]', data.profile.cellphone)
+  formData.append('profile[genderId]', String(data.profile.genderId))
+
+  if (data.identificationCardImage) {
+    formData.append('identificationCardImage', data.identificationCardImage)
+  }
+
   const response = await fetch(`${API_URL}/owner/${id}`, {
     method: 'PATCH',
-
     headers: {
-      'Content-Type': 'application/json',
-
       Authorization: `Bearer ${token}`
     },
-
-    body: JSON.stringify(data)
+    body: formData
   })
 
   const result = await response.json()

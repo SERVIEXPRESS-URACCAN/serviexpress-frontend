@@ -1,16 +1,10 @@
-// components/admin/owner/create-owner-form.tsx
-
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-
 import { Button } from '@/components/ui/button'
-
 import { Input } from '@/components/ui/input'
-
-import { Label } from '@/components/ui/label'
 
 import {
   Select,
@@ -27,20 +21,27 @@ import {
 } from '@/schemas/owner.schema'
 
 import { useCities } from '@/hooks/useCities'
+import { phoneKeyDown } from '@/lib/phone'
 import { User } from '@/types/user.type'
+
+import { FormError } from '../../shared/form-error'
+import { FormField } from '../../shared/form-field'
+import { FormSection } from '../../shared/form-section'
+import { ImageUploadField } from '../../shared/image-upload-field'
 import { UserSearch } from './search-owner'
 
 type Props = {
   users: User[]
   onSubmitAction: (data: CreateOwner) => Promise<void>
-
   isLoading?: boolean
+  serverError?: string
 }
 
 export const CreateOwnerForm = ({
   users,
   onSubmitAction,
-  isLoading
+  isLoading,
+  serverError
 }: Props) => {
   const {
     register,
@@ -50,16 +51,13 @@ export const CreateOwnerForm = ({
     formState: { errors }
   } = useForm<CreateOwnerInput, unknown, CreateOwner>({
     resolver: zodResolver(createOwnerSchema),
-
     defaultValues: {
       razonSocial: '',
-
       user: 0,
-
       business: {
         name: '',
         address: '',
-        cellphone: '',
+        phone: '',
         city: 0
       }
     }
@@ -69,13 +67,9 @@ export const CreateOwnerForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-4">
-      {/* Sección propietario */}
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground border-b pb-1">
-        Propietario
-      </p>
+      <FormSection title="Propietario" />
 
       <div className="space-y-2">
-        <Label>Usuario</Label>
         <Controller
           control={control}
           name="user"
@@ -87,141 +81,103 @@ export const CreateOwnerForm = ({
             />
           )}
         />
-        {errors.user && (
-          <p className="text-sm text-red-400">{errors.user.message}</p>
-        )}
+
+        <FormError message={errors.user?.message} />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="razonSocial">Razón social</Label>
+      <FormField
+        label="Razón social"
+        htmlFor="razonSocial"
+        error={errors.razonSocial?.message}
+      >
         <Input
           id="razonSocial"
           placeholder="Razón social"
           {...register('razonSocial')}
         />
-        {errors.razonSocial && (
-          <p className="text-sm text-red-400">{errors.razonSocial.message}</p>
-        )}
-      </div>
+      </FormField>
 
-      {/* Sección negocio — 2 columnas */}
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground border-b pb-1">
-        Negocio
-      </p>
+      <FormSection title="Negocio" />
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="businessName">Nombre del negocio</Label>
+        <FormField
+          label="Nombre del negocio"
+          htmlFor="businessName"
+          error={errors.business?.name?.message}
+        >
           <Input
             id="businessName"
             placeholder="Negocio"
             {...register('business.name')}
           />
-          {errors.business?.name && (
-            <p className="text-sm text-red-400">
-              {errors.business.name.message}
-            </p>
-          )}
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <Label htmlFor="businessPhone">Teléfono</Label>
+        <FormField
+          label="Teléfono"
+          htmlFor="businessPhone"
+          error={errors.business?.phone?.message || serverError}
+        >
           <Input
             id="businessPhone"
             placeholder="8888-8888"
             inputMode="numeric"
             type="tel"
             maxLength={8}
-            onKeyDown={(e) => {
-              if (
-                !/\d/.test(e.key) &&
-                e.key !== 'Backspace' &&
-                e.key !== 'Delete' &&
-                e.key !== 'Tab' &&
-                e.key !== 'ArrowLeft' &&
-                e.key !== 'ArrowRight'
-              ) {
-                e.preventDefault()
-              }
-            }}
-            {...register('business.cellphone')}
+            onKeyDown={phoneKeyDown}
+            {...register('business.phone')}
           />
-          {errors.business?.cellphone && (
-            <p className="text-sm text-red-400">
-              {errors.business.cellphone.message}
-            </p>
-          )}
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <Label htmlFor="address">Dirección</Label>
+        <FormField
+          label="Dirección"
+          htmlFor="address"
+          error={errors.business?.address?.message}
+        >
           <Input
             id="address"
             placeholder="Dirección"
             {...register('business.address')}
           />
-          {errors.business?.address && (
-            <p className="text-sm text-red-400">
-              {errors.business.address.message}
-            </p>
-          )}
-        </div>
+        </FormField>
 
         <div className="space-y-2">
-          <Label>Ciudad</Label>
-          <Controller
-            control={control}
-            name="business.city"
-            render={({ field }) => (
-              <Select
-                value={field.value ? String(field.value) : ''}
-                onValueChange={(value) => field.onChange(Number(value))}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione una ciudad" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cities.map((city) => (
-                    <SelectItem key={city.id} value={String(city.id)}>
-                      {city.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.business?.city && (
-            <p className="text-sm text-red-400">
-              {errors.business.city.message}
-            </p>
-          )}
+          <FormField label="Ciudad" error={errors.business?.city?.message}>
+            <Controller
+              control={control}
+              name="business.city"
+              render={({ field }) => (
+                <Select
+                  value={field.value ? String(field.value) : ''}
+                  onValueChange={(value) => field.onChange(Number(value))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Seleccione una ciudad" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {cities.map((city) => (
+                      <SelectItem key={city.id} value={String(city.id)}>
+                        {city.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FormField>
         </div>
       </div>
 
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground border-b pb-1">
-        Identificación
-      </p>
+      <FormSection title="Identificación" />
 
-      <div className="space-y-2">
-        <Label htmlFor="image">Imagen de identificación</Label>
-        <Input
-          id="image"
-          type="file"
-          accept="image/*"
-          onChange={(event) => {
-            const file = event.target.files?.[0]
-            if (file)
-              setValue('identificationCardImage', file, {
-                shouldValidate: true
-              })
-          }}
-        />
-        {errors.identificationCardImage && (
-          <p className="text-sm text-red-400">
-            {errors.identificationCardImage.message}
-          </p>
-        )}
-      </div>
+      <ImageUploadField
+        error={errors.identificationCardImage?.message}
+        onChangeAction={(file) =>
+          setValue('identificationCardImage', file, {
+            shouldValidate: true
+          })
+        }
+      />
 
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Guardando...' : 'Crear propietario'}
