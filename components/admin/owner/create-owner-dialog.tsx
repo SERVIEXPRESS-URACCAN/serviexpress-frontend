@@ -16,9 +16,9 @@ import { useAuth } from '@/hooks/useAuth'
 
 import { CreateOwner } from '@/schemas/owner.schema'
 
-import { createOwner } from '@/services/owner.service'
-
 import { User } from '@/types/user.type'
+
+import { useCreateOwner } from '@/hooks/owner/useCreateOwner'
 import { CreateOwnerForm } from './create-owner-form'
 
 type Props = {
@@ -28,26 +28,26 @@ type Props = {
 
 export const CreateOwnerDialog = ({ users, onCreatedAction }: Props) => {
   const [open, setOpen] = useState(false)
-
-  const [isLoading, setIsLoading] = useState(false)
+  const [serverError, setServerError] = useState('')
 
   const { session } = useAuth()
 
-  const token = session?.accessToken ?? ''
+  const { execute, isLoading } = useCreateOwner()
 
   const handleCreate = async (data: CreateOwner) => {
-    try {
-      setIsLoading(true)
+    if (!session?.accessToken) return
 
-      await createOwner(data, token)
+    try {
+      setServerError('')
+      await execute(data, session.accessToken)
 
       setOpen(false)
 
       await onCreatedAction()
     } catch (error) {
-      console.error(error)
-    } finally {
-      setIsLoading(false)
+      if (error instanceof Error) {
+        setServerError(error.message)
+      }
     }
   }
 
@@ -66,6 +66,7 @@ export const CreateOwnerDialog = ({ users, onCreatedAction }: Props) => {
           users={users}
           onSubmitAction={handleCreate}
           isLoading={isLoading}
+          serverError={serverError}
         />
       </DialogContent>
     </Dialog>
