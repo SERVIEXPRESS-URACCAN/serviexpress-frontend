@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 import {
   Dialog,
   DialogContent,
@@ -10,9 +8,12 @@ import {
 } from '@/components/ui/dialog'
 
 import { useAuth } from '@/hooks/useAuth'
+
 import { UpdateOwner } from '@/schemas/owner.schema'
-import { updateOwner } from '@/services/owner.service'
+
 import { Owner } from '@/types/owner.types'
+
+import { useUpdateOwner } from '@/hooks/owner/useUpdateOwner'
 import { UpdateOwnerForm } from './update-owner-form'
 
 type Props = {
@@ -29,34 +30,29 @@ export const EditOwnerDialog = ({
   onUpdated
 }: Props) => {
   const { session } = useAuth()
-
-  const [isLoading, setIsLoading] = useState(false)
+  const { execute, isLoading } = useUpdateOwner()
 
   const handleUpdate = async (data: UpdateOwner) => {
+    if (!session?.accessToken) return
+
     try {
-      setIsLoading(true)
-
-      if (!session?.accessToken) return
-
-      await updateOwner(owner.id, data, session.accessToken)
+      await execute(owner.id, data, session.accessToken)
 
       onOpenChangeAction(false)
 
       await onUpdated()
     } catch (error) {
       console.error(error)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-m">
-        {' '}
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Editar propietario</DialogTitle>
         </DialogHeader>
+
         <UpdateOwnerForm
           defaultValues={{
             razonSocial: owner.razonSocial ?? '',
