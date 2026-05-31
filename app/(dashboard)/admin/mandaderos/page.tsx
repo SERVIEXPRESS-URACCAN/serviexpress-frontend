@@ -1,7 +1,7 @@
 import { getMandaderos } from "@/services/mandadero.service";
 import { auth } from "@/auth";
 import { MandaderoTable } from "@/components/admin/mandadero/mandadero-table";
-import { MandaderoSearch } from "@/components/admin/mandadero/categories-business-search";
+import { MandaderoSearch } from "@/components/admin/mandadero/mandadero-search";
 
 export default async function MandaderoPage({
   searchParams,
@@ -26,9 +26,7 @@ export default async function MandaderoPage({
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Mandaderos</h1>
       </div>
-
       <MandaderoSearch />
-
       <MandaderoTable mandaderos={mandaderos} currentPage={currentPage} />
     </div>
   );
