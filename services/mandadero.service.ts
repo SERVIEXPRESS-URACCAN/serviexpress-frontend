@@ -28,6 +28,22 @@ export const getMandaderos = async (
   return response.json();
 };
 
+export const getMandaderoById = async (
+  id: number,
+  token: string,
+): Promise<Mandadero> => {
+  const response = await fetch(`${API_URL}/mandadero/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error(`Error fetching mandadero`);
+  }
+  return response.json();
+};
+
 export const createMandaderoAdmin = async (
   token: string,
   data: CreateMandaderoAdminDto,
