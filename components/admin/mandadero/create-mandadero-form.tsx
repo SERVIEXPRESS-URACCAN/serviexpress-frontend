@@ -15,6 +15,7 @@ import { FormField } from "@/components/shared/form-field";
 import { FormSection } from "@/components/shared/form-section";
 import { ImageUploadField } from "@/components/shared/image-upload-field";
 import { FormError } from "@/components/shared/form-error";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   users: User[];
@@ -61,10 +62,22 @@ export const MandaderoForm = ({
           </FormField>
         </div>
 
-        <ImageUploadField
-          onChangeAction={(file) => form.setValue("imageIdentification", file)}
-          error={errors.imageIdentification?.message}
-        />
+        <div className="space-y-2">
+          <Label>Imagen de la Licencia</Label>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) form.setValue("imageIdentification", file);
+            }}
+          />
+          {errors.imageIdentification && (
+            <p className="text-xs text-red-400">
+              {errors.imageIdentification.message}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="space-y-3">
@@ -89,15 +102,39 @@ export const MandaderoForm = ({
           </FormField>
         </div>
 
-        <ImageUploadField
-          onChangeAction={(file) => form.setValue("circulationImage", file)}
-          error={errors.circulationImage?.message}
-        />
+        <div className="space-y-2">
+          <Label>Tarjeta de circulación</Label>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) form.setValue("circulationImage", file);
+            }}
+          />
+          {errors.circulationImage && (
+            <p className="text-xs text-red-400">
+              {errors.circulationImage.message}
+            </p>
+          )}
+        </div>
 
-        <ImageUploadField
-          onChangeAction={(file) => form.setValue("insuranceImage", file)}
-          error={errors.insuranceImage?.message}
-        />
+        <div className="space-y-2">
+          <Label>Seguro</Label>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) form.setValue("insuranceImage", file);
+            }}
+          />
+          {errors.insuranceImage && (
+            <p className="text-xs text-red-400">
+              {errors.insuranceImage.message}
+            </p>
+          )}
+        </div>
       </div>
 
       <FormError message={error ?? undefined} />

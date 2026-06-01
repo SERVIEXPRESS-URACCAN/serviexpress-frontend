@@ -9,7 +9,7 @@ export const createMandaderoSchema = z.object({
   model: z.string().optional(),
   color: z.string().optional(),
   imageIdentification: z.instanceof(File, {
-    message: "La imagen de identificación es requerida",
+    message: "La  licencia es requerida",
   }),
   circulationImage: z.instanceof(File, {
     message: "La tarjeta de circulación es requerida",

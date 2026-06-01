@@ -22,13 +22,6 @@ export const CategoryProductSearch = ({ className }: Props) => {
         }}
         className="w-full rounded-md border px-3 py-2"
       />
-
-      <button
-        onClick={handleSearch}
-        className="shrink-0 rounded-md bg-black px-4 text-sm text-white cursor-pointer"
-      >
-        Buscar
-      </button>
     </div>
   );
 };
