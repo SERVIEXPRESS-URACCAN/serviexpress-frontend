@@ -16,13 +16,11 @@ export default async function CategoryProductPage({
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Categorías de Productos</h1>
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Categorías de Productos</h1>
-        </div>
+        <CategoryProductSearch className="w-full max-w-6xl" />
         <CreateCategoryProductDialog />
       </div>
-      <CategoryProductSearch />
 
       <CategoriesProductsTable
         categoryProduct={categoryProducts}

@@ -19,11 +19,12 @@ export default async function CategoriesBusinessPage({
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
+        <CategoryBusinessSearch className="w-full max-w-6xl" />
+
         <CreateCategoryBusinessDialog />
       </div>
-      <CategoryBusinessSearch />
 
       <CategoriesBusinessTable
         categoriesBusiness={categoriesBusiness}
