@@ -1,5 +1,6 @@
 import { API_URL } from '@/config/config'
 import { CreateUserDto, UpdateClientProfileDto } from '@/schemas/client.schema'
+import { UserConflictException } from '@/types/api-errors.types'
 import { Clients, ClientsResponse } from '@/types/clients'
 
 export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientsResponse> => {
@@ -19,7 +20,26 @@ export const getClientes = async (token: string, page = 1, limit = 10): Promise<
 
   return response.json()
 }
+export const restoreClient = async (
+  id: number,
+  data: CreateUserDto,
+  token: string,
+): Promise<Clients> => {
+  const response = await fetch(`${API_URL}/users/${id}/restore`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
 
+  if (!response.ok) {
+    throw new Error(`Error al restaurar el cliente con id ${id}`)
+  }
+
+  return response.json()
+}
 export const createClient = async (data: CreateUserDto, token: string): Promise<Clients> => {
   const response = await fetch(`${API_URL}/users`, {
     method: 'POST',
@@ -31,7 +51,16 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
     body: JSON.stringify(data)
   })
   const result = await response.json()
-console.log('result:', result)
+  console.log('result:', result)
+  if (response.status === 409) {
+     console.log('409 result:', result)
+    throw new UserConflictException({
+      message: result.message,
+      canRestore: result.canRestore ?? false,
+      id: result.userId,
+    });
+  }
+
   if (!response.ok) {
     if (Array.isArray(result.message)) {
       throw new TypeError(JSON.stringify({ field: null }))

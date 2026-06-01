@@ -9,3 +9,13 @@ export class CategoryConflictException extends Error {
     super(data.message);
   }
 }
+
+export class UserConflictException extends Error {
+  data: { message: string; canRestore: boolean; id: number }
+
+  constructor(data: { message: string; canRestore: boolean; id: number }) {
+    super(data.message)
+    this.name = 'UserConflictException'
+    this.data = data
+  }
+}
