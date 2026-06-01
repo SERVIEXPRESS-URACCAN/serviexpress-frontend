@@ -13,8 +13,6 @@ import { MandaderoActions } from "./mandadero-actions";
 import { useState } from "react";
 import { EditMandaderoDialog } from "./edit-mandadero-dialog";
 import { TablePaginationInput } from "@/components/shared/table-pagination";
-import { Button } from "@/components/ui/button";
-import { CreateMandaderoDialog } from "./create-mandadero-dialog";
 type Props = {
   mandaderos: MandaderoResponse;
   currentPage: number;
@@ -25,13 +23,10 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
     null,
   );
   const [open, setOpen] = useState(false);
-  const [openCreate, setOpenCreate] = useState(false);
+
   const { pagination } = mandaderos;
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={() => setOpenCreate(true)}>Crear Mandadero</Button>
-      </div>
       <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
@@ -130,11 +125,6 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
           onOpenChangeAction={setOpen}
         />
       )}
-      <CreateMandaderoDialog
-        key={openCreate ? "open" : "closed"}
-        open={openCreate}
-        onOpenChangeAction={setOpenCreate}
-      />
     </div>
   );
 };
