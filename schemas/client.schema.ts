@@ -25,6 +25,8 @@ export const updateClientProfileSchema = z.object({
   lastName: z.string().min(1, 'El apellido es requerido'),
 
   cellphone: z.string().min(8, 'El teléfono es inválido'),
+  
+  status: z.coerce.boolean({ error: 'El estado es requerido' }),
 
   gender_id: z.coerce.number().min(1, {
     message: 'Seleccione un género'
