@@ -17,7 +17,6 @@ import { ClientForm } from './client-form'
 import { createClient, restoreClient } from '@/services/clients.service'
 import { Gender } from '@/types/gender.type'
 import { CreateUserDto } from '@/schemas/client.schema'
-import { useRouter } from 'next/navigation'
 import { UserConflictException } from '@/types/api-errors.types'
 
 const fireSwal = (options: SweetAlertOptions) =>
@@ -39,21 +38,25 @@ export const CreateClientDialog = ({
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<{ field: 'email' | 'cellphone', message: string } | null>(null)
+  
+  
   const handleOpenChange = (value: boolean) => {
+
     setOpen(value)
 
     if (!value) {
       setServerError(null)
     }
   }
-  const router = useRouter()
+
 
   const handleConflict = async (error: UserConflictException, data:CreateUserDto) => {
     if (!error.data.canRestore) {
       setServerError({ field: 'email', message: error.message })
       return
     }
-
+    setOpen(false)
+    
     const result = await fireSwal({
       icon: 'question',
       title: '¿Restaurar cliente?',
@@ -68,9 +71,8 @@ export const CreateClientDialog = ({
     if (!result.isConfirmed) return
 
     try {
-      await restoreClient(error.data.id, data,token)
+      await restoreClient(error.data.id, data, token)
       setOpen(false)
-      router.refresh()
       onCreatedAction()
       await fireSwal({
         icon: 'success',
@@ -85,14 +87,13 @@ export const CreateClientDialog = ({
   }
 
   const handleCreate = async (data: CreateUserDto) => {
-    console.log('handleCreate llamado', data)
     try {
       setIsLoading(true)
       setServerError(null)
 
       await createClient(data, token)
-
       setOpen(false)
+      
       onCreatedAction()
 
       await fireSwal({

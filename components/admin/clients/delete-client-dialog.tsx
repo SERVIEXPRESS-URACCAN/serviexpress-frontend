@@ -26,9 +26,6 @@ export const DeleteClientDialog = ({
   const [isLoading, setIsLoading] = useState(false)
 
   const handleDelete = async () => {
-    console.log('session:', session)
-  console.log('user:', client.user.id)
-  console.log('client:', client)
     if (!session?.accessToken) return
     const result = await fireSwal({
       title: '¿Estás segura?',
@@ -60,8 +57,7 @@ export const DeleteClientDialog = ({
         showConfirmButton: false,
         theme: 'auto'
       })
-    } catch (error) {
-      console.error('Error al eliminar:', error) 
+    } catch {
       await fireSwal({
         title: 'Error',
         text: 'No se pudo eliminar el cliente',

@@ -35,7 +35,8 @@ export const CreateCategoryProductDialog = () => {
       setServerError(error.message)
       return
     }
-
+    setOpen(false)
+    
     const result = await fireSwal({
       icon: 'question',
       title: '¿Restaurar categoría?',

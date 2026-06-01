@@ -51,9 +51,7 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
     body: JSON.stringify(data)
   })
   const result = await response.json()
-  console.log('result:', result)
   if (response.status === 409) {
-     console.log('409 result:', result)
     throw new UserConflictException({
       message: result.message,
       canRestore: result.canRestore ?? false,
