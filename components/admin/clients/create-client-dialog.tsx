@@ -26,7 +26,7 @@ const fireSwal = (options: SweetAlertOptions) =>
 type Props = {
   token: string
   genders: Gender[]
-  onCreatedAction:() => void
+  onCreatedAction: () => void
 }
 
 export const CreateClientDialog = ({
@@ -36,8 +36,7 @@ export const CreateClientDialog = ({
 }: Props) => {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
-
+  const [serverError, setServerError] = useState<{ field: 'email' | 'cellphone', message: string } | null>(null)
   const handleOpenChange = (value: boolean) => {
     setOpen(value)
 
@@ -47,6 +46,7 @@ export const CreateClientDialog = ({
   }
 
   const handleCreate = async (data: CreateUserDto) => {
+    console.log('handleCreate llamado', data)
     try {
       setIsLoading(true)
       setServerError(null)
@@ -63,44 +63,40 @@ export const CreateClientDialog = ({
         theme: 'auto'
       })
 
-    } catch (error) {
-      let err: any = null
-
-      if (error instanceof Error) {
-        try {
-          err = JSON.parse(error.message)
-        } catch {
-          err = null
-        }
+  } catch (error) {
+    if (!(error instanceof TypeError)) return
+    try {
+      const err = JSON.parse(error.message)
+      if (err?.field === 'email' || err?.field === 'cellphone') {
+        setServerError({ field: err.field, message: err.message })
       }
-
-      const message = err?.message || 'Error al crear cliente'
-
-      setServerError(message)
-    } finally {
-      setIsLoading(false)
+    } catch {
+      setServerError({ field: 'email', message: 'Error inesperado, intenta de nuevo' })
     }
+  } finally {
+    setIsLoading(false)
   }
+}
 
-  return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button>Nuevo cliente</Button>
-      </DialogTrigger>
+return (
+  <Dialog open={open} onOpenChange={handleOpenChange}>
+    <DialogTrigger asChild>
+      <Button>Nuevo cliente</Button>
+    </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Crear cliente</DialogTitle>
-        </DialogHeader>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Crear cliente</DialogTitle>
+      </DialogHeader>
 
-        <ClientForm
-          genders={genders}
-          onSubmitAction={handleCreate}
-          isLoading={isLoading}
-          serverError={serverError}
-          onClearServerErrorAction={() => setServerError(null)}
-        />
-      </DialogContent>
-    </Dialog>
-  )
+      <ClientForm
+        genders={genders}
+        onSubmitAction={handleCreate}
+        isLoading={isLoading}
+        serverError={serverError}
+        onClearServerErrorAction={() => setServerError(null)}
+      />
+    </DialogContent>
+  </Dialog>
+)
 }

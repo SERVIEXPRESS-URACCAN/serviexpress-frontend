@@ -31,16 +31,12 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
     body: JSON.stringify(data)
   })
   const result = await response.json()
-
+console.log('result:', result)
   if (!response.ok) {
     if (Array.isArray(result.message)) {
-      result.field = 'email'
-      result.message = result.message[0]
+      throw new TypeError(JSON.stringify({ field: null }))
     }
-
-    throw new Error(
-      JSON.stringify(result)
-    )
+    throw new TypeError(JSON.stringify(result))
   }
 
   return result
