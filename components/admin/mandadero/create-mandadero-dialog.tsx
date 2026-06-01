@@ -6,33 +6,32 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { createMandaderoAdmin, getUsers } from "@/services/mandadero.service";
 import { CreateMandaderoAdminDto } from "@/types/mandadero.type";
 import { useEffect, useState } from "react";
-import { MandaderoForm } from "./mandadero-form";
+import { MandaderoForm } from "./create-mandadero-form";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { UseFormSetError } from "react-hook-form";
 import { CreateMandaderoInput } from "@/schemas/mandaderos.schema";
+import { User } from "@/types/user.type";
+import { Button } from "@/components/ui/button";
 
-type Props = {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-};
-
-export const CreateMandaderoDialog = ({ open, onOpenChangeAction }: Props) => {
+export const CreateMandaderoDialog = () => {
   const router = useRouter();
   const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [users, setUsers] = useState<{ id: number; email: string }[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     if (open && session) {
       getUsers(session.accessToken).then((res) => {
         const data = res as unknown as {
-          data: { id: number; email: string }[];
+          data: User[];
         };
         setUsers(data.data);
       });
@@ -59,18 +58,18 @@ export const CreateMandaderoDialog = ({ open, onOpenChangeAction }: Props) => {
       await Swal.fire({
         icon: "success",
         title: "Mandadero creado",
-        text: `El mandadero "${data.name}" fue creado exitosamente.`,
+        text: `Mandadero creado exitosamente.`,
         timer: 2000,
         showConfirmButton: false,
       });
-      onOpenChangeAction(false);
+      setOpen(false);
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Error al crear el mandadero";
       if (message.toLowerCase().includes("placa")) {
         setFieldError("licensePlate", {
           message: "Esta placa ya está registrada",
-        }); // 👈 va al campo
+        });
       } else {
         setError(message);
       }
@@ -79,7 +78,10 @@ export const CreateMandaderoDialog = ({ open, onOpenChangeAction }: Props) => {
     }
   };
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>Crear Mandadero</Button>
+      </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Crear Mandadero</DialogTitle>
