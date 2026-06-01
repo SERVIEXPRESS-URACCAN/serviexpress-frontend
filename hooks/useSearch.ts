@@ -9,9 +9,25 @@ export const useSearch = () => {
 
   const [value, setValue] = useState(searchParams.get("search") || "");
 
-  const handleSearch = () => {
-    if (!value.trim() && !searchParams.get("search")) return;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const currentSearch = searchParams.get("search") || "";
+      if (value === currentSearch) return;
 
+      const params = new URLSearchParams(searchParams.toString());
+      if (value.trim()) {
+        params.set("search", value);
+      } else {
+        params.delete("search");
+      }
+
+      params.set("page", "1");
+      router.replace(`?${params.toString()}`);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [value]);
+
+  const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (value.trim()) {
@@ -21,20 +37,7 @@ export const useSearch = () => {
     }
 
     params.set("page", "1");
-
     router.replace(`?${params.toString()}`);
   };
-  useEffect(() => {
-    if (value === "" && searchParams.get("search")) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("search");
-      params.set("page", "1");
-      router.replace(`?${params.toString()}`);
-    }
-  }, [value, searchParams, router]);
-  return {
-    value,
-    setValue,
-    handleSearch,
-  };
+  return { value, setValue, handleSearch };
 };

@@ -24,11 +24,7 @@ import {
 } from "@/components/ui/popover";
 
 import { useState } from "react";
-
-type User = {
-  id: number;
-  email: string;
-};
+import { User } from "@/types/user.type";
 
 type Props = {
   users: User[];

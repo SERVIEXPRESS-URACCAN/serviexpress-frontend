@@ -4,9 +4,6 @@ export const createMandaderoSchema = z.object({
   userId: z
     .number({ error: "Debes seleccionar un usuario" })
     .min(1, "Debes seleccionar un usuario"),
-  name: z.string().trim().min(1, "El nombre es requerido"),
-  lastName: z.string().trim().min(1, "El apellido es requerido"),
-  cellphone: z.string().trim().min(1, "El teléfono es requerido"),
   licensePlate: z.string().trim().min(1, "La placa es requerida"),
   brand: z.string().optional(),
   model: z.string().optional(),
@@ -27,7 +24,10 @@ export const updateMandaderoSchema = z.object({
   profile: z.object({
     name: z.string().trim().min(1, "El nombre es requerido"),
     lastName: z.string().trim().min(1, "El apellido es requerido"),
-    cellphone: z.string().trim().min(1, "El teléfono es requerido"),
+    cellphone: z
+      .string()
+      .trim()
+      .regex(/^\d{8}$/, "El teléfono debe tener 8 dígitos"),
   }),
 
   available: z.boolean(),
