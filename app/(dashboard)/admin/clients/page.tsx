@@ -37,7 +37,7 @@ export default function ClientsPage() {
         clients={clients}
         currentPage={clients.pagination.page}
         genders={genders}
-        onUpdated={fetchClients}
+        onUpdatedAction={fetchClients}
 
       />
     </div>

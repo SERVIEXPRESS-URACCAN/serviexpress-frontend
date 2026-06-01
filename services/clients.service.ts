@@ -124,3 +124,18 @@ export const updateClientProfile = async (
 
   return result
 }
+
+export const deleteClient = async (id: number, token: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(`Error al eliminar el cliente con id ${id}: ${JSON.stringify(error)}`)
+  }
+}

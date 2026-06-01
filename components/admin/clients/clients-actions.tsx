@@ -17,17 +17,18 @@ import { Clients } from '@/types/clients'
 import { Gender } from '@/types/gender.type'
 
 import { EditClientDialog } from './edit-client-dialog'
+import { DeleteClientDialog } from './delete-client-dialog'
 
 type Props = {
   client: Clients
   genders: Gender[]
-  onUpdated: () => Promise<void>
+  onUpdatedAction: () => Promise<void>
 }
 
 export const ClientesActions = ({
   client,
   genders,
-  onUpdated
+  onUpdatedAction
 }: Props) => {
   const [editOpen, setEditOpen] =
     useState(false)
@@ -51,6 +52,10 @@ export const ClientesActions = ({
           >
             Editar
           </DropdownMenuItem>
+          <DeleteClientDialog
+            client={client}
+            onUpdatedAction={onUpdatedAction}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -59,7 +64,7 @@ export const ClientesActions = ({
         genders={genders}
         open={editOpen}
         onOpenChangeAction={setEditOpen}
-        onUpdated={onUpdated}
+        onUpdated={onUpdatedAction}
       />
     </>
   )

@@ -7,7 +7,7 @@ export type Clients = {
   lastName: string
   cellphone: string
   gender?: Gender
-  user?: User
+  user: User
 }
 
 export type ClientsResponse = {
