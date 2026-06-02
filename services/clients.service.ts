@@ -20,6 +20,23 @@ export const getClientes = async (token: string, page = 1, limit = 10): Promise<
 
   return response.json()
 }
+export const getClientById = async (token: string, id:number)=>{
+  const response = await fetch(`${API_URL}/profiles/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    cache: 'no-store',
+
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(`Error ${response.status}: ${JSON.stringify(error)}`)
+  }
+
+  return response.json()
+}
 export const restoreClient = async (
   id: number,
   data: CreateUserDto,

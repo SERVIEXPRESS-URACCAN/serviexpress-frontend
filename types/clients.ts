@@ -8,6 +8,7 @@ export type Clients = {
   cellphone: string
   gender?: Gender
   user: User
+  profileImage?: string | null
 }
 
 export type ClientsResponse = {

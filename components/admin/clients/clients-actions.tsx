@@ -18,6 +18,7 @@ import { Gender } from '@/types/gender.type'
 
 import { EditClientDialog } from './edit-client-dialog'
 import { DeleteClientDialog } from './delete-client-dialog'
+import Link from 'next/link'
 
 type Props = {
   client: Clients
@@ -47,6 +48,11 @@ export const ClientesActions = ({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link href={`/admin/clients/${client.id}`}>
+              Ver
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setEditOpen(true)}
           >
