@@ -39,7 +39,6 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
 
               <TableHead>Marca</TableHead>
               <TableHead>Modelo</TableHead>
-              <TableHead>Color</TableHead>
               <TableHead>Placa</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead>Disponibilidad</TableHead>
@@ -65,7 +64,7 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
 
                   <TableCell>{mandadero.motorcycle?.brand ?? "-"}</TableCell>
                   <TableCell>{mandadero.motorcycle?.model ?? "-"}</TableCell>
-                  <TableCell>{mandadero.motorcycle?.color ?? "-"}</TableCell>
+
                   <TableCell>
                     {mandadero.motorcycle?.licensePlate ?? "-"}
                   </TableCell>
