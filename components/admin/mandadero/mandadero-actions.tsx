@@ -9,13 +9,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Mandadero } from "@/types/mandadero.type";
 import { MoreVertical } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   mandadero: Mandadero;
   onEditAction: () => void;
 };
 
-export const MandaderoActions = ({ onEditAction }: Props) => {
+export const MandaderoActions = ({ mandadero, onEditAction }: Props) => {
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,6 +31,11 @@ export const MandaderoActions = ({ onEditAction }: Props) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          onClick={() => router.push(`/admin/mandaderos/${mandadero.id}`)}
+        >
+          Ver
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={onEditAction}>Editar</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

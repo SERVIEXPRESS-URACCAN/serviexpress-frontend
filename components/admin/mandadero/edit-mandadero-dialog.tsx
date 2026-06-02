@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogHeader,
@@ -8,18 +7,19 @@ import {
   Dialog,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { useAuth } from "@/hooks/useAuth";
 import { updateMandaderoProfile } from "@/services/mandadero-profile.service";
 import {
   updateMandaderoActive,
   updateMandaderoAvailability,
+  updateMotorcycle,
 } from "@/services/mandadero.service";
 import { Mandadero } from "@/types/mandadero.type";
 import { useRouter } from "next/navigation";
+import { UpdateMandaderoInput } from "@/schemas/mandaderos.schema";
 import { useState } from "react";
+import { EditMandaderoForm } from "./edit-mandadero-form";
 
 type Props = {
   mandadero: Mandadero;
@@ -34,129 +34,72 @@ export const EditMandaderoDialog = ({
 }: Props) => {
   const router = useRouter();
   const { session } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    name: mandadero.user?.profile?.name || "",
-    lastName: mandadero.user?.profile?.lastName || "",
-    cellphone: mandadero.user?.profile?.cellphone || "",
-    available: mandadero.available,
-    isActive: mandadero.isActive,
-  });
-
-  const handleSave = async () => {
+  const onSubmit = async (data: UpdateMandaderoInput) => {
     if (!session) return;
 
     const profileId = mandadero.user?.profile?.id;
-    if (!profileId) {
-      return;
-    }
+    if (!profileId) return;
 
     try {
-      setIsLoading(true);
-
-      await updateMandaderoProfile(profileId, session!.accessToken, {
-        name: formData.name,
-        lastName: formData.lastName,
-        cellphone: formData.cellphone,
-      });
-      await updateMandaderoAvailability(
-        mandadero.id,
-        session!.accessToken,
-        formData.available,
+      setIsSubmitting(true);
+      await updateMotorcycle(
+        mandadero.motorcycle.id,
+        session.accessToken,
+        data.motorcycle,
       );
+
+      await updateMandaderoProfile(
+        profileId,
+        session!.accessToken,
+        data.profile,
+      );
+
       await updateMandaderoActive(
         mandadero.id,
         session!.accessToken,
-        formData.isActive,
+        data.isActive,
+      );
+
+      await updateMandaderoAvailability(
+        mandadero.id,
+        session!.accessToken,
+        data.available,
       );
 
       onOpenChangeAction(false);
       router.refresh();
     } catch (error) {
-      console.error("Error updating mandadero:", error);
+      const message =
+        error instanceof Error ? error.message : "Error al actualizar";
+
+      setError(message);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
+  };
+  const handleOpenChange = (value: boolean) => {
+    if (!value) setError(null);
+    onOpenChangeAction(value);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar Mandadero</DialogTitle>
           <DialogDescription>
             Edita la información del mandadero.
           </DialogDescription>
         </DialogHeader>
-
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nombre</Label>
-            <Input
-              value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  name: e.target.value,
-                }))
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Apellido</Label>
-            <Input
-              value={formData.lastName}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  lastName: e.target.value,
-                }))
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Telefono</Label>
-            <Input
-              value={formData.cellphone}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, cellphone: e.target.value }))
-              }
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <Label>Activo</Label>
-            <Switch
-              checked={formData.isActive}
-              onCheckedChange={(value) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  isActive: value,
-                  available: !value ? false : prev.available,
-                }));
-              }}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <Label>Disponible</Label>
-            <Switch
-              checked={formData.available}
-              onCheckedChange={(value) => {
-                if (value && !formData.isActive) return;
-                setFormData((prev) => ({
-                  ...prev,
-                  available: value,
-                }));
-              }}
-              disabled={!formData.isActive}
-            />
-          </div>
-
-          <Button onClick={handleSave} disabled={isLoading} className="w-full">
-            {isLoading ? "Guardando..." : "Guardar cambios"}
-          </Button>
-        </div>
+        <EditMandaderoForm
+          mandadero={mandadero}
+          onSubmitAction={onSubmit}
+          isSubmitting={isSubmitting}
+          error={error}
+        />
       </DialogContent>
     </Dialog>
   );

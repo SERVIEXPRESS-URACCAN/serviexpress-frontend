@@ -2,11 +2,14 @@
 
 import { useSearch } from "@/hooks/useSearch";
 
-export const CategoryProductSearch = () => {
+type Props = {
+  className?: string;
+};
+export const CategoryProductSearch = ({ className }: Props) => {
   const { value, setValue, handleSearch } = useSearch();
 
   return (
-    <div className="flex gap-2">
+    <div className={`flex gap-2 ${className}`}>
       <input
         type="text"
         placeholder="Buscar categoría..."
@@ -19,13 +22,6 @@ export const CategoryProductSearch = () => {
         }}
         className="w-full rounded-md border px-3 py-2"
       />
-
-      <button
-        onClick={handleSearch}
-        className="rounded-md bg-black px-4 py-2 text-white"
-      >
-        Buscar
-      </button>
     </div>
   );
 };
