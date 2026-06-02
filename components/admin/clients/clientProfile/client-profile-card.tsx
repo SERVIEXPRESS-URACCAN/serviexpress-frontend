@@ -13,9 +13,9 @@ import {
 import { Separator } from '@/components/ui/separator'
 
 import { Clients } from '@/types/clients'
-import { API_IMAGE_URL } from '@/config/config'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { API_IMG_URL } from '@/config/config'
 
 type Props = Readonly<{
   client: Clients
@@ -40,7 +40,7 @@ export function ClientProfileCard({ client }: Props) {
           <AvatarImage
             src={
               client.profileImage
-                ? `${API_IMAGE_URL}/profile/${client.profileImage}`
+                ? `${API_IMG_URL}/uploads/profile/${client.profileImage}`
                 : undefined
             }
             alt={`${client.name} ${client.lastName}`}
