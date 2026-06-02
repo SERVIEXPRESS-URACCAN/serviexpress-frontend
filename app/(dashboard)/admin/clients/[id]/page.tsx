@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation'
 
-import { ClientDetail } from '@/components/admin/clients/client-detail'
+import { ClientDetail } from '@/components/admin/clients/clientProfile/client-detail'
 import { useClient } from '@/hooks/useClient'
 
 export default function ClientPage() {
