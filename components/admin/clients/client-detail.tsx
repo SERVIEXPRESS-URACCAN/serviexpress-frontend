@@ -7,11 +7,11 @@ type Props = {
 
 export function ClientDetail({ client }: Props) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+    <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
       <ClientProfileCard client={client} />
 
       <div>
       </div>
     </div>
   )
-}
+} 

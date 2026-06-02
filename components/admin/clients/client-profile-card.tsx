@@ -14,10 +14,18 @@ import { Separator } from '@/components/ui/separator'
 
 import { Clients } from '@/types/clients'
 import { API_IMAGE_URL } from '@/config/config'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
-type Props = {
+type Props = Readonly<{
   client: Clients
-}
+}>
+
+type RowProps = Readonly<{
+  label: string
+  value: string
+}>
+
 
 function getInitials(name: string, lastName: string) {
   return `${name[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase()
@@ -28,7 +36,7 @@ export function ClientProfileCard({ client }: Props) {
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-col items-center gap-4">
-        <Avatar className="h-20 w-20">
+        <Avatar className="h-40 w-40">
           <AvatarImage
             src={
               client.profileImage
@@ -37,17 +45,17 @@ export function ClientProfileCard({ client }: Props) {
             }
             alt={`${client.name} ${client.lastName}`}
           />
-          <AvatarFallback>
+          <AvatarFallback className="bg-yellow-200 text-yellow-700 text-3xl font-bold">
             {getInitials(client.name, client.lastName)}
           </AvatarFallback>
         </Avatar>
 
         <div className="flex flex-col items-center gap-2">
           <CardTitle className="text-center">
-            {client.name} {client.lastName}
+            {client.user.email}
           </CardTitle>
 
-          <Badge variant={isActive ? 'default' : 'secondary'}>
+          <Badge variant={isActive ? 'default' : 'destructive'}>
             {isActive ? 'Activo' : 'Inactivo'}
           </Badge>
         </div>
@@ -55,25 +63,30 @@ export function ClientProfileCard({ client }: Props) {
 
       <Separator />
 
-      <CardContent className="pt-4">
-        <dl className="space-y-4">
-          <Row
-            label="Correo"
-            value={client.user.email}
-          />
+      <CardContent className="space-y-4 pt-4">
+  <div className="space-y-2">
+    <Label className="text-base font-semibold">Nombre</Label>
+    <Input value={client.name} readOnly/>
+  </div>
 
-          <Row
-            label="Teléfono"
-            value={client.cellphone}
-          />
+  <div className="space-y-2">
+    <Label className="text-base font-semibold">Apellido</Label>
+    <Input value={client.lastName} readOnly />
+  </div>
 
-          <Row
-            label="Género"
-            value={client.gender?.name ?? 'No definido'}
-          />
+  <div className="space-y-2">
+    <Label className="text-base font-semibold">Teléfono</Label>
+    <Input value={client.cellphone} readOnly />
+  </div>
 
-        </dl>
-      </CardContent>
+  <div className="space-y-2">
+    <Label className="text-base font-semibold">Género</Label>
+    <Input
+      value={client.gender?.name ?? 'No definido'}
+      readOnly
+    />
+  </div>
+</CardContent>
     </Card>
   )
 }
@@ -81,10 +94,8 @@ export function ClientProfileCard({ client }: Props) {
 function Row({
   label,
   value
-}: {
-  label: string
-  value: string
-}) {
+}: RowProps){
+
   return (
     <div className="flex items-center justify-between gap-4">
       <dt className="text-muted-foreground">
