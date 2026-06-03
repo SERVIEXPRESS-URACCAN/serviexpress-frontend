@@ -31,3 +31,18 @@ export const getAvailableUsersForOwner = async (token: string) => {
 
   return result
 }
+
+export async function updateUserStatus(userId: number, status: boolean, token: string) {
+  const res = await fetch(`${API_URL}/users/${userId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+
+  if (!res.ok) throw new Error('Error al actualizar el estado del usuario')
+
+  return res.json()
+}

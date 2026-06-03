@@ -7,7 +7,8 @@ export type Clients = {
   lastName: string
   cellphone: string
   gender?: Gender
-  user?: User
+  user: User
+  profileImage?: string | null
 }
 
 export type ClientsResponse = {

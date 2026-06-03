@@ -4,19 +4,22 @@ import { useEffect, useState } from 'react'
 import { getClientes } from '@/services/clients.service'
 import { ClientsResponse } from '@/types/clients'
 import { useAuth } from './useAuth'
+import { useSearchParams } from 'next/navigation'
 
 export const useClients = () => {
-    const { session } = useAuth()
-  
+  const { session } = useAuth()
+  const searchParams = useSearchParams()
+  const page = Number(searchParams.get('page') || 1)
+  const search = searchParams.get('search') || ''
+
   const [clients, setClients] = useState<ClientsResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchClients = async () => {
     if (!session?.accessToken) return
-    
-
     try {
-      const response = await getClientes(session.accessToken)
+      setLoading(true)
+      const response = await getClientes(session.accessToken, page)
 
       setClients(response)
     } finally {
@@ -26,7 +29,7 @@ export const useClients = () => {
 
   useEffect(() => {
     fetchClients()
-  }, [session])
+  }, [session, page, search])
 
   return {
     clients,

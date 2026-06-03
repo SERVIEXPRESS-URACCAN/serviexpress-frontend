@@ -14,6 +14,7 @@ import { UpdateClientProfileDto } from '@/schemas/client.schema'
 import { updateClientProfile } from '@/services/clients.service'
 import { ClientEditForm } from './client-edit-form'
 import { Gender } from '@/types/gender.type'
+import { updateUserStatus } from '@/services/users.service'
 
 type Props = {
   client: Clients | null
@@ -35,28 +36,33 @@ export const EditClientDialog = ({
   const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
-
+  const [serverError, setServerError] = useState<{ field: 'cellphone', message: string } | null>(null)
   const handleUpdate = async (data: UpdateClientProfileDto) => {
-  try {
-    setIsLoading(true)
-    setServerError(null)
+    try {
+      setIsLoading(true)
+      setServerError(null)
 
-    if (!client || !session?.accessToken) return
+      if (!client || !session?.accessToken) return
 
-    await updateClientProfile(client.id, data, session.accessToken)
+      if (!client.user?.id) {
+        setServerError({ field: 'cellphone', message: 'No se encontró el usuario asociado' })
+        return
+      }
 
-    onOpenChangeAction(false)
+      await Promise.all([
+        updateClientProfile(client.id, data, session.accessToken),
+        updateUserStatus(client.user.id, data.status, session.accessToken)
+      ])
+      onOpenChangeAction(false)
 
-    await onUpdated?.()
-  } catch (error) {
-    setServerError(
-      error instanceof Error ? error.message : 'Error al actualizar'
-    )
-  } finally {
-    setIsLoading(false)
+      await onUpdated?.()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error al actualizar'
+      setServerError({ field: 'cellphone', message: message })
+    } finally {
+      setIsLoading(false)
+    }
   }
-}
 
   if (!client) return null
 
@@ -73,11 +79,13 @@ export const EditClientDialog = ({
             name: client.name,
             lastName: client.lastName,
             cellphone: client.cellphone,
-            gender_id: client.gender?.id || 0
+            gender_id: client.gender?.id || 0,
+            status: client.user?.status ?? true
           }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}
           serverError={serverError}
+          onClearServerErrorAction={() => setServerError(null)}
         />
       </DialogContent>
     </Dialog>

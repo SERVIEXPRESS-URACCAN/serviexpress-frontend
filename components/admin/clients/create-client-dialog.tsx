@@ -14,9 +14,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { ClientForm } from './client-form'
 
-import { createClient } from '@/services/clients.service'
+import { createClient, restoreClient } from '@/services/clients.service'
 import { Gender } from '@/types/gender.type'
 import { CreateUserDto } from '@/schemas/client.schema'
+import { UserConflictException } from '@/types/api-errors.types'
 
 const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
@@ -26,7 +27,7 @@ const fireSwal = (options: SweetAlertOptions) =>
 type Props = {
   token: string
   genders: Gender[]
-  onCreatedAction:() => void
+  onCreatedAction: () => void
 }
 
 export const CreateClientDialog = ({
@@ -36,13 +37,52 @@ export const CreateClientDialog = ({
 }: Props) => {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
-
+  const [serverError, setServerError] = useState<{ field: 'email' | 'cellphone', message: string } | null>(null)
+  
+  
   const handleOpenChange = (value: boolean) => {
+
     setOpen(value)
 
     if (!value) {
       setServerError(null)
+    }
+  }
+
+
+  const handleConflict = async (error: UserConflictException, data:CreateUserDto) => {
+    if (!error.data.canRestore) {
+      setServerError({ field: 'email', message: error.message })
+      return
+    }
+    setOpen(false)
+    
+    const result = await fireSwal({
+      icon: 'question',
+      title: '¿Restaurar cliente?',
+      text: error.data.message,
+      showCancelButton: true,
+      confirmButtonText: 'Sí, restaurar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#dc2626',
+    })
+
+    if (!result.isConfirmed) return
+
+    try {
+      await restoreClient(error.data.id, data, token)
+      setOpen(false)
+      onCreatedAction()
+      await fireSwal({
+        icon: 'success',
+        title: 'Cliente restaurado',
+        timer: 2000,
+        showConfirmButton: false,
+      })
+    } catch (restoreError) {
+      const message = restoreError instanceof Error ? restoreError.message : 'Error al restaurar el cliente'
+      await fireSwal({ icon: 'error', title: 'Error', text: message })
     }
   }
 
@@ -52,8 +92,8 @@ export const CreateClientDialog = ({
       setServerError(null)
 
       await createClient(data, token)
-
       setOpen(false)
+      
       onCreatedAction()
 
       await fireSwal({
@@ -64,19 +104,19 @@ export const CreateClientDialog = ({
       })
 
     } catch (error) {
-      let err: any = null
-
-      if (error instanceof Error) {
-        try {
-          err = JSON.parse(error.message)
-        } catch {
-          err = null
-        }
+      if (error instanceof UserConflictException) {
+        await handleConflict(error, data)
+        return
       }
-
-      const message = err?.message || 'Error al crear cliente'
-
-      setServerError(message)
+      if (!(error instanceof TypeError)) return
+      try {
+        const err = JSON.parse(error.message)
+        if (err?.field === 'email' || err?.field === 'cellphone') {
+          setServerError({ field: err.field, message: err.message })
+        }
+      } catch {
+        setServerError({ field: 'email', message: 'Error inesperado, intenta de nuevo' })
+      }
     } finally {
       setIsLoading(false)
     }

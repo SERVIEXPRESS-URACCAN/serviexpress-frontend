@@ -18,14 +18,14 @@ type Props = {
   clients: ClientsResponse
   currentPage: number
   genders: Gender[]
-  onUpdated: () => Promise<void>
+  onUpdatedAction: () => Promise<void>
 }
 
 export const ClientesTable = ({
   clients,
   currentPage,
   genders,
-  onUpdated
+  onUpdatedAction
 }: Props) => {
   const { pagination } = clients;
 
@@ -98,7 +98,7 @@ export const ClientesTable = ({
                     <ClientesActions
                       client={client}
                       genders={genders}
-                      onUpdated={onUpdated}
+                      onUpdatedAction={onUpdatedAction}
                     />
                   </TableCell>
                 </TableRow>

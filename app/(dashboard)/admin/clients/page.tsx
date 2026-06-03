@@ -4,6 +4,7 @@ import { CreateClientDialog } from '@/components/admin/clients/create-client-dia
 import { useAuth } from '@/hooks/useAuth'
 import { useClients } from '@/hooks/useClients'
 import { useGenders } from '@/hooks/useGenders'
+import Loading from './loading'
 
 export default function ClientsPage() {
   const { session, isLoading: authLoading } = useAuth()
@@ -22,13 +23,12 @@ export default function ClientsPage() {
     authLoading || loading || loadingGenders
 
   if (isLoading || !clients) {
-    return <p>Cargando...</p>
+    return <Loading/>
   }
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Clientes</h1>
-
         <CreateClientDialog token={token} genders={genders} onCreatedAction={fetchClients}
         />
       </div>
@@ -37,7 +37,7 @@ export default function ClientsPage() {
         clients={clients}
         currentPage={clients.pagination.page}
         genders={genders}
-        onUpdated={fetchClients}
+        onUpdatedAction={fetchClients}
 
       />
     </div>
