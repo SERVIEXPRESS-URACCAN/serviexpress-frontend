@@ -50,15 +50,6 @@ export const ClientEditForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-
-        <FormField label="Imagen de perfil" error={errors.profileImage?.message?.toString()}>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setValue('profileImage', e.target.files?.[0] || null)}
-          />
-        </FormField>
-
         <FormField label="Nombre" htmlFor="name" error={errors.name?.message}>
           <Input id="name" {...register('name')} />
         </FormField>
@@ -66,17 +57,14 @@ export const ClientEditForm = ({
         <FormField label="Apellido" htmlFor="lastName" error={errors.lastName?.message}>
           <Input id="lastName" {...register('lastName')} />
         </FormField>
-
       </div>
 
       <FormField label="Teléfono" htmlFor="cellphone" error={errors.cellphone?.message}>
-        <Input id="cellphone" {...register('cellphone', { onChange: () => onClearServerErrorAction?.() })} />        
+        <Input id="cellphone" {...register('cellphone', { onChange: () => onClearServerErrorAction?.() })} />
         <FormError message={serverError?.field === 'cellphone' ? serverError.message : undefined} />
-
       </FormField>
 
       <div className="grid gap-4 sm:grid-cols-2">
-
         <FormField label="Género" error={errors.gender_id?.message}>
           <Controller
             control={control}
@@ -121,9 +109,15 @@ export const ClientEditForm = ({
             )}
           />
         </FormField>
-
       </div>
-
+      
+      <FormField label="Imagen de perfil" error={errors.profileImage?.message?.toString()}>
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setValue('profileImage', e.target.files?.[0] || null)}
+        />
+      </FormField>
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Guardando...' : 'Guardar'}
       </Button>

@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation'
 
-import { ClientDetail } from '@/components/admin/clients/clientProfile/client-detail'
+import { ClientDetail } from '@/components/admin/clients/profile/client-detail'
 import { useClient } from '@/hooks/useClient'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'

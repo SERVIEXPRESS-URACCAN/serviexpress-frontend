@@ -5,7 +5,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { useClients } from '@/hooks/useClients'
 import { useGenders } from '@/hooks/useGenders'
 import Loading from './loading'
-import { ClientSearch } from '@/components/admin/clients/search-client'
 
 export default function ClientsPage() {
   const { session, isLoading: authLoading } = useAuth()
@@ -30,7 +29,6 @@ export default function ClientsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Clientes</h1>
-        <ClientSearch />
         <CreateClientDialog token={token} genders={genders} onCreatedAction={fetchClients}
         />
       </div>
