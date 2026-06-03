@@ -10,6 +10,7 @@ export const useClients = () => {
   const { session } = useAuth()
   const searchParams = useSearchParams()
   const page = Number(searchParams.get('page') || 1)
+  const search = searchParams.get('search') || ''
 
   const [clients, setClients] = useState<ClientsResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -28,7 +29,7 @@ export const useClients = () => {
 
   useEffect(() => {
     fetchClients()
-  }, [session, page])
+  }, [session, page, search])
 
   return {
     clients,
