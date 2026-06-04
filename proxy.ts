@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 
+
 const publicRoutes = [
   "/",
   "/login",
@@ -12,6 +13,7 @@ export const proxy = auth((req) => {
   if (pathname === "/") {
     return;
   }
+
   if (
     publicRoutes.some((route) =>
       pathname.startsWith(route)
@@ -21,6 +23,18 @@ export const proxy = auth((req) => {
   }
 
   if (!req.auth) {
+    return Response.redirect(
+      new URL(
+        "/login",
+        req.nextUrl.origin
+      )
+    );
+  }
+
+  if (
+    req.auth.expiresAt &&
+    Date.now() >= req.auth.expiresAt * 1000
+  ) {
     return Response.redirect(
       new URL(
         "/login",

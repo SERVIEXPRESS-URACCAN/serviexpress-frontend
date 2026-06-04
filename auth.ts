@@ -28,8 +28,8 @@ export const {
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60,
-    updateAge: 60 * 60,
+    maxAge: 60,
+    updateAge:0,
   },
   providers: [
     Credentials({
@@ -56,6 +56,7 @@ export const {
             email: data.user.email,
             roles: data.user.roles,
             accessToken: data.access_token,
+            expiresAt: data.expires_at,
           };
         } catch {
           throw new InvalidCredentialsError();
@@ -64,33 +65,38 @@ export const {
     }),
   ],
 
-  callbacks: {
-    async jwt({
-      token,
-      user,
-    }) {
-      if (user) {
-        token.roles =
-          user.roles;
+ callbacks: {
+  async jwt({
+    token,
+    user,
+  }) {
+    if (user) {
+      token.roles = user.roles;
 
-        token.accessToken =
-          user.accessToken;
-      }
+      token.accessToken =
+        user.accessToken;
 
-      return token;
-    },
+      token.expiresAt =
+        user.expiresAt;
+    }
 
-    async session({
-      session,
-      token,
-    }) {
-      session.user.roles =
-        token.roles as Role[];
-
-      session.accessToken =
-        token.accessToken as string;
-
-      return session;
-    },
+    return token;
   },
+
+  async session({
+    session,
+    token,
+  }) {
+    session.user.roles =
+      token.roles as Role[];
+
+    session.accessToken =
+      token.accessToken as string;
+
+    session.expiresAt =
+      token.expiresAt as number;
+
+    return session;
+  },
+},
 });
