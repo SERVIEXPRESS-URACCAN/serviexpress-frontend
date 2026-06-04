@@ -1,0 +1,18 @@
+import { Card, CardContent } from '@/components/ui/card'
+
+interface StatsCardProps {
+  title: string
+  value: string
+}
+
+export default function StatsCard({ title, value }: Readonly<StatsCardProps>) {
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <p className="text-sm text-muted-foreground">{title}</p>
+
+        <h3 className="mt-2 text-3xl font-bold">{value}</h3>
+      </CardContent>
+    </Card>
+  )
+}

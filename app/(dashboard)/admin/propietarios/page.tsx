@@ -1,8 +1,8 @@
 'use client'
 
-import { OwnerTable } from '@/components/admin/owner/owner-table'
+import { OwnerTable } from '@/components/admin/owners/owner-table'
 
-import { CreateOwnerDialog } from '@/components/admin/owner/create-owner-dialog'
+import { CreateOwnerDialog } from '@/components/admin/owners/create-owner-dialog'
 
 import { useAvailableUsers } from '@/hooks/owner/useAvailableUsers'
 import { useOwners } from '@/hooks/useOwner'
