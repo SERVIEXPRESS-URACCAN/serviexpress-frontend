@@ -1,17 +1,30 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { isOwner } from "@/lib/permissions";
-import { LogoutButton } from "@/components/shared/logout-button";
+import { auth } from '@/auth'
+import StatsCard from '@/components/propietario/owner-stats-card'
+import PageHeader from '@/components/propietario/page-header'
+import { isOwner } from '@/lib/permissions'
+import { redirect } from 'next/navigation'
 
 export default async function OwnerPage() {
-  const session = await auth();
-  if (!session) redirect("/login");
-  if (!isOwner(session.user.roles)) redirect("/not-found");
+  const session = await auth()
+  if (!session) redirect('/login')
+  if (!isOwner(session.user.roles)) redirect('/not-found')
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <h1 className="text-2xl font-bold">Owner Dashboard</h1>
-      <LogoutButton />
+    <div>
+      <PageHeader
+        title="Dashboard negocio"
+        description="Resumen general del sistema"
+      />
+
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <StatsCard title="Productos" value="120" />
+
+        <StatsCard title="Pedidos" value="58" />
+
+        <StatsCard title="Negocios" value="12" />
+
+        <StatsCard title="Ingresos" value="$2,340" />
+      </div>
     </div>
-  );
+  )
 }
