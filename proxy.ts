@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 
-
 const publicRoutes = [
   "/",
   "/login",
@@ -10,10 +9,6 @@ const publicRoutes = [
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
-  if (pathname === "/") {
-    return;
-  }
-
   if (
     publicRoutes.some((route) =>
       pathname.startsWith(route)
@@ -21,25 +16,14 @@ export const proxy = auth((req) => {
   ) {
     return;
   }
+  if (req.nextUrl.searchParams.has('_rsc')) return;
+
+  if (publicRoutes.some((route) => pathname.startsWith(route))) return;
+
 
   if (!req.auth) {
     return Response.redirect(
-      new URL(
-        "/login",
-        req.nextUrl.origin
-      )
-    );
-  }
-
-  if (
-    req.auth.expiresAt &&
-    Date.now() >= req.auth.expiresAt * 1000
-  ) {
-    return Response.redirect(
-      new URL(
-        "/login",
-        req.nextUrl.origin
-      )
+      new URL("/login", req.nextUrl.origin)
     );
   }
 });

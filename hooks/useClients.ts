@@ -1,6 +1,5 @@
 'use client'
-
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { getClientes } from '@/services/clients.service'
 import { ClientsResponse } from '@/types/clients'
 import { useAuth } from './useAuth'
@@ -10,29 +9,28 @@ export const useClients = () => {
   const { session } = useAuth()
   const searchParams = useSearchParams()
   const page = Number(searchParams.get('page') || 1)
-  const search = searchParams.get('search') || undefined
+
   const [clients, setClients] = useState<ClientsResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
 
-  const fetchClients = async () => {
-    if (!session?.accessToken) return
+  const fetchClients = useCallback(async () => {
+    if (!session?.accessToken) return;
     try {
-      setLoading(true)
-      const response = await getClientes(session.accessToken, page, 10, search)
-
-      setClients(response)
+      const data = await getClientes(session.accessToken, page);
+      if (data) setClients(data);
+      setError(null);  
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Error inesperado'));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, [session, page]);
 
   useEffect(() => {
-    fetchClients()
-  }, [session, page, search])
+    // eslint-disable-next-line
+    fetchClients();
+  }, [fetchClients]);
 
-  return {
-    clients,
-    loading,
-    fetchClients,
-  }
+  return { clients, loading, error, fetchClients }
 }
