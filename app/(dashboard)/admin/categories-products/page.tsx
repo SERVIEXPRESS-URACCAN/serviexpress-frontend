@@ -1,6 +1,6 @@
 import { CategoriesProductsTable } from "@/components/admin/categories-products.ts";
-import { CategoryProductSearch } from "@/components/admin/categories-products.ts/categories-product-search";
 import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog";
+import { SearchInput } from "@/components/shared/search-input";
 import { getCategoryProducts } from "@/services/categories-products.service";
 
 export default async function CategoryProductPage({
@@ -18,7 +18,10 @@ export default async function CategoryProductPage({
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Categorías de Productos</h1>
       <div className="flex items-center justify-between">
-        <CategoryProductSearch className="w-full max-w-6xl" />
+        <SearchInput
+          placeholder="Buscar categoría de producto..."
+          className="w-full max-w-6xl"
+        />
         <CreateCategoryProductDialog />
       </div>
 
