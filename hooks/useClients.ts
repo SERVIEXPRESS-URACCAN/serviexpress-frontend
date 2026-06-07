@@ -10,8 +10,7 @@ export const useClients = () => {
   const { session } = useAuth()
   const searchParams = useSearchParams()
   const page = Number(searchParams.get('page') || 1)
-  const search = searchParams.get('search') || ''
-
+  const search = searchParams.get('search') || undefined
   const [clients, setClients] = useState<ClientsResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -19,7 +18,7 @@ export const useClients = () => {
     if (!session?.accessToken) return
     try {
       setLoading(true)
-      const response = await getClientes(session.accessToken, page)
+      const response = await getClientes(session.accessToken, page, 10, search)
 
       setClients(response)
     } finally {

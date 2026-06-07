@@ -5,41 +5,46 @@ import { useAuth } from '@/hooks/useAuth'
 import { useClients } from '@/hooks/useClients'
 import { useGenders } from '@/hooks/useGenders'
 import Loading from './loading'
+import { SearchInput } from '@/components/shared/search-input'
 
 export default function ClientsPage() {
   const { session, isLoading: authLoading } = useAuth()
 
   const token = session?.accessToken ?? ''
 
-  const {
-    clients,
-    loading,
-    fetchClients,
-  } = useClients()
+  const { clients, loading, fetchClients } = useClients()
 
   const { genders, loading: loadingGenders } = useGenders(token)
 
-  const isLoading =
-    authLoading || loading || loadingGenders
+  const isLoading = authLoading || loading || loadingGenders
 
-  if (isLoading || !clients) {
-    return <Loading/>
+  if (authLoading || loadingGenders || !clients) {
+    return <Loading />
   }
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Clientes</h1>
-        <CreateClientDialog token={token} genders={genders} onCreatedAction={fetchClients}
+    <div className='space-y-6'>
+      <h1 className='text-2xl font-bold'>Clientes</h1>
+      <div className='flex items-center justify-between'>
+        <SearchInput
+          placeholder='Buscar cliente...'
+          className='w-full max-w-6xl'
+        />
+        <CreateClientDialog
+          token={token}
+          genders={genders}
+          onCreatedAction={fetchClients}
         />
       </div>
-
-      <ClientesTable
-        clients={clients}
-        currentPage={clients.pagination.page}
-        genders={genders}
-        onUpdatedAction={fetchClients}
-
-      />
+      {isLoading ? (
+        <p>Cargando...</p>
+      ) : (
+        <ClientesTable
+          clients={clients}
+          currentPage={clients.pagination.page}
+          genders={genders}
+          onUpdatedAction={fetchClients}
+        />
+      )}
     </div>
   )
 }
