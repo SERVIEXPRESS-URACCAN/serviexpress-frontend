@@ -4,6 +4,7 @@ import { OwnerResponse } from '@/types/owner.types'
 import { useEffect, useState } from 'react'
 
 import { useAuth } from './useAuth'
+import { useSearchParams } from 'next/navigation'
 
 export const useOwners = () => {
   const { session } = useAuth()
@@ -12,11 +13,16 @@ export const useOwners = () => {
 
   const [loading, setLoading] = useState(true)
 
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search') || undefined
+
+  const page = Number(searchParams.get('page') || 1)
+
   const fetchOwners = async () => {
     if (!session?.accessToken) return
 
     try {
-      const response = await getOwner(session.accessToken)
+      const response = await getOwner(session.accessToken, page, search)
 
       setOwners(response)
     } finally {
@@ -26,11 +32,11 @@ export const useOwners = () => {
 
   useEffect(() => {
     fetchOwners()
-  }, [session])
+  }, [session, search, page])
 
   return {
     owners,
     loading,
-    fetchOwners
+    fetchOwners,
   }
 }
