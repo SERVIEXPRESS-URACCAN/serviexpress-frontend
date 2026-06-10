@@ -3,31 +3,40 @@ import { CreateUserDto, UpdateClientProfileDto } from '@/schemas/client.schema'
 import { UserConflictException } from '@/types/api-errors.types'
 import { Clients, ClientsResponse } from '@/types/clients'
 
-export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientsResponse> => {
-  const response = await fetch(`${API_URL}/profiles?page=${page}&limit=${limit}`, {
+export const getClientes = async (
+  token: string,
+  page = 1,
+  limit = 10,
+  search?: string,
+): Promise<ClientsResponse> => {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    ...(search && { search }),
+  })
+
+  const response = await fetch(`${API_URL}/profiles?${params}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     cache: 'no-store',
-
   })
+  const result = await response.json()
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(`Error ${response.status}: ${JSON.stringify(error)}`)
+    throw new Error(result.message || 'Error fetching clients')
   }
 
-  return response.json()
+  return result
 }
-export const getClientById = async (token: string, id:number)=>{
+export const getClientById = async (token: string, id: number) => {
   const response = await fetch(`${API_URL}/profiles/${id}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     cache: 'no-store',
-
   })
 
   if (!response.ok) {
@@ -57,7 +66,10 @@ export const restoreClient = async (
 
   return response.json()
 }
-export const createClient = async (data: CreateUserDto, token: string): Promise<Clients> => {
+export const createClient = async (
+  data: CreateUserDto,
+  token: string,
+): Promise<Clients> => {
   const response = await fetch(`${API_URL}/users`, {
     method: 'POST',
     headers: {
@@ -65,7 +77,7 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
       Authorization: `Bearer ${token}`,
     },
 
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   })
   const result = await response.json()
   if (response.status === 409) {
@@ -73,7 +85,7 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
       message: result.message,
       canRestore: result.canRestore ?? false,
       id: result.userId,
-    });
+    })
   }
 
   if (!response.ok) {
@@ -86,61 +98,45 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
   return result
 }
 
-
 export const updateClientProfile = async (
   id: number,
   data: UpdateClientProfileDto,
-  token: string
+  token: string,
 ) => {
   const formData = new FormData()
 
   formData.append('name', data.name)
-  formData.append(
-    'lastName',
-    data.lastName
-  )
+  formData.append('lastName', data.lastName)
 
-  formData.append(
-    'cellphone',
-    data.cellphone
-  )
+  formData.append('cellphone', data.cellphone)
 
-  formData.append(
-    'genderId',
-    String(data.gender_id)
-  )
+  formData.append('genderId', String(data.gender_id))
 
   if (data.profileImage) {
-    formData.append(
-      'profileImage',
-      data.profileImage
-    )
+    formData.append('profileImage', data.profileImage)
   }
 
-  const response = await fetch(
-    `${API_URL}/profiles/${id}`,
-    {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: formData
-    }
-  )
+  const response = await fetch(`${API_URL}/profiles/${id}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
 
   const result = await response.json()
 
   if (!response.ok) {
-    throw new Error(
-      result.message ||
-      'Error updating client'
-    )
+    throw new Error(result.message || 'Error updating client')
   }
 
   return result
 }
 
-export const deleteClient = async (id: number, token: string): Promise<void> => {
+export const deleteClient = async (
+  id: number,
+  token: string,
+): Promise<void> => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: 'DELETE',
     headers: {
@@ -151,6 +147,8 @@ export const deleteClient = async (id: number, token: string): Promise<void> => 
 
   if (!response.ok) {
     const error = await response.json()
-    throw new Error(`Error al eliminar el cliente con id ${id}: ${JSON.stringify(error)}`)
+    throw new Error(
+      `Error al eliminar el cliente con id ${id}: ${JSON.stringify(error)}`,
+    )
   }
 }

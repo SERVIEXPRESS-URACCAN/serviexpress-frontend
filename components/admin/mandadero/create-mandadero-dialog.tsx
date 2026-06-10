@@ -3,13 +3,16 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
-import { createMandaderoAdmin, getUsers } from "@/services/mandadero.service";
+import {
+  createMandaderoAdmin,
+  getMandaderos,
+  getUsers,
+} from "@/services/mandadero.service";
 import { CreateMandaderoAdminDto } from "@/types/mandadero.type";
 import { useEffect, useState } from "react";
 import { MandaderoForm } from "./create-mandadero-form";
@@ -27,13 +30,22 @@ export const CreateMandaderoDialog = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
   useEffect(() => {
     if (open && session) {
-      getUsers(session.accessToken).then((res) => {
-        const data = res as unknown as {
-          data: User[];
-        };
-        setUsers(data.data);
+      Promise.all([
+        getUsers(session.accessToken),
+        getMandaderos(session.accessToken),
+      ]).then(([usersResponse, mandaderosResponse]) => {
+        const allUsers = (usersResponse as unknown as { data: User[] }).data;
+
+        const mandaderoUserIds = new Set(
+          mandaderosResponse.data.map((mandadero) => mandadero.user.id),
+        );
+        const filteredUsers = allUsers.filter(
+          (u) => !mandaderoUserIds.has(u.id),
+        );
+        setUsers(filteredUsers);
       });
     }
   }, [open, session]);
@@ -85,9 +97,6 @@ export const CreateMandaderoDialog = () => {
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Crear Mandadero</DialogTitle>
-          <DialogDescription>
-            Completa los datos para registrar un nuevo mandadero.
-          </DialogDescription>
         </DialogHeader>
         <MandaderoForm
           users={users}

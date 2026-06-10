@@ -13,7 +13,6 @@ import { UserSearch } from "./search-mandadero-user";
 import { User } from "@/types/user.type";
 import { FormField } from "@/components/shared/form-field";
 import { FormSection } from "@/components/shared/form-section";
-import { ImageUploadField } from "@/components/shared/image-upload-field";
 import { FormError } from "@/components/shared/form-error";
 import { Label } from "@/components/ui/label";
 

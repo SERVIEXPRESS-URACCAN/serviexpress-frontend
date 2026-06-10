@@ -5,6 +5,6 @@ export type Profile = {
   name: string
   lastName: string
   cellphone: string
-  image?: string
+  profileImage?: string
   gender?: Gender
 }

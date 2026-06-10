@@ -2,7 +2,7 @@ import {
   CategoriesBusinessTable,
   CreateCategoryBusinessDialog,
 } from "@/components/admin/categories-business.ts";
-import { CategoryBusinessSearch } from "@/components/admin/categories-business.ts/categories-business-search";
+import { SearchInput } from "@/components/shared/search-input";
 import { getCategoryBusiness } from "@/services/categories-business.service";
 
 export default async function CategoriesBusinessPage({
@@ -21,7 +21,10 @@ export default async function CategoriesBusinessPage({
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
       <div className="flex items-center justify-between">
-        <CategoryBusinessSearch className="w-full max-w-6xl" />
+        <SearchInput
+          placeholder="Buscar categoría de negocio..."
+          className="w-full max-w-6xl"
+        />
 
         <CreateCategoryBusinessDialog />
       </div>
