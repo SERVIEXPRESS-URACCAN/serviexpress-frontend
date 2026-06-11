@@ -9,25 +9,15 @@ const publicRoutes = [
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
-  if (
-    publicRoutes.some((route) =>
-      pathname.startsWith(route)
-    )
-  ) {
-    return;
-  }
+  const isPublic = publicRoutes.some((route) => pathname.startsWith(route))
+  if (isPublic) return;
+
   if (req.nextUrl.searchParams.has('_rsc')) return;
 
-  if (publicRoutes.some((route) => pathname.startsWith(route))) return;
-
-
   if (!req.auth) {
-    return Response.redirect(
-      new URL("/login", req.nextUrl.origin)
-    );
+    return Response.redirect(new URL("/login", req.nextUrl.origin))
   }
 });
-
 export const config = {
   matcher: [
     String.raw`/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)`,

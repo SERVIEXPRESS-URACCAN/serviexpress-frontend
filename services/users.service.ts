@@ -1,4 +1,5 @@
 import { API_URL } from '@/config/config'
+import { fetchAuth } from '@/lib/fetch-auth'
 
 export const getUsers = async (token: string, page = 1, limit = 10) => {
   const response = await fetch(`${API_URL}/users?page=${page}&limit=${limit}`, {
@@ -33,7 +34,7 @@ export const getAvailableUsersForOwner = async (token: string) => {
 }
 
 export async function updateUserStatus(userId: number, status: boolean, token: string) {
-  const res = await fetch(`${API_URL}/users/${userId}`, {
+  const res = await fetchAuth(`${API_URL}/users/${userId}`, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,

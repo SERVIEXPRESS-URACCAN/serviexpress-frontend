@@ -1,16 +1,15 @@
 'use client'
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { getGenders } from '@/services/genders.service'
 import { Gender } from '@/types/gender.type'
 import { useAuth } from './useAuth'
 
-export const useGenders = () => {  // ← sin token como parámetro
-  const { session } = useAuth()   // ← token interno
+export const useGenders = () => { 
+  const { session } = useAuth() 
 
   const [genders, setGenders] = useState<Gender[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const isMounted = useRef(false)
 
   const fetchGenders = useCallback(async () => {
     if (!session?.accessToken) return;
@@ -26,11 +25,7 @@ export const useGenders = () => {  // ← sin token como parámetro
   }, [session]);
 
   useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      fetchGenders();
-      return;
-    }
+    //eslint-disable-next-line
     fetchGenders();
   }, [fetchGenders]);
 

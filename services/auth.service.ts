@@ -20,3 +20,23 @@ export async function loginService(data: LoginType): Promise<LoginResponse> {
 
   return response.json()
 }
+
+export async function refreshTokenService(refreshToken: string) {
+  const response = await fetch(`${API_URL}/auth/refresh`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Refresh token failed");
+  }
+
+  return response.json() as Promise<{
+    access_token: string;
+    refresh_token: string;
+    expires_at: number;
+  }>;
+}

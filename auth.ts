@@ -1,35 +1,21 @@
-import NextAuth
-, { CredentialsSignin }  from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { LoginSchema } from "@/schemas/login.schema";
+import { loginService } from "@/services/auth.service";
+import { Role, ROLES } from "@/constants/roles";
 
-import Credentials
-  from "next-auth/providers/credentials";
-
-import { LoginSchema }
-  from "@/schemas/login.schema";
-
-import { loginService }
-  from "@/services/auth.service";
-
-import { ROLES, type Role }
-  from "@/constants/roles";
-
-  class InvalidCredentialsError extends CredentialsSignin {
+class InvalidCredentialsError extends CredentialsSignin {
   code = "invalid_credentials";
 }
 
-export const {
-  handlers,
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
   session: {
     strategy: "jwt",
-    maxAge: 60,
-    updateAge:60,
+    maxAge: 60 * 60 * 24,
+    updateAge: 0, 
   },
   providers: [
     Credentials({
@@ -37,7 +23,6 @@ export const {
         email: {},
         password: {},
       },
-
       async authorize(credentials) {
         try {
           const validatedFields = await LoginSchema.parseAsync(credentials);
@@ -47,16 +32,15 @@ export const {
             (role) => role === ROLES.ADMIN || role === ROLES.OWNER
           );
 
-          if (!hasValidRole) {
-            throw new InvalidCredentialsError();
-          }
+          if (!hasValidRole) throw new InvalidCredentialsError();
 
           return {
             id: data.user.id.toString(),
             email: data.user.email,
             roles: data.user.roles,
             accessToken: data.access_token,
-            expiresAt: data.expires_at,
+            refreshToken: data.refresh_token,
+            expiresAt: data.expires_at * 1000,
           };
         } catch {
           throw new InvalidCredentialsError();
@@ -64,39 +48,37 @@ export const {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, trigger, session: sessionData }) {
+      if (user) {
+        return {
+          ...token,
+          roles: user.roles,
+          accessToken: user.accessToken,
+          refreshToken: user.refreshToken,
+          expiresAt: user.expiresAt,
+        };
+      }
 
- callbacks: {
-  async jwt({
-    token,
-    user,
-  }) {
-    if (user) {
-      token.roles = user.roles;
+      if (trigger === 'update' && sessionData) {
+        return {
+          ...token,
+          accessToken: sessionData.accessToken,
+          refreshToken: sessionData.refreshToken,
+          expiresAt: sessionData.expiresAt,
+        };
+      }
 
-      token.accessToken =
-        user.accessToken;
+      return token;
+    },
 
-      token.expiresAt =
-        user.expiresAt;
-    }
-
-    return token;
-  },
-
-  async session({
-    session,
-    token,
-  }) {
-    session.user.roles =
-      token.roles as Role[];
-
-    session.accessToken =
-      token.accessToken as string;
-
-    session.expiresAt =
-      token.expiresAt as number;
-
-    return session;
-  },
+   async session({ session, token }) {
+  session.user.roles = token.roles as Role[];
+  session.accessToken = token.accessToken as string;
+  session.refreshToken = token.refreshToken as string;
+  session.expiresAt = token.expiresAt as number;
+  session.error = token.error as "RefreshAccessTokenError" | undefined;
+  return session;
 },
+  },
 });

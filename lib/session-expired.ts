@@ -1,10 +1,11 @@
-import Swal from "sweetalert2";
+import { signOut } from "next-auth/react"
+import Swal from "sweetalert2"
 
-let isShowing = false;
+let isShowing = false
 
 export async function handleSessionExpired() {
-  if (isShowing) return;
-  isShowing = true;
+  if (isShowing) return
+  isShowing = true
 
   await Swal.fire({
     icon: "warning",
@@ -15,8 +16,9 @@ export async function handleSessionExpired() {
     allowEscapeKey: false,
     timer: 3000,
     timerProgressBar: true,
-  });
+  })
 
-  isShowing = false;
-  window.location.href = "/login";
+  isShowing = false
+  await signOut({ redirect: false })
+  window.location.href = "/login"
 }
