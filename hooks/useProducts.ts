@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
+
 import { Product } from '@/types/products.type'
 import { getProducts } from '@/services/products.service'
 
@@ -14,28 +15,36 @@ export function useProducts() {
 
   const accessToken = session?.accessToken
 
-  useEffect(() => {
+  const fetchProducts = useCallback(async () => {
     if (!accessToken) return
 
-    const loadProducts = async () => {
-      try {
-        const response = await getProducts(accessToken)
-        setProducts(response.data)
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Error al cargar productos',
-        )
-      } finally {
-        setIsLoading(false)
-      }
-    }
+    try {
+      setIsLoading(true)
 
-    loadProducts()
+      const response = await getProducts(accessToken)
+
+      setProducts(response.data)
+      setError(null)
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Error al cargar productos',
+      )
+    } finally {
+      setIsLoading(false)
+    }
   }, [accessToken])
+
+  useEffect(() => {
+    //eslint-disable-next-line
+    fetchProducts()
+  }, [fetchProducts])
 
   return {
     products,
     isLoading,
     error,
+    fetchProducts,
   }
 }

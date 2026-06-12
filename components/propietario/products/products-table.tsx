@@ -41,7 +41,7 @@ export const ProductsTable = ({ products }: Props) => {
                     <TableCell>{product.id}</TableCell>
                     <TableCell>{product.name}</TableCell>
                     <TableCell>{product.description ?? '-'}</TableCell>
-                    <TableCell>${product.price}</TableCell>
+                    <TableCell>C${product.price}</TableCell>
                     <TableCell>{product.category.name}</TableCell>
                                       <TableCell>
                     <span
@@ -51,8 +51,8 @@ export const ProductsTable = ({ products }: Props) => {
                         }`}
                     >
                       {product.status
-                        ? 'Activo'
-                        : 'Inactivo'}
+                        ? 'Disponible'
+                        : 'Agotado'}
                     </span>
                   </TableCell>
                   </TableRow>
