@@ -17,6 +17,7 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 
 import { Input } from '@/components/ui/input'
 import { Eye, EyeOff } from 'lucide-react'
+import { setAuthToken } from '@/lib/fetch-auth'
 
 const initialState = {
   error: '',
@@ -41,16 +42,22 @@ export function LoginForm({ className, ...props }: Props) {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  useEffect(() => {
-    if (!state.success) return
 
-    update().then((updatedSession) => {
-      if (!updatedSession) return
+useEffect(() => {
+  if (!state.success) return
+  let cancelled = false
+  update().then((updatedSession) => {
+    if (cancelled) return
+    if (!updatedSession) {
+      return
+    }
+    setAuthToken(updatedSession.accessToken, updatedSession.expiresAt)
+    router.replace(getRedirectByRole(updatedSession.user.roles))
+  })
 
-      router.replace(getRedirectByRole(updatedSession.user.roles))
-    })
-  }, [state.success, update, router])
-
+  return () => { cancelled = true }
+}, [state.success])
+  
   const handleSubmit = async (formData: FormData) => {
     const email = formData.get('email') as string
     const password = formData.get('password') as string

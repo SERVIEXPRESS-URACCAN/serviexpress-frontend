@@ -1,37 +1,33 @@
 'use client'
-
-import { useEffect, useState } from 'react'
-
+import { useEffect, useState, useCallback } from 'react'
 import { getGenders } from '@/services/genders.service'
-
 import { Gender } from '@/types/gender.type'
+import { useAuth } from './useAuth'
 
-export const useGenders = (token: string) => {
-  const [genders, setGenders] =
-    useState<Gender[]>([])
+export const useGenders = () => { 
+  const { session } = useAuth() 
 
-  const [loading, setLoading] =
-    useState(true)
+  const [genders, setGenders] = useState<Gender[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
 
-  const fetchGenders = async () => {
-    if (!token) return
-
+  const fetchGenders = useCallback(async () => {
+    if (!session?.accessToken) return;
     try {
-      const response = await getGenders(token)
-
-      setGenders(response)
+      const data = await getGenders(session.accessToken);
+      if (data) setGenders(data);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Error inesperado'));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, [session]);
 
   useEffect(() => {
-    fetchGenders()
-  }, [token])
+    //eslint-disable-next-line
+    fetchGenders();
+  }, [fetchGenders]);
 
-  return {
-    genders,
-    loading,
-    fetchGenders
-  }
+  return { genders, loading, error, fetchGenders }
 }

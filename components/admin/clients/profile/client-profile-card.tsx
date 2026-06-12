@@ -21,12 +21,6 @@ type Props = Readonly<{
   client: Clients
 }>
 
-type RowProps = Readonly<{
-  label: string
-  value: string
-}>
-
-
 function getInitials(name: string, lastName: string) {
   return `${name[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase()
 }

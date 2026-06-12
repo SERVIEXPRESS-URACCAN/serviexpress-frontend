@@ -9,18 +9,18 @@ import { SearchInput } from '@/components/shared/search-input'
 
 export default function ClientsPage() {
   const { session, isLoading: authLoading } = useAuth()
-
+  const { clients, loading, fetchClients } = useClients()
   const token = session?.accessToken ?? ''
 
-  const { clients, loading, fetchClients } = useClients()
 
-  const { genders, loading: loadingGenders } = useGenders(token)
+  const { genders, loading: loadingGenders } = useGenders()
 
   const isLoading = authLoading || loading || loadingGenders
 
   if (authLoading || loadingGenders || !clients) {
     return <Loading />
   }
+
   return (
     <div className='space-y-6'>
       <h1 className='text-2xl font-bold'>Clientes</h1>
