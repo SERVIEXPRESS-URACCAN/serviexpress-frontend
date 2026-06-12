@@ -35,8 +35,8 @@ export const createProduct = async (
     formData.append('description', data.description)
   }
 
-  formData.append('price', data.price)
-
+  formData.append('price', String(data.price))
+  
   formData.append('categoryId', String(data.categoryId))
 
   if (data.productImage) {
