@@ -76,7 +76,7 @@ export const CreateOwnerForm = ({
           render={({ field }) => (
             <UserSearch
               users={users}
-              value={field.value}
+              value={field.value as number | undefined}
               onChangeAction={field.onChange}
             />
           )}
@@ -154,7 +154,7 @@ export const CreateOwnerForm = ({
                     <SelectValue placeholder="Seleccione una ciudad" />
                   </SelectTrigger>
 
-                  <SelectContent>
+                  <SelectContent position="popper" className="z-50">
                     {cities.map((city) => (
                       <SelectItem key={city.id} value={String(city.id)}>
                         {city.name}

@@ -3,9 +3,9 @@ import Sidebar from './sidebar'
 
 export default function DashboardShell({
   children
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
     <div className="flex min-h-screen bg-zinc-50 dark:bg-black">
       <Sidebar />

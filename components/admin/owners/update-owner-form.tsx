@@ -41,7 +41,7 @@ export const UpdateOwnerForm = ({
 }: Props) => {
   const { session } = useAuth()
 
-  const { genders } = useGenders(session?.accessToken ?? '')
+  const { genders } = useGenders()
 
   const {
     register,
@@ -123,7 +123,7 @@ export const UpdateOwnerForm = ({
                   <SelectValue placeholder="Seleccione un género" />
                 </SelectTrigger>
 
-                <SelectContent>
+                <SelectContent position="popper" className="z-50">
                   {genders.map((gender) => (
                     <SelectItem key={gender.id} value={String(gender.id)}>
                       {gender.name}
