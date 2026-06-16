@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAuth } from "@/hooks/useAuth";
 import {
   createCategoryBusiness,
   restoreCategoryBusiness,
@@ -22,7 +21,6 @@ import Swal from "sweetalert2";
 
 export const CreateCategoryBusinessDialog = () => {
   const router = useRouter();
-  const { session } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +45,7 @@ export const CreateCategoryBusinessDialog = () => {
     if (!result.isConfirmed) return;
 
     try {
-      await restoreCategoryBusiness(error.data.id, session!.accessToken);
+      await restoreCategoryBusiness(error.data.id,);
       setOpen(false);
       router.refresh();
 
@@ -74,7 +72,7 @@ export const CreateCategoryBusinessDialog = () => {
       setIsLoading(true);
       setError("");
 
-      await createCategoryBusiness(data, session!.accessToken);
+      await createCategoryBusiness(data);
       setOpen(false);
       router.refresh();
 

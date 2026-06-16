@@ -1,4 +1,3 @@
-import { auth } from '@/auth'
 import { getMandaderoById } from '@/services/mandadero.service'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -14,8 +13,7 @@ export default async function MandaderoDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const session = await auth()
-  const mandadero = await getMandaderoById(Number(id), session!.accessToken)
+  const mandadero = await getMandaderoById(Number(id),)
 
   return (
     <div className='space-y-6'>

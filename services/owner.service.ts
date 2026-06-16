@@ -2,9 +2,9 @@ import { API_URL } from '@/config/config'
 import { Owner, OwnerResponse } from '@/types/owner.types'
 
 import { CreateOwner, UpdateOwner } from '@/schemas/owner.schema'
+import { fetchAuth } from '@/lib/fetch-auth'
 
 export const getOwner = async (
-  token: string,
   page = 1,
   search?: string,
 ): Promise<OwnerResponse> => {
@@ -14,9 +14,8 @@ export const getOwner = async (
     ...(search && { search }),
   })
 
-  const response = await fetch(`${API_URL}/owner?${params}`, {
+  const response = await fetchAuth(`${API_URL}/owner?${params}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
     },
     cache: 'no-store',
   })
@@ -32,7 +31,6 @@ export const getOwner = async (
 
 export const createOwner = async (
   data: CreateOwner,
-  token: string,
 ): Promise<Owner> => {
   const formData = new FormData()
 
@@ -46,11 +44,10 @@ export const createOwner = async (
     formData.append('identificationCardImage', data.identificationCardImage)
   }
 
-  const response = await fetch(`${API_URL}/owner`, {
+  const response = await fetchAuth(`${API_URL}/owner`, {
     method: 'POST',
 
     headers: {
-      Authorization: `Bearer ${token}`,
     },
 
     body: formData,
@@ -68,7 +65,6 @@ export const createOwner = async (
 export const updateOwner = async (
   id: number,
   data: UpdateOwner,
-  token: string,
 ): Promise<Owner> => {
   const formData = new FormData()
 
@@ -82,11 +78,8 @@ export const updateOwner = async (
     formData.append('identificationCardImage', data.identificationCardImage)
   }
 
-  const response = await fetch(`${API_URL}/owner/${id}`, {
+  const response = await fetchAuth(`${API_URL}/owner/${id}`, {
     method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     body: formData,
   })
 
@@ -100,13 +93,9 @@ export const updateOwner = async (
 }
 
 export const getOwnerById = async (
-  token: string,
   id: string,
 ): Promise<Owner> => {
-  const response = await fetch(`${API_URL}/owner/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  const response = await fetchAuth(`${API_URL}/owner/${id}`, {
     cache: 'no-store',
   })
 
