@@ -5,8 +5,8 @@ import { SearchInput } from '@/components/shared/search-input'
 import { useOrders } from '@/hooks/orders/useOrders'
 
 export default function OrdersPage() {
-  const { orders, loading, fetchOrders } = useOrders()
-  console.log(orders)
+  const { orders, loading } = useOrders()
+
   if (!orders) {
     return <p>Cargando...</p>
   }
@@ -25,11 +25,7 @@ export default function OrdersPage() {
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <OrderTable
-          orders={orders}
-          currentPage={orders.meta.page}
-          onUpdated={fetchOrders}
-        />
+        <OrderTable orders={orders} currentPage={orders.meta.page} />
       )}
     </div>
   )
