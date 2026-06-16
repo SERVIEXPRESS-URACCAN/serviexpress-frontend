@@ -25,7 +25,7 @@ export const ADMIN_SIDEBAR_SECTIONS = [
       {
         id: 'orders',
         title: 'Pedidos',
-        href: '/admin/pedidos',
+        href: '/admin/orders',
         icon: ReceiptText
       }
     ]
