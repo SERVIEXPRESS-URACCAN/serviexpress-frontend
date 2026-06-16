@@ -1,73 +1,77 @@
-"use client";
+'use client'
 
-import { useAuth } from "@/hooks/useAuth";
-import { updateCategoryBusiness } from "@/services/categories-business.service";
+import { useAuth } from '@/hooks/useAuth'
+import { updateCategoryBusiness } from '@/services/categories-business.service'
 import {
   CategoryBusiness,
   UpdateCategoryBusinessDto,
-} from "@/types/categories-business";
+} from '@/types/categories-business'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { CategoryBusinessForm } from "./categories-business-form";
+} from '@/components/ui/dialog'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { CategoryBusinessForm } from './categories-business-form'
 
 type Props = {
-  CategoryBusiness: CategoryBusiness;
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-};
+  CategoryBusiness: CategoryBusiness
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  refreshAction?: () => Promise<void>
+}
 export const EditCategorBusinessDialog = ({
   CategoryBusiness,
   open,
   onOpenChangeAction,
+  refreshAction,
 }: Props) => {
-  const router = useRouter();
-  const { session } = useAuth();
+  const router = useRouter()
+  const { session } = useAuth()
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      setError("");
+      setError('')
     }
 
-    onOpenChangeAction(open);
-  };
+    onOpenChangeAction(open)
+  }
 
   const handleUpdate = async (data: UpdateCategoryBusinessDto) => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
       await updateCategoryBusiness(
         CategoryBusiness.id,
         data,
         session!.accessToken,
-      );
+      )
 
-      onOpenChangeAction(false);
+      onOpenChangeAction(false)
 
-      router.refresh();
+      await refreshAction?.()
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        setError(error.message)
       } else {
-        setError("La categoría ya existe");
+        setError('La categoría ya existe')
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      {" "}
-      <DialogContent aria-describedby={undefined}>
+      <DialogContent
+        aria-describedby={undefined}
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Editar categoría de negocio</DialogTitle>
         </DialogHeader>
@@ -82,5 +86,5 @@ export const EditCategorBusinessDialog = ({
         />
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
