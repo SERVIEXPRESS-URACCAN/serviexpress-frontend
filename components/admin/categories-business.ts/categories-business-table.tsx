@@ -5,38 +5,40 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
-import { CategoryBusinessResponse } from "@/types/categories-business";
-import { CategoryBusinessActions } from "./categories-business-actions";
-import { TablePaginationInput } from "@/components/shared/table-pagination";
+import { CategoryBusinessResponse } from '@/types/categories-business'
+import { CategoryBusinessActions } from './categories-business-actions'
+import { TablePaginationInput } from '@/components/shared/table-pagination'
 
 type Props = {
-  categoriesBusiness: CategoryBusinessResponse;
-  currentPage: number;
-};
+  categoriesBusiness: CategoryBusinessResponse
+  currentPage: number
+  refreshAction?: () => Promise<void>
+}
 
 export const CategoriesBusinessTable = ({
   categoriesBusiness,
   currentPage,
+  refreshAction,
 }: Props) => {
-  const { pagination } = categoriesBusiness;
+  const { pagination } = categoriesBusiness
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
               <TableHead>Nombre</TableHead>
-              <TableHead className="w-12.5"></TableHead>
+              <TableHead className='w-12.5'></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {categoriesBusiness.data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} className="h-24 text-center">
+                <TableCell colSpan={3} className='h-24 text-center'>
                   No hay categorías de negocios disponibles
                 </TableCell>
               </TableRow>
@@ -46,7 +48,10 @@ export const CategoriesBusinessTable = ({
                   <TableCell>{category.id}</TableCell>
                   <TableCell>{category.name}</TableCell>
                   <TableCell>
-                    <CategoryBusinessActions categoryBusiness={category} />
+                    <CategoryBusinessActions
+                      categoryBusiness={category}
+                      refreshAction={refreshAction}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -55,8 +60,8 @@ export const CategoriesBusinessTable = ({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between px-2">
-        <p className="text-sm text-muted-foreground">
+      <div className='flex items-center justify-between px-2'>
+        <p className='text-sm text-muted-foreground'>
           Página {currentPage} de {pagination.lastPage}
         </p>
         <TablePaginationInput
@@ -65,5 +70,5 @@ export const CategoriesBusinessTable = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}

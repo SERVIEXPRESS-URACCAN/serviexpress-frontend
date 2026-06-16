@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 
 import {
@@ -22,7 +21,6 @@ type Props = {
   open: boolean
   onOpenChangeAction: (open: boolean) => void
   onUpdated: () => Promise<void>
-
 }
 
 export const EditClientDialog = ({
@@ -30,13 +28,15 @@ export const EditClientDialog = ({
   genders,
   open,
   onOpenChangeAction,
-  onUpdated
-
+  onUpdated,
 }: Props) => {
   const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<{ field: 'cellphone', message: string } | null>(null)
+  const [serverError, setServerError] = useState<{
+    field: 'cellphone'
+    message: string
+  } | null>(null)
   const handleUpdate = async (data: UpdateClientProfileDto) => {
     try {
       setIsLoading(true)
@@ -45,19 +45,23 @@ export const EditClientDialog = ({
       if (!client || !session?.accessToken) return
 
       if (!client.user?.id) {
-        setServerError({ field: 'cellphone', message: 'No se encontró el usuario asociado' })
+        setServerError({
+          field: 'cellphone',
+          message: 'No se encontró el usuario asociado',
+        })
         return
       }
 
       await Promise.all([
         updateClientProfile(client.id, data, session.accessToken),
-        updateUserStatus(client.user.id, data.status, session.accessToken)
+        updateUserStatus(client.user.id, data.status, session.accessToken),
       ])
       onOpenChangeAction(false)
 
       await onUpdated?.()
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Error al actualizar'
+      const message =
+        error instanceof Error ? error.message : 'Error al actualizar'
       setServerError({ field: 'cellphone', message: message })
     } finally {
       setIsLoading(false)
@@ -68,7 +72,7 @@ export const EditClientDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent>
+      <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Editar cliente</DialogTitle>
         </DialogHeader>
@@ -80,7 +84,7 @@ export const EditClientDialog = ({
             lastName: client.lastName,
             cellphone: client.cellphone,
             gender_id: client.gender?.id || 0,
-            status: client.user?.status ?? true
+            status: client.user?.status ?? true,
           }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}

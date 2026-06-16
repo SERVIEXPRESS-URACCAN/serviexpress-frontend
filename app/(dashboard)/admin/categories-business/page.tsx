@@ -1,38 +1,39 @@
+'use client'
+
 import {
   CategoriesBusinessTable,
   CreateCategoryBusinessDialog,
-} from "@/components/admin/categories-business.ts";
-import { SearchInput } from "@/components/shared/search-input";
-import { getCategoryBusiness } from "@/services/categories-business.service";
+} from '@/components/admin/categories-business.ts'
+import { SearchInput } from '@/components/shared/search-input'
+import { useCategoryBusiness } from '@/hooks/useCategoryBusiness'
 
-export default async function CategoriesBusinessPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; search?: string }>;
-}) {
-  const params = await searchParams;
+export default function CategoriesBusinessPage() {
+  const { data, loading, fetchCategoryBusiness } = useCategoryBusiness()
 
-  const currentPage = Number(params.page) || 1;
-  const search = params.search || "";
-
-  const categoriesBusiness = await getCategoryBusiness(currentPage, search);
-
+  if (!data) {
+    return <div>Cargando...</div>
+  }
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Categorías de Negocios</h1>
-      <div className="flex items-center justify-between">
+    <div className='space-y-6'>
+      <h1 className='text-2xl font-bold'>Categorías de Negocios</h1>
+      <div className='flex items-center justify-between'>
         <SearchInput
-          placeholder="Buscar categoría de negocio..."
-          className="w-full max-w-6xl"
+          placeholder='Buscar categoría de negocio...'
+          className='w-full max-w-6xl'
         />
 
         <CreateCategoryBusinessDialog />
       </div>
 
-      <CategoriesBusinessTable
-        categoriesBusiness={categoriesBusiness}
-        currentPage={currentPage}
-      />
+      {loading ? (
+        <p>Cargando...</p>
+      ) : (
+        <CategoriesBusinessTable
+          categoriesBusiness={data}
+          currentPage={data.pagination.page}
+          refreshAction={fetchCategoryBusiness}
+        />
+      )}
     </div>
-  );
+  )
 }
