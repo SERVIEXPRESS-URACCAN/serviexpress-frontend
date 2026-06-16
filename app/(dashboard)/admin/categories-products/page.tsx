@@ -6,11 +6,7 @@ import { SearchInput } from '@/components/shared/search-input'
 import { useCategoryProducts } from '@/hooks/useCategoryProducts'
 
 export default function CategoryProductPage() {
-  const {
-    data,
-    loading,
-    fetchCategoryProducts,
-  } = useCategoryProducts()
+  const { data, loading, fetchCategoryProducts } = useCategoryProducts()
 
   if (!data) {
     return <div>Cargando...</div>
@@ -26,8 +22,7 @@ export default function CategoryProductPage() {
           className="w-full max-w-6xl"
         />
 
-        <CreateCategoryProductDialog
-        refreshAction={fetchCategoryProducts}/>
+        <CreateCategoryProductDialog refreshAction={fetchCategoryProducts} />
       </div>
 
       {loading ? (

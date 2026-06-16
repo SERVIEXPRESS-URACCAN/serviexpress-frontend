@@ -16,8 +16,8 @@ import {
 } from '@/types/categories-products'
 
 import {
-  updateCategoryProduct,
-  restoreCategoryProduct
+  restoreCategoryProduct,
+  updateCategoryProduct
 } from '@/services/categories-products.service'
 
 import { CategoryConflictException } from '@/types/api-errors.types'
@@ -34,7 +34,6 @@ type Props = {
   open: boolean
   onOpenChangeAction: (open: boolean) => void
   refreshAction?: () => Promise<void>
-
 }
 
 export const EditCategoryProductDialog = ({
@@ -42,9 +41,7 @@ export const EditCategoryProductDialog = ({
   open,
   onOpenChangeAction,
   refreshAction
-  
 }: Props) => {
-
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -69,11 +66,9 @@ export const EditCategoryProductDialog = ({
     if (!result.isConfirmed) return
 
     try {
-      await restoreCategoryProduct(
-        error.data.id,
-      )
+      await restoreCategoryProduct(error.data.id)
 
-    await refreshAction?.()
+      await refreshAction?.()
       await fireSwal({
         icon: 'success',
         title: 'Categoría restaurada',
@@ -96,54 +91,49 @@ export const EditCategoryProductDialog = ({
     }
   }
 
-const handleUpdate = async (
-  data: UpdateCategoryProductDto
-) => {
-  try {
-    setIsLoading(true)
-    setServerError(null)
+  const handleUpdate = async (data: UpdateCategoryProductDto) => {
+    try {
+      setIsLoading(true)
+      setServerError(null)
 
-    await updateCategoryProduct(
-      categoryProduct.id,
-      data
-    )
+      await updateCategoryProduct(categoryProduct.id, data)
 
-    onOpenChangeAction(false)
+      onOpenChangeAction(false)
 
-    await refreshAction?.()
+      await refreshAction?.()
 
-    await fireSwal({
-      icon: 'success',
-      title: 'Categoría actualizada',
-      text: `La categoría "${data.name}" fue actualizada exitosamente.`,
-      timer: 2000,
-      showConfirmButton: false,
-      theme: 'auto'
-    })
-  } catch (error) {
-    if (error instanceof CategoryConflictException) {
-      await handleConflict(error)
-      return
+      await fireSwal({
+        icon: 'success',
+        title: 'Categoría actualizada',
+        text: `La categoría "${data.name}" fue actualizada exitosamente.`,
+        timer: 2000,
+        showConfirmButton: false,
+        theme: 'auto'
+      })
+    } catch (error) {
+      if (error instanceof CategoryConflictException) {
+        await handleConflict(error)
+        return
+      }
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error al actualizar la categoría'
+
+      setServerError(message)
+
+      await fireSwal({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        theme: 'auto'
+      })
+    } finally {
+      setIsLoading(false)
     }
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'Error al actualizar la categoría'
-
-    setServerError(message)
-
-    await fireSwal({
-      icon: 'error',
-      title: 'Error',
-      text: message,
-      theme: 'auto'
-    })
-  } finally {
-    setIsLoading(false)
   }
-  }
-    const handleOpenChange = (value: boolean) => {
+  const handleOpenChange = (value: boolean) => {
     onOpenChangeAction(value)
 
     if (!value) {
@@ -151,17 +141,11 @@ const handleUpdate = async (
     }
   }
 
-
   return (
-    <Dialog
-      open={open}
-      onOpenChange={handleOpenChange}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>
-            Editar categoría de producto
-          </DialogTitle>
+          <DialogTitle>Editar categoría de producto</DialogTitle>
         </DialogHeader>
 
         <CategoryProductForm

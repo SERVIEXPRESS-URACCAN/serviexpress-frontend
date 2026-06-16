@@ -1,28 +1,27 @@
 'use client'
+import { TablePaginationInput } from '@/components/shared/table-pagination'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { CategoryProductResponse } from "@/types/categories-products";
-import { CategoryProductActions } from "./categories-products-actions";
-import { TablePaginationInput } from "@/components/shared/table-pagination";
+  TableRow
+} from '@/components/ui/table'
+import { CategoryProductResponse } from '@/types/categories-products'
+import { CategoryProductActions } from './categories-products-actions'
 type Props = {
-  categoryProduct: CategoryProductResponse;
-  currentPage: number;
+  categoryProduct: CategoryProductResponse
+  currentPage: number
   refreshAction?: () => Promise<void>
-
-};
+}
 
 export const CategoriesProductsTable = ({
   categoryProduct,
-  currentPage,                                                   
-  refreshAction                         
+  currentPage,
+  refreshAction
 }: Props) => {
-  const { pagination } = categoryProduct;
+  const { pagination } = categoryProduct
 
   return (
     <div className="space-y-4">
@@ -50,7 +49,8 @@ export const CategoriesProductsTable = ({
                   <TableCell>
                     <CategoryProductActions
                       categoryProduct={cat}
-                      refreshAction={refreshAction}/>
+                      refreshAction={refreshAction}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -69,5 +69,5 @@ export const CategoriesProductsTable = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}
