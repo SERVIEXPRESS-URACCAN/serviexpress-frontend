@@ -44,6 +44,16 @@ export const OrderInfo = ({ order }: Props) => {
               {order.business?.name ?? 'N/D'}
             </span>
           </div>
+
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Mandadero</span>
+
+            <span className="font-semibold text-right">
+              {order.mandadero?.profile
+                ? `${order.mandadero.profile.name} ${order.mandadero.profile.lastName}`
+                : 'Sin asignar'}
+            </span>
+          </div>
         </div>
 
         <div className="border-y border-dashed px-6 py-4">
