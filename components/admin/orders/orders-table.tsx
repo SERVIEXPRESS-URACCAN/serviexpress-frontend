@@ -4,25 +4,25 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@/components/ui/table'
 
 import { TablePaginationInput } from '@/components/shared/table-pagination'
 
 import { OrderResponse } from '@/types/order.type'
-import { OrderActions } from './orders-actions'
 
 type Props = {
   orders: OrderResponse
   currentPage: number
+  onUpdated: () => Promise<void>
 }
 
 export const OrderTable = ({ orders, currentPage }: Props) => {
   const { meta } = orders
 
   return (
-    <div className='space-y-4'>
-      <div className='rounded-md border'>
+    <div className="space-y-4">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -39,14 +39,14 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
               <TableHead>Delivery</TableHead>
 
               <TableHead>Fecha</TableHead>
-              <TableHead className='w-20'></TableHead>
+              <TableHead className="w-20"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {orders.data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className='h-24 text-center'>
+                <TableCell colSpan={8} className="h-24 text-center">
                   No hay órdenes disponibles
                 </TableCell>
               </TableRow>
@@ -72,9 +72,6 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
                   <TableCell>
                     {new Date(order.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
-                    <OrderActions order={order} />
-                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -82,8 +79,8 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
         </Table>
       </div>
 
-      <div className='flex items-center justify-between px-2'>
-        <p className='text-sm text-muted-foreground'>
+      <div className="flex items-center justify-between px-2">
+        <p className="text-sm text-muted-foreground">
           Página {currentPage} de {meta.totalPages}
         </p>
 
