@@ -6,7 +6,6 @@ import { useOrders } from '@/hooks/orders/useOrders'
 
 export default function OrdersPage() {
   const { orders, loading } = useOrders()
-
   if (!orders) {
     return <p>Cargando...</p>
   }
