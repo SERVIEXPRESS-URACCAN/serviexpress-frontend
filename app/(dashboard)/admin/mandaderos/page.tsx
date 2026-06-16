@@ -6,7 +6,7 @@ import { SearchInput } from '@/components/shared/search-input'
 import { useMandaderos } from '@/hooks/useMandadero'
 
 export default function MandaderoPage() {
-  const { mandaderos, loading } = useMandaderos()
+  const { mandaderos, loading, fetchMandaderos } = useMandaderos()
 
   if (!mandaderos) {
     return <div>Cargando...</div>
@@ -29,6 +29,7 @@ export default function MandaderoPage() {
         <MandaderoTable
           mandaderos={mandaderos}
           currentPage={mandaderos.pagination.page}
+          refreshAction={fetchMandaderos}
         />
       )}
     </div>

@@ -16,9 +16,14 @@ import { TablePaginationInput } from '@/components/shared/table-pagination'
 type Props = {
   mandaderos: MandaderoResponse
   currentPage: number
+  refreshAction?: () => Promise<void>
 }
 
-export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
+export const MandaderoTable = ({
+  mandaderos,
+  currentPage,
+  refreshAction,
+}: Props) => {
   const [selectedMandadero, setSelectedMandadero] = useState<Mandadero | null>(
     null,
   )
@@ -116,6 +121,7 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
           mandadero={selectedMandadero}
           open={open}
           onOpenChangeAction={setOpen}
+          refreshAction={refreshAction}
         />
       )}
     </div>
