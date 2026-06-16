@@ -71,7 +71,9 @@ export const BusinessProducts = ({
                     <TableCell>{product.name}</TableCell>
                     <TableCell>{product.description ?? '-'}</TableCell>
                     <TableCell>${product.price}</TableCell>
-                    <TableCell>{product.category?.name ?? '-'}</TableCell>
+                    <TableCell>
+                      {product.categories?.map((c) => c.name).join(', ') ?? '-'}
+                    </TableCell>
                     <TableCell>
                       {product.status ? (
                         <span className='text-green-600 font-medium'>

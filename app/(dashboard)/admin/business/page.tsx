@@ -5,7 +5,7 @@ import { SearchInput } from '@/components/shared/search-input'
 import { useBusiness } from '@/hooks/useBusiness'
 
 export default function BusinessPage() {
-  const { businesses, loading } = useBusiness()
+  const { businesses, loading, refreshBusiness } = useBusiness()
 
   if (!businesses) {
     return <div>Cargando...</div>
@@ -23,7 +23,11 @@ export default function BusinessPage() {
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <BusinessTable businesses={businesses} currentPage={0} />
+        <BusinessTable
+          businesses={businesses}
+          currentPage={1}
+          refreshAction={refreshBusiness}
+        />
       )}
     </div>
   )

@@ -15,9 +15,14 @@ import { BusinessActions } from './business-actions'
 type Props = {
   businesses: BusinessResponse
   currentPage: number
+  refreshAction: () => Promise<void>
 }
 
-export const BusinessTable = ({ businesses, currentPage }: Props) => {
+export const BusinessTable = ({
+  businesses,
+  currentPage,
+  refreshAction,
+}: Props) => {
   const { meta } = businesses
 
   return (
@@ -50,7 +55,10 @@ export const BusinessTable = ({ businesses, currentPage }: Props) => {
                   <TableCell>{business.address ?? '-'}</TableCell>
                   <TableCell>{business.city?.name ?? '-'}</TableCell>
                   <TableCell>
-                    <BusinessActions business={business} />
+                    <BusinessActions
+                      business={business}
+                      refreshAction={refreshAction}
+                    />
                   </TableCell>
                 </TableRow>
               ))

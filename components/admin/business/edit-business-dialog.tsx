@@ -12,7 +12,6 @@ import { getCities } from '@/services/city.service'
 import { Business } from '@/types/business.type'
 import { CategoryBusiness } from '@/types/categories-business'
 import { City } from '@/types/city.types'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { EditBusinessForm } from './edit-business-form'
 
@@ -20,14 +19,15 @@ type Props = {
   business: Business
   open: boolean
   onOpenChangeAction: (open: boolean) => void
+  refreshAction: () => Promise<void>
 }
 
 export const EditBusinessDialog = ({
   business,
   open,
   onOpenChangeAction,
+  refreshAction,
 }: Props) => {
-  const router = useRouter()
   const { session } = useAuth()
 
   const [error, setError] = useState<string | null>(null)
@@ -66,13 +66,17 @@ export const EditBusinessDialog = ({
       data.businessCategories?.forEach((catId) =>
         formData.append('businessCategories', String(catId)),
       )
+      if (data.logoImage) formData.append('logoImage', data.logoImage)
+      if (data.bannerImage) formData.append('bannerImage', data.bannerImage)
+
       await updateBusiness(session.accessToken, business.id, formData)
 
-      router.refresh()
+      await refreshAction?.()
       onOpenChangeAction(false)
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Error updating business'
+      console.log('error message:', message)
       setError(message)
     } finally {
       setIsSubmitting(false)

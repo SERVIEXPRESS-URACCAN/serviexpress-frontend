@@ -15,9 +15,10 @@ import { EditBusinessDialog } from './edit-business-dialog'
 
 type Props = {
   business: Business
+  refreshAction: () => Promise<void>
 }
 
-export const BusinessActions = ({ business }: Props) => {
+export const BusinessActions = ({ business, refreshAction }: Props) => {
   const router = useRouter()
   const [openEdit, setOpenEdit] = useState(false)
 
@@ -45,6 +46,7 @@ export const BusinessActions = ({ business }: Props) => {
         business={business}
         open={openEdit}
         onOpenChangeAction={setOpenEdit}
+        refreshAction={refreshAction}
       />
     </>
   )

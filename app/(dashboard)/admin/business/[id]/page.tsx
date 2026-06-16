@@ -2,12 +2,13 @@ import { auth } from '@/auth'
 import { getBusinessById } from '@/services/business.service'
 import { getProductsByBusiness } from '@/services/products.service'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import Link from 'next/link'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
 import { BusinessProducts } from '@/components/admin/business/business-products'
 import { getCategoryProducts } from '@/services/categories-products.service'
-
+import { API_IMG_URL } from '@/config/config'
+import Link from 'next/link'
+import Image from 'next/image'
 export default async function BusinessDetailPage({
   params,
   searchParams,
@@ -34,7 +35,7 @@ export default async function BusinessDetailPage({
   const categoriesResult = await getCategoryProducts()
 
   return (
-    <div className='space-y-8'>
+    <div className='space-y-4'>
       <div className='flex items-center gap-3'>
         <Button variant='ghost' asChild>
           <Link href='/admin/business'>
@@ -47,11 +48,44 @@ export default async function BusinessDetailPage({
       <div className='grid grid-cols-[450px_1fr] gap-6 items-start'>
         <Card className='h-full'>
           <CardHeader>
-            <CardTitle className='text-lg font-bold uppercase tracking-wide'>
-              Información del Negocio
-            </CardTitle>
+            <div className='w-full h-32 bg-muted rounded-t-xl '>
+              {' '}
+              {business.bannerImage ? (
+                <Image
+                  src={`${API_IMG_URL}/uploads/business/${business.bannerImage}`}
+                  alt='Banner'
+                  width={800}
+                  height={200}
+                  unoptimized
+                  className='w-full h-full object-cover'
+                />
+              ) : (
+                <div className='w-full h-full bg-muted flex items-center justify-center'>
+                  <p className='text-sm text-muted-foreground'>Sin banner</p>
+                </div>
+              )}
+            </div>
+            <div className='px-4 -mt-8 mb-2 flex justify-center'>
+              <div className='w-30 h-30 rounded-full border-4 border-background bg-muted overflow-hidden'>
+                {business.logoImage ? (
+                  <Image
+                    src={`${API_IMG_URL}/uploads/business/${business.logoImage}`}
+                    alt='Logo'
+                    width={64}
+                    height={64}
+                    unoptimized
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <div className='w-full h-full flex items-center justify-center'>
+                    <p className='text-xs text-muted-foreground'>Logo</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent className='space-y-6'>
+            <div className='grid grid-cols-2 gap-4'></div>
             {[
               { label: 'Nombre', value: business.name },
               { label: 'Teléfono', value: business.phone },
@@ -60,7 +94,7 @@ export default async function BusinessDetailPage({
               { label: 'Descripción', value: business.description },
             ].map(({ label, value }) => (
               <div key={label}>
-                <label className='text-xl font-bold block'>{label}</label>
+                <label className='text-xl font-bold block mb-2'>{label}</label>
                 <input
                   value={value ?? '-'}
                   disabled

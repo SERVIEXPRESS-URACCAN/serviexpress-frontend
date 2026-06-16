@@ -3,7 +3,19 @@
 import { FormError } from '@/components/shared/form-error'
 import { FormField } from '@/components/shared/form-field'
 import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command'
 import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -19,6 +31,7 @@ import { Business } from '@/types/business.type'
 import { CategoryBusiness } from '@/types/categories-business'
 import { City } from '@/types/city.types'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Check } from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 
 type Props = {
@@ -112,35 +125,54 @@ export const EditBusinessForm = ({
         />
       </FormField>
       <FormField label='Categorías' error={errors.businessCategories?.message}>
-        <div className='space-y-2'>
-          {categories.map((category) => (
-            <div key={category.id} className='flex items-center gap-2'>
-              <input
-                type='checkbox'
-                id={`category-${category.id}`}
-                checked={businessCategories?.includes(category.id) ?? false}
-                onChange={(e) => {
-                  const current = form.getValues('businessCategories') ?? []
-                  if (e.target.checked) {
-                    form.setValue('businessCategories', [
-                      ...current,
-                      category.id,
-                    ])
-                  } else {
-                    form.setValue(
-                      'businessCategories',
-                      current.filter((id) => id !== category.id),
-                    )
-                  }
-                }}
-                className='rounded border'
-              />
-              <label htmlFor={`category-${category.id}`} className='text-sm'>
-                {category.name}
-              </label>
-            </div>
-          ))}
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant='outline' className='w-full justify-start'>
+              {businessCategories?.length
+                ? categories
+                    .filter((c) => businessCategories.includes(c.id))
+                    .map((c) => c.name)
+                    .join(', ')
+                : 'Selecciona categorías'}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className='w-auto'>
+            <Command>
+              <CommandInput placeholder='Buscar categorías...' />
+              <CommandEmpty>No se encontraron categorías.</CommandEmpty>
+              <CommandGroup>
+                {categories.map((category) => (
+                  <CommandItem
+                    key={category.id}
+                    onSelect={() => {
+                      const current = form.getValues('businessCategories') ?? []
+
+                      const exists = current.includes(category.id)
+
+                      form.setValue(
+                        'businessCategories',
+                        exists
+                          ? current.filter((id) => id !== category.id)
+                          : [...current, category.id],
+                        { shouldValidate: true },
+                      )
+                    }}
+                  >
+                    <Check
+                      className={`mr-2 h-4 w-4 ${
+                        businessCategories?.includes(category.id)
+                          ? 'opacity-100'
+                          : 'opacity-0'
+                      }`}
+                    />
+
+                    {category.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </FormField>
       <FormError
         message={
@@ -150,6 +182,27 @@ export const EditBusinessForm = ({
             : undefined
         }
       />
+      <FormField label='Logo' error={errors.logoImage?.message}>
+        <Input
+          type='file'
+          accept='image/*'
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) form.setValue('logoImage', file)
+          }}
+        />
+      </FormField>
+
+      <FormField label='Banner' error={errors.bannerImage?.message}>
+        <Input
+          type='file'
+          accept='image/*'
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) form.setValue('bannerImage', file)
+          }}
+        />
+      </FormField>
       <Button type='submit' className='w-full' disabled={isSubmitting}>
         {isSubmitting ? 'Guardando...' : 'Guardar cambios'}
       </Button>
