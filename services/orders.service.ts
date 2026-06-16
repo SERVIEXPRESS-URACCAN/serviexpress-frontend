@@ -1,6 +1,5 @@
 import { API_URL } from '@/config/config'
 import { fetchAuth } from '@/lib/fetch-auth'
-
 import { Order, OrderResponse } from '@/types/order.type'
 export const getOrders = async (
   page = 1,
@@ -34,6 +33,7 @@ export const getOrders = async (
 
   return result
 }
+
 export const getOrderById = async (id: number): Promise<Order> => {
   const response = await fetchAuth(`${API_URL}/orders/admin/${id}`, {
     headers: {
