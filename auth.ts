@@ -61,7 +61,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       if (trigger === 'update' && sessionData) {
-        console.log("JWT UPDATE", sessionData)
         return {
           ...token,
           accessToken: sessionData.accessToken,
