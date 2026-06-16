@@ -9,7 +9,7 @@ export const getProductsByBusiness = async (
 ): Promise<ProductResponse> => {
   const params = new URLSearchParams()
   params.set('page', String(page))
-  params.set('limit', '10')
+  params.set('limit', '12')
   params.set('businessId', String(businessId))
   if (search) params.set('search', search)
 
@@ -74,24 +74,4 @@ export const deleteProduct = async (token: string, productId: number) => {
     const result = await response.json().catch(() => null)
     throw new Error(result?.message || 'Error deleting product')
   }
-}
-
-export const toggleProductStatus = async (
-  token: string,
-  productId: number,
-  status: boolean,
-) => {
-  const response = await fetch(`${API_URL}/products/admin/${productId}`, {
-    method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ status }),
-  })
-  if (!response.ok) {
-    const result = await response.json().catch(() => null)
-    throw new Error(result?.message || 'Error actualizando estado')
-  }
-  return response.json()
 }

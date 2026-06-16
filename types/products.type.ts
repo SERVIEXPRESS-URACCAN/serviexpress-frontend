@@ -7,7 +7,7 @@ export interface Product {
   price: number
   imageUrl?: string
   status: boolean
-  category?: CategoryProduct
+  categories?: CategoryProduct[]
 }
 
 export type ProductResponse = {
