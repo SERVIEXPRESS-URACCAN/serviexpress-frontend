@@ -1,3 +1,4 @@
+import { deliveryStatusColors, orderStatusColors } from '@/constants/colors'
 import { Order } from '@/types/order.type'
 
 type Props = {
@@ -41,26 +42,6 @@ export const OrderInfo = ({ order }: Props) => {
 
             <span className="font-semibold text-right">
               {order.business?.name ?? 'N/D'}
-            </span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Mandadero</span>
-
-            <span className="font-semibold text-right">
-              {order.mandadero?.profile
-                ? `${order.mandadero.profile.name} ${order.mandadero.profile.lastName}`
-                : 'Sin asignar'}
-            </span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Mandadero</span>
-
-            <span className="font-semibold text-right">
-              {order.mandadero?.profile
-                ? `${order.mandadero.profile.name} ${order.mandadero.profile.lastName}`
-                : 'Sin asignar'}
             </span>
           </div>
         </div>
