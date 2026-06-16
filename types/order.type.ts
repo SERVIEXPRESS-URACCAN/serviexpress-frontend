@@ -8,6 +8,8 @@ export interface Order {
 
   user?: User
 
+  mandadero?: User
+
   businessId: number
   business?: Business
 
