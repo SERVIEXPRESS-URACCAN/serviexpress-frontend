@@ -39,13 +39,19 @@ export const EditProductAdminDialog = ({
   }
 
   const onSubmit = async (data: UpdateProductInput) => {
+    console.log('status:', data.status)
+    console.log('status string:', data.status ? 'true' : 'false')
     if (!session) return
+
     try {
       setIsSubmitting(true)
       const formData = new FormData()
       formData.append('name', data.name || '')
       formData.append('price', String(data.price))
-      formData.append('categoryId', String(data.categoryId))
+      data.categoryIds?.forEach((id) => {
+        formData.append('categoryIds[]', String(id))
+      })
+      formData.append('status', data.status ? 'true' : 'false')
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 

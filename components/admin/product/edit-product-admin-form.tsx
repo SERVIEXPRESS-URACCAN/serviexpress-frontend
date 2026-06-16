@@ -3,14 +3,21 @@
 import { FormError } from '@/components/shared/form-error'
 import { FormField } from '@/components/shared/form-field'
 import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command'
 import { Input } from '@/components/ui/input'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Switch } from '@/components/ui/switch'
+
 import {
   UpdateProductInput,
   updateProductSchema,
@@ -18,6 +25,7 @@ import {
 import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Check } from 'lucide-react'
 
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -43,7 +51,8 @@ export const EditProductAdminForm = ({
       name: product.name ?? '',
       description: product.description ?? '',
       price: Number(product.price) ?? 0,
-      categoryId: product.category?.id ?? 0,
+      categoryIds: product.categories?.map((c) => c.id) ?? [],
+      status: product.status ?? true,
     },
   })
 
@@ -56,7 +65,8 @@ export const EditProductAdminForm = ({
       name: product.name,
       description: product.description || '',
       price: product.price,
-      categoryId: product.category?.id,
+      categoryIds: product.categories?.map((c) => c.id) ?? [],
+      status: product.status,
     })
   }, [product, form])
 
@@ -69,32 +79,71 @@ export const EditProductAdminForm = ({
         <Input {...form.register('description')} placeholder='Descripción' />
       </FormField>
       <FormField label='Precio' error={errors.price?.message}>
-        <Input {...form.register('price')} placeholder='Precio' type='number' />
-      </FormField>
-      <FormField label='Categoría' error={errors.categoryId?.message}>
-        <Controller
-          name='categoryId'
-          control={form.control}
-          render={({ field }) => (
-            <Select
-              value={field.value ? String(field.value) : ''}
-              onValueChange={(value) => field.onChange(Number(value))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder='Selecciona una categoría' />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={String(category.id)}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
+        <Input
+          type='number'
+          {...form.register('price')}
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement
+            target.value = target.value.slice(0, 6)
+          }}
+          placeholder='Precio'
         />
       </FormField>
+      <FormField label='Categorías' error={errors.categoryIds?.message}>
+        <Controller
+          name='categoryIds'
+          control={form.control}
+          render={({ field }) => {
+            const selected = field.value ?? []
 
+            return (
+              <Popover>
+                <PopoverTrigger className='w-full border rounded px-3 py-2 text-left'>
+                  {selected.length > 0
+                    ? categories
+                        .filter((c) => selected.includes(c.id))
+                        .map((c) => c.name)
+                        .join(', ')
+                    : 'Selecciona categorías'}
+                </PopoverTrigger>
+
+                <PopoverContent className='w-72 p-0'>
+                  <Command>
+                    <CommandInput placeholder='Buscar categorías...' />
+                    <CommandEmpty>No encontradas</CommandEmpty>
+
+                    <CommandGroup>
+                      {categories.map((category) => {
+                        const isSelected = selected.includes(category.id)
+
+                        return (
+                          <CommandItem
+                            key={category.id}
+                            onSelect={() => {
+                              const newValue = isSelected
+                                ? selected.filter((id) => id !== category.id)
+                                : [...selected, category.id]
+
+                              field.onChange(newValue)
+                            }}
+                          >
+                            <Check
+                              className={`mr-2 h-4 w-4 ${
+                                isSelected ? 'opacity-100' : 'opacity-0'
+                              }`}
+                            />
+                            {category.name}
+                          </CommandItem>
+                        )
+                      })}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            )
+          }}
+        />
+      </FormField>
       <FormField label='Imagen' error={errors.image?.message}>
         <Input
           type='file'
@@ -107,7 +156,17 @@ export const EditProductAdminForm = ({
       </FormField>
 
       <FormError message={error ?? undefined} />
+      <Controller
+        name='status'
+        control={form.control}
+        render={({ field }) => (
+          <div className='flex items-center justify-between'>
+            <span className='text-sm font-bold'>Estado</span>
 
+            <Switch checked={field.value} onCheckedChange={field.onChange} />
+          </div>
+        )}
+      />
       <Button type='submit' className='w-full' disabled={isSubmitting}>
         {isSubmitting ? 'Guardando...' : 'Guardar cambios'}
       </Button>

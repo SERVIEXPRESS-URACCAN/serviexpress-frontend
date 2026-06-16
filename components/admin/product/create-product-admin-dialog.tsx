@@ -42,7 +42,9 @@ export const CreateProductAdminDialog = ({ businessId, categories }: Props) => {
       formData.append('name', data.name)
       formData.append('price', String(data.price))
       formData.append('businessId', String(data.businessId))
-      formData.append('categoryId', String(data.categoryId))
+      data.categoryIds.forEach((id) => {
+        formData.append('categoryIds', String(id))
+      })
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 
