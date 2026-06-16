@@ -11,6 +11,9 @@ export const updateBusinessSchema = z.object({
     .optional(),
   city: z.number().optional(),
   businessCategories: z.array(z.number()).optional(),
+
+  logoImage: z.instanceof(File).optional(),
+  bannerImage: z.instanceof(File).optional(),
 })
 
 export type UpdateBusinessInput = z.infer<typeof updateBusinessSchema>

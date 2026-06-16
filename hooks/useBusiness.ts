@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from './useAuth'
 import { BusinessResponse } from '@/types/business.type'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getBusinesses } from '@/services/business.service'
 
 export const useBusiness = () => {
@@ -17,25 +17,25 @@ export const useBusiness = () => {
   const [businesses, setBusinesses] = useState<BusinessResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetch = async () => {
-      if (!session?.accessToken) return
+  const refreshBusiness = useCallback(async () => {
+    if (!session?.accessToken) return
 
-      try {
-        setLoading(true)
+    try {
+      setLoading(true)
 
-        const data = await getBusinesses(session.accessToken, page, search)
+      const data = await getBusinesses(session.accessToken, page, search)
 
-        setBusinesses(data)
-      } finally {
-        setLoading(false)
-      }
+      setBusinesses(data)
+    } finally {
+      setLoading(false)
     }
-
-    fetch()
   }, [session?.accessToken, page, search])
+  useEffect(() => {
+    refreshBusiness()
+  }, [refreshBusiness])
   return {
     businesses,
     loading,
+    refreshBusiness,
   }
 }
