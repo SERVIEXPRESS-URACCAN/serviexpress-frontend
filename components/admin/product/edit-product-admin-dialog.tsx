@@ -55,7 +55,7 @@ export const EditProductAdminDialog = ({
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 
-      await updateProduct(session.accessToken, product.id, formData)
+      await updateProduct( product.id, formData)
       router.refresh()
       onOpenChangeAction(false)
     } catch (error) {

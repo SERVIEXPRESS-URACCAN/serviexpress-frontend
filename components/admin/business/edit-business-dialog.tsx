@@ -71,7 +71,7 @@ export const EditBusinessDialog = ({
       if (data.logoImage) formData.append('logoImage', data.logoImage)
       if (data.bannerImage) formData.append('bannerImage', data.bannerImage)
 
-      await updateBusiness(session.accessToken, business.id, formData)
+      await updateBusiness( business.id, formData)
 
       await refreshAction?.()
       onOpenChangeAction(false)
