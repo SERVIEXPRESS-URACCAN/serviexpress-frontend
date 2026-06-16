@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import { CategoryProductForm } from './categories-products-form'
 import { createCategoryProduct, restoreCategoryProduct } from '@/services/categories-products.service'
 import { CategoryConflictException } from '@/types/api-errors.types'
-import { useAuth } from '@/hooks/useAuth'
 
 const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
@@ -22,7 +21,6 @@ const fireSwal = (options: SweetAlertOptions) =>
 
 export const CreateCategoryProductDialog = () => {
   const router = useRouter()
-  const { session } = useAuth()
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -51,7 +49,7 @@ export const CreateCategoryProductDialog = () => {
     if (!result.isConfirmed) return
 
     try {
-      await restoreCategoryProduct(error.data.id, session!.accessToken)
+      await restoreCategoryProduct(error.data.id,)
       router.refresh()
       await fireSwal({
         icon: 'success',
@@ -76,7 +74,7 @@ export const CreateCategoryProductDialog = () => {
   const handleCreate = async (data: { name: string }) => {
     try {
       setIsLoading(true)
-      await createCategoryProduct(data, session!.accessToken)
+      await createCategoryProduct(data)
       setOpen(false)
       router.refresh()
       await fireSwal({
