@@ -2,7 +2,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
 import { UpdateBusinessInput } from '@/schemas/business.schema'
@@ -26,7 +26,7 @@ export const EditBusinessDialog = ({
   business,
   open,
   onOpenChangeAction,
-  refreshAction,
+  refreshAction
 }: Props) => {
   const { session } = useAuth()
 
@@ -64,7 +64,7 @@ export const EditBusinessDialog = ({
       formData.append('city', String(data.city))
 
       data.businessCategories?.forEach((catId) =>
-        formData.append('businessCategories', String(catId)),
+        formData.append('businessCategories', String(catId))
       )
       if (data.logoImage) formData.append('logoImage', data.logoImage)
       if (data.bannerImage) formData.append('bannerImage', data.bannerImage)
@@ -86,7 +86,7 @@ export const EditBusinessDialog = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className='sm:max-w-lg'
+        className="sm:max-w-lg"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
