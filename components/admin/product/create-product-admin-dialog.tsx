@@ -1,19 +1,19 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { CreateProductInput } from '@/schemas/products.schema'
 import { createProduct } from '@/services/products.service'
 import { CategoryProduct } from '@/types/categories-products'
 import { useState } from 'react'
 import { CreateProductAdminForm } from './create-product-admin-form'
-import { Button } from '@/components/ui/button'
 
 type Props = {
   businessId: number
@@ -21,7 +21,11 @@ type Props = {
   refreshAction?: () => Promise<void>
 }
 
-export const CreateProductAdminDialog = ({ businessId, categories,refreshAction }: Props) => {
+export const CreateProductAdminDialog = ({
+  businessId,
+  categories,
+  refreshAction
+}: Props) => {
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -64,7 +68,7 @@ export const CreateProductAdminDialog = ({ businessId, categories,refreshAction 
         <Button>Agregar Producto</Button>
       </DialogTrigger>
       <DialogContent
-        className='max-h-[90vh] overflow-y-auto'
+        className="max-h-[90vh] overflow-y-auto"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>

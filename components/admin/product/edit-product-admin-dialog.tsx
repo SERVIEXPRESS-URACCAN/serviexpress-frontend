@@ -3,7 +3,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
 import { UpdateProductInput } from '@/schemas/products.schema'
@@ -53,7 +53,7 @@ export const EditProductAdminDialog = ({
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 
-      await updateProduct( product.id, formData)
+      await updateProduct(product.id, formData)
       await refreshAction?.()
       onOpenChangeAction(false)
     } catch (error) {
@@ -69,7 +69,7 @@ export const EditProductAdminDialog = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className='max-h-[90vh] overflow-y-auto'
+        className="max-h-[90vh] overflow-y-auto"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>

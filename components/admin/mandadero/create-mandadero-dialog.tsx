@@ -1,32 +1,31 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
+import { CreateMandaderoInput } from '@/schemas/mandaderos.schema'
 import {
   createMandaderoAdmin,
   getMandaderos,
-  getUsers,
+  getUsers
 } from '@/services/mandadero.service'
 import { CreateMandaderoAdminDto } from '@/types/mandadero.type'
-import { useEffect, useState } from 'react'
-import { MandaderoForm } from './create-mandadero-form'
-import Swal from 'sweetalert2'
-import { UseFormSetError } from 'react-hook-form'
-import { CreateMandaderoInput } from '@/schemas/mandaderos.schema'
 import { User } from '@/types/user.type'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
+import { UseFormSetError } from 'react-hook-form'
+import Swal from 'sweetalert2'
+import { MandaderoForm } from './create-mandadero-form'
 
-
-type Props={
-refreshAction?: ()=> Promise<void>
+type Props = {
+  refreshAction?: () => Promise<void>
 }
-export const CreateMandaderoDialog = ({refreshAction}:Props) => {
+export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
   const { session } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [users, setUsers] = useState<User[]>([])
@@ -35,20 +34,19 @@ export const CreateMandaderoDialog = ({refreshAction}:Props) => {
 
   useEffect(() => {
     if (open && session) {
-      Promise.all([
-        getUsers(),
-        getMandaderos(),
-      ]).then(([usersResponse, mandaderosResponse]) => {
-        const allUsers = (usersResponse as unknown as { data: User[] }).data
+      Promise.all([getUsers(), getMandaderos()]).then(
+        ([usersResponse, mandaderosResponse]) => {
+          const allUsers = (usersResponse as unknown as { data: User[] }).data
 
-        const mandaderoUserIds = new Set(
-          mandaderosResponse.data.map((mandadero) => mandadero.user.id),
-        )
-        const filteredUsers = allUsers.filter(
-          (u) => !mandaderoUserIds.has(u.id),
-        )
-        setUsers(filteredUsers)
-      })
+          const mandaderoUserIds = new Set(
+            mandaderosResponse.data.map((mandadero) => mandadero.user.id)
+          )
+          const filteredUsers = allUsers.filter(
+            (u) => !mandaderoUserIds.has(u.id)
+          )
+          setUsers(filteredUsers)
+        }
+      )
     }
   }, [open, session])
 
@@ -60,15 +58,15 @@ export const CreateMandaderoDialog = ({refreshAction}:Props) => {
   }, [open])
   const handleSubmit = async (
     data: CreateMandaderoAdminDto,
-    setFieldError: UseFormSetError<CreateMandaderoInput>,
+    setFieldError: UseFormSetError<CreateMandaderoInput>
   ) => {
     if (!session) return
     setError(null)
 
     try {
       setIsLoading(true)
-      await createMandaderoAdmin( data)
-      
+      await createMandaderoAdmin(data)
+
       await refreshAction?.()
 
       await Swal.fire({
@@ -76,7 +74,7 @@ export const CreateMandaderoDialog = ({refreshAction}:Props) => {
         title: 'Mandadero creado',
         text: `Mandadero creado exitosamente.`,
         timer: 2000,
-        showConfirmButton: false,
+        showConfirmButton: false
       })
       setOpen(false)
     } catch (error: unknown) {
@@ -84,7 +82,7 @@ export const CreateMandaderoDialog = ({refreshAction}:Props) => {
         error instanceof Error ? error.message : 'Error al crear el mandadero'
       if (message.toLowerCase().includes('placa')) {
         setFieldError('licensePlate', {
-          message: 'Esta placa ya está registrada',
+          message: 'Esta placa ya está registrada'
         })
       } else {
         setError(message)
@@ -99,7 +97,7 @@ export const CreateMandaderoDialog = ({refreshAction}:Props) => {
         <Button>Crear Mandadero</Button>
       </DialogTrigger>
       <DialogContent
-        className='max-h-[90vh] overflow-y-auto'
+        className="max-h-[90vh] overflow-y-auto"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
