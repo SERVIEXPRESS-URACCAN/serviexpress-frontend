@@ -1,5 +1,4 @@
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { useAuth } from '@/hooks/useAuth'
 import { deleteProduct } from '@/services/products.service'
 import { Product } from '@/types/products.type'
 import { useRouter } from 'next/navigation'
@@ -16,7 +15,6 @@ type Props = {
 
 export const DeleteProductDialog = ({ product }: Props) => {
   const router = useRouter()
-  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -36,7 +34,7 @@ export const DeleteProductDialog = ({ product }: Props) => {
 
     try {
       setIsLoading(true)
-      await deleteProduct(session!.accessToken, product.id)
+      await deleteProduct( product.id)
 
       router.refresh()
       await fireSwal({
