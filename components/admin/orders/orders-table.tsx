@@ -10,11 +10,11 @@ import {
 import { TablePaginationInput } from '@/components/shared/table-pagination'
 
 import { OrderResponse } from '@/types/order.type'
+import { OrderActions } from './orders-actions'
 
 type Props = {
   orders: OrderResponse
   currentPage: number
-  onUpdated: () => Promise<void>
 }
 
 export const OrderTable = ({ orders, currentPage }: Props) => {
@@ -39,6 +39,7 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
               <TableHead>Delivery</TableHead>
 
               <TableHead>Fecha</TableHead>
+              <TableHead className="w-20"></TableHead>
             </TableRow>
           </TableHeader>
 
@@ -70,6 +71,9 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
 
                   <TableCell>
                     {new Date(order.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <OrderActions order={order} />
                   </TableCell>
                 </TableRow>
               ))
