@@ -32,6 +32,6 @@ export const useOrders = () => {
   return {
     orders,
     loading,
-    fetchOrders
+    fetchOrders,
   }
 }
