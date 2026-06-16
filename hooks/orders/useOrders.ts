@@ -19,8 +19,6 @@ export const useOrders = () => {
 
       const response = await getOrders(1, 10, search)
 
-      console.log('[useOrders] Orders:', response)
-
       setOrders(response)
     } finally {
       setLoading(false)
