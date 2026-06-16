@@ -5,9 +5,6 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { OwnerInfo } from '@/components/admin/owners/details/owner-info'
-import { OwnerBusiness } from '@/components/admin/owners/details/owner-busines'
-import { OwnerProducts } from '@/components/admin/owners/details/owner-products'
-
 export default async function OwnerDetailPage({
   params,
 }: {
@@ -28,13 +25,8 @@ export default async function OwnerDetailPage({
         <h1 className='text-xl font-bold'>Detalle del Propietario</h1>
       </div>
 
-      <div className='grid gap-6' style={{ gridTemplateColumns: '500px 1fr' }}>
-        {' '}
+      <div className='max-w-2xl mx-auto'>
         <OwnerInfo owner={owner} />
-        <div className='space-y-6'>
-          <OwnerBusiness owner={owner} />
-          <OwnerProducts products={owner.business?.products ?? []} />
-        </div>
       </div>
     </div>
   )

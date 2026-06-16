@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Table,
@@ -7,27 +7,32 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Mandadero, MandaderoResponse } from "@/types/mandadero.type";
-import { MandaderoActions } from "./mandadero-actions";
-import { useState } from "react";
-import { EditMandaderoDialog } from "./edit-mandadero-dialog";
-import { TablePaginationInput } from "@/components/shared/table-pagination";
+} from '@/components/ui/table'
+import { Mandadero, MandaderoResponse } from '@/types/mandadero.type'
+import { MandaderoActions } from './mandadero-actions'
+import { useState } from 'react'
+import { EditMandaderoDialog } from './edit-mandadero-dialog'
+import { TablePaginationInput } from '@/components/shared/table-pagination'
 type Props = {
-  mandaderos: MandaderoResponse;
-  currentPage: number;
-};
+  mandaderos: MandaderoResponse
+  currentPage: number
+  refreshAction?: () => Promise<void>
+}
 
-export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
+export const MandaderoTable = ({
+  mandaderos,
+  currentPage,
+  refreshAction,
+}: Props) => {
   const [selectedMandadero, setSelectedMandadero] = useState<Mandadero | null>(
     null,
-  );
-  const [open, setOpen] = useState(false);
+  )
+  const [open, setOpen] = useState(false)
 
-  const { pagination } = mandaderos;
+  const { pagination } = mandaderos
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border overflow-x-auto">
+    <div className='space-y-4'>
+      <div className='rounded-md border overflow-x-auto'>
         <Table>
           <TableHeader>
             <TableRow>
@@ -37,8 +42,6 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
               <TableHead>Telefono</TableHead>
               <TableHead>Email</TableHead>
 
-              <TableHead>Marca</TableHead>
-              <TableHead>Modelo</TableHead>
               <TableHead>Placa</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead>Disponibilidad</TableHead>
@@ -49,7 +52,7 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
           <TableBody>
             {mandaderos.data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={8} className='h-24 text-center'>
                   No hay mandaderos disponibles
                 </TableCell>
               </TableRow>
@@ -61,42 +64,38 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
                   <TableCell>{mandadero.user?.profile?.lastName}</TableCell>
                   <TableCell>{mandadero.user?.profile?.cellphone}</TableCell>
                   <TableCell>{mandadero.user?.email}</TableCell>
-
-                  <TableCell>{mandadero.motorcycle?.brand ?? "-"}</TableCell>
-                  <TableCell>{mandadero.motorcycle?.model ?? "-"}</TableCell>
-
                   <TableCell>
-                    {mandadero.motorcycle?.licensePlate ?? "-"}
+                    {mandadero.motorcycle?.licensePlate ?? '-'}
                   </TableCell>
 
                   <TableCell>
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold transition-colors ${
                         mandadero.isActive
-                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400"
-                          : "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400"
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400'
+                          : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400'
                       }`}
                     >
-                      {mandadero.isActive ? "Activo" : "Inactivo"}
+                      {mandadero.isActive ? 'Activo' : 'Inactivo'}
                     </span>
                   </TableCell>
                   <TableCell>
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-sm transition-colors ${
                         mandadero.available
-                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                          : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                          : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                       }`}
                     >
-                      {mandadero.available ? "Disponible" : "No disponible"}
+                      {mandadero.available ? 'Disponible' : 'No disponible'}
                     </span>
                   </TableCell>
                   <TableCell>
                     <MandaderoActions
                       mandadero={mandadero}
                       onEditAction={() => {
-                        setSelectedMandadero(mandadero);
-                        setOpen(true);
+                        setSelectedMandadero(mandadero)
+                        setOpen(true)
                       }}
                     />
                   </TableCell>
@@ -106,8 +105,8 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between px-2">
-        <p className="text-sm text-muted-foreground">
+      <div className='flex items-center justify-between px-2'>
+        <p className='text-sm text-muted-foreground'>
           Página {currentPage} de {pagination.lastPage}
         </p>
 
@@ -122,8 +121,9 @@ export const MandaderoTable = ({ mandaderos, currentPage }: Props) => {
           mandadero={selectedMandadero}
           open={open}
           onOpenChangeAction={setOpen}
+          refreshAction={refreshAction}
         />
       )}
     </div>
-  );
-};
+  )
+}

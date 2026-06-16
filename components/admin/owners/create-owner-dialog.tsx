@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
@@ -57,7 +57,10 @@ export const CreateOwnerDialog = ({ users, onCreatedAction }: Props) => {
         <Button>Crear propietario</Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
+      <DialogContent
+        className='max-h-[90vh] overflow-y-auto sm:max-w-md'
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Crear propietario</DialogTitle>
         </DialogHeader>

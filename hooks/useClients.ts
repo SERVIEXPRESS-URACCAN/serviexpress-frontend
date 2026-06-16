@@ -7,7 +7,9 @@ import { useSearchParams } from 'next/navigation'
 
 export const useClients = () => {
   const { session } = useAuth()
+
   const searchParams = useSearchParams()
+  const search = searchParams.get('search') || undefined
   const page = Number(searchParams.get('page') || 1)
 
   const [clients, setClients] = useState<ClientsResponse | null>(null)
@@ -15,22 +17,22 @@ export const useClients = () => {
   const [error, setError] = useState<Error | null>(null)
 
   const fetchClients = useCallback(async () => {
-    if (!session?.accessToken) return;
+    if (!session?.accessToken) return
     try {
-      const data = await getClientes(session.accessToken, page);
-      if (data) setClients(data);
-      setError(null);  
+      const data = await getClientes(session.accessToken, page, 10, search)
+      if (data) setClients(data)
+      setError(null)
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Error inesperado'));
+      setError(err instanceof Error ? err : new Error('Error inesperado'))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [session, page]);
+  }, [session, page, search])
 
   useEffect(() => {
     // eslint-disable-next-line
-    fetchClients();
-  }, [fetchClients]);
+    fetchClients()
+  }, [fetchClients])
 
   return { clients, loading, error, fetchClients }
 }

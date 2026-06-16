@@ -4,7 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from '@/components/ui/dialog'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -27,7 +27,7 @@ export const EditOwnerDialog = ({
   owner,
   open,
   onOpenChangeAction,
-  onUpdated
+  onUpdated,
 }: Props) => {
   const { session } = useAuth()
   const { execute, isLoading } = useUpdateOwner()
@@ -48,7 +48,10 @@ export const EditOwnerDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
+      <DialogContent
+        className='max-h-[90vh] overflow-y-auto sm:max-w-md'
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Editar propietario</DialogTitle>
         </DialogHeader>
@@ -60,9 +63,9 @@ export const EditOwnerDialog = ({
               name: owner.user?.profile?.name ?? '',
               lastName: owner.user?.profile?.lastName ?? '',
               cellphone: owner.user?.profile?.cellphone ?? '',
-              genderId: owner.user?.profile?.gender?.id ?? 0
+              genderId: owner.user?.profile?.gender?.id ?? 0,
             },
-            identificationCardImage: undefined
+            identificationCardImage: undefined,
           }}
           onSubmitAction={handleUpdate}
           isLoading={isLoading}

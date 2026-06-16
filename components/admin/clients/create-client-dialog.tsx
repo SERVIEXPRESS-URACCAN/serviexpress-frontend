@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from '@/components/ui/dialog'
 
 import { Button } from '@/components/ui/button'
@@ -33,15 +33,16 @@ type Props = {
 export const CreateClientDialog = ({
   token,
   genders,
-  onCreatedAction
+  onCreatedAction,
 }: Props) => {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [serverError, setServerError] = useState<{ field: 'email' | 'cellphone', message: string } | null>(null)
-  
-  
-  const handleOpenChange = (value: boolean) => {
+  const [serverError, setServerError] = useState<{
+    field: 'email' | 'cellphone'
+    message: string
+  } | null>(null)
 
+  const handleOpenChange = (value: boolean) => {
     setOpen(value)
 
     if (!value) {
@@ -49,14 +50,16 @@ export const CreateClientDialog = ({
     }
   }
 
-
-  const handleConflict = async (error: UserConflictException, data:CreateUserDto) => {
+  const handleConflict = async (
+    error: UserConflictException,
+    data: CreateUserDto,
+  ) => {
     if (!error.data.canRestore) {
       setServerError({ field: 'email', message: error.message })
       return
     }
     setOpen(false)
-    
+
     const result = await fireSwal({
       icon: 'question',
       title: '¿Restaurar cliente?',
@@ -81,7 +84,10 @@ export const CreateClientDialog = ({
         showConfirmButton: false,
       })
     } catch (restoreError) {
-      const message = restoreError instanceof Error ? restoreError.message : 'Error al restaurar el cliente'
+      const message =
+        restoreError instanceof Error
+          ? restoreError.message
+          : 'Error al restaurar el cliente'
       await fireSwal({ icon: 'error', title: 'Error', text: message })
     }
   }
@@ -93,16 +99,15 @@ export const CreateClientDialog = ({
 
       await createClient(data, token)
       setOpen(false)
-      
+
       onCreatedAction()
 
       await fireSwal({
         icon: 'success',
         title: 'Cliente creado',
         text: `El cliente "${data.profile.name}" fue creado exitosamente.`,
-        theme: 'auto'
+        theme: 'auto',
       })
-
     } catch (error) {
       if (error instanceof UserConflictException) {
         await handleConflict(error, data)
@@ -115,7 +120,10 @@ export const CreateClientDialog = ({
           setServerError({ field: err.field, message: err.message })
         }
       } catch {
-        setServerError({ field: 'email', message: 'Error inesperado, intenta de nuevo' })
+        setServerError({
+          field: 'email',
+          message: 'Error inesperado, intenta de nuevo',
+        })
       }
     } finally {
       setIsLoading(false)
@@ -128,7 +136,7 @@ export const CreateClientDialog = ({
         <Button>Nuevo cliente</Button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Crear cliente</DialogTitle>
         </DialogHeader>

@@ -4,8 +4,22 @@ import { CreateUserDto, UpdateClientProfileDto } from '@/schemas/client.schema'
 import { UserConflictException } from '@/types/api-errors.types'
 import { Clients, ClientsResponse } from '@/types/clients'
 
-export const getClientes = async (token: string, page = 1, limit = 10): Promise<ClientsResponse> => {
-  const response = await fetchAuth(`${API_URL}/profiles?page=${page}&limit=${limit}`, {
+export const getClientes = async (
+  token: string,
+  page = 1,
+  limit = 10,
+  search?: string,
+): Promise<ClientsResponse> => {
+  const params = new URLSearchParams()
+
+  params.set('page', String(page))
+  params.set('limit', String(limit))
+
+  if (search) {
+    params.set('search', search)
+  }
+
+  const response = await fetchAuth(`${API_URL}/profiles?${params.toString()}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -19,7 +33,7 @@ export const getClientes = async (token: string, page = 1, limit = 10): Promise<
 
   return result
 }
-export const getClientById = async (token: string, id:number)=>{
+export const getClientById = async (token: string, id: number) => {
   const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +67,10 @@ export const restoreClient = async (
 
   return response.json()
 }
-export const createClient = async (data: CreateUserDto, token: string): Promise<Clients> => {
+export const createClient = async (
+  data: CreateUserDto,
+  token: string,
+): Promise<Clients> => {
   const response = await fetchAuth(`${API_URL}/users`, {
     method: 'POST',
     headers: {
@@ -99,15 +116,13 @@ export const updateClientProfile = async (
     formData.append('profileImage', data.profileImage)
   }
 
-  const response = await fetchAuth(
-    `${API_URL}/profiles/${id}`,
-    {
-      method: 'PATCH',
-      headers: {
-      },
-      body: formData
-    }
-  )
+  const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
 
   const result = await response.json()
 
@@ -118,7 +133,10 @@ export const updateClientProfile = async (
   return result
 }
 
-export const deleteClient = async (id: number, token: string): Promise<void> => {
+export const deleteClient = async (
+  id: number,
+  token: string,
+): Promise<void> => {
   const response = await fetchAuth(`${API_URL}/users/${id}`, {
     method: 'DELETE',
     headers: {
