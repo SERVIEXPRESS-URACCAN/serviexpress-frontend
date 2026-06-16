@@ -1,4 +1,6 @@
-import { deliveryStatusColors, orderStatusColors } from '@/constants/colors'
+import { InfoField } from '@/components/shared/Info-field'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 import { Order } from '@/types/order.type'
 
 type Props = {
@@ -7,123 +9,50 @@ type Props = {
 
 export const OrderInfo = ({ order }: Props) => {
   return (
-    <div className="mx-auto max-w-md">
-      <div className="relative overflow-hidden rounded-lg border bg-background font-mono shadow-md">
-        <div className="absolute -left-3 top-20 h-6 w-6 rounded-full border bg-background" />
-        <div className="absolute -right-3 top-20 h-6 w-6 rounded-full border bg-background" />
+    <Card className='w-full'>
+      <CardHeader>
+        <CardTitle className='text-lg font-bold uppercase tracking-wide text-center'>
+          Información de la Orden
+        </CardTitle>
+      </CardHeader>
 
-        <div className="border-b border-dashed p-6 text-center">
-          <h2 className="text-xl font-bold uppercase tracking-[0.25em]">
-            ServiExpress
-          </h2>
+      <CardContent className='space-y-6'>
+        <InfoField label='ID' value={String(order.id)} />
 
-          <p className="mt-2 text-xs text-muted-foreground">Ticket de Pedido</p>
+        <InfoField
+          label='Cliente'
+          value={
+            order.user?.profile
+              ? `${order.user.profile.name} ${order.user.profile.lastName}`
+              : 'No disponible'
+          }
+        />
 
-          <p className="mt-1 text-lg font-bold">#{order.id}</p>
+        <InfoField
+          label='Negocio'
+          value={order.business?.name ?? 'No disponible'}
+        />
 
-          <p className="text-xs text-muted-foreground">
-            {new Date(order.createdAt).toLocaleString()}
-          </p>
-        </div>
+        <InfoField label='Estado de la Orden' value={order.status} />
 
-        <div className="space-y-3 p-6 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Cliente</span>
+        <InfoField label='Estado de Entrega' value={order.deliveryStatus} />
 
-            <span className="font-semibold text-right">
-              {order.user?.profile
-                ? `${order.user.profile.name} ${order.user.profile.lastName}`
-                : 'N/D'}
-            </span>
-          </div>
+        <InfoField label='Total' value={`C$ ${order.total}`} />
 
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Negocio</span>
+        <InfoField
+          label='Fecha de Creación'
+          value={new Date(order.createdAt).toLocaleString()}
+        />
 
-            <span className="font-semibold text-right">
-              {order.business?.name ?? 'N/D'}
-            </span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Mandadero</span>
-
-            <span className="font-semibold text-right">
-              {order.mandadero?.profile
-                ? `${order.mandadero.profile.name} ${order.mandadero.profile.lastName}`
-                : 'Sin asignar'}
-            </span>
-          </div>
-        </div>
-
-        <div className="border-y border-dashed px-6 py-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">
-              Estado de la orden
-            </span>
-
-            <span
-              className={`rounded-full border px-3 py-1 text-xs font-bold ${
-                orderStatusColors[order.status]
-              }`}
-            >
-              {order.status}
-            </span>
-          </div>
-
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">
-              Delivery
-            </span>
-
-            <span
-              className={`rounded-full border px-3 py-1 text-xs font-bold ${
-                deliveryStatusColors[order.deliveryStatus]
-              }`}
-            >
-              {order.deliveryStatus}
-            </span>
-          </div>
-        </div>
-
-        <div className="p-6">
-          <h3 className="mb-4 text-center text-xs font-bold tracking-[0.3em] text-muted-foreground">
-            DETALLE DEL PEDIDO
-          </h3>
-
-          <div className="space-y-3">
-            {order.items.map((item) => (
-              <div key={item.id}>
-                <div className="flex justify-between text-sm font-medium">
-                  <span>
-                    {item.quantity} × {item.nameSnapshot || item.product?.name}
-                  </span>
-
-                  <span>C$ {Number(item.subtotal).toFixed(2)}</span>
-                </div>
-
-                <p className="text-xs text-muted-foreground">
-                  C$ {Number(item.priceAtMoment).toFixed(2)} por unidad
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="border-t border-dashed p-6">
-          <div className="flex justify-between text-xl font-bold">
-            <span>TOTAL</span>
-
-            <span>C$ {Number(order.total).toFixed(2)}</span>
-          </div>
-        </div>
-
-        <div className="border-t border-dashed p-4 text-center">
-          <p className="text-xs tracking-[0.25em] text-muted-foreground">
-            GRACIAS POR SU COMPRA
-          </p>
-        </div>
-      </div>
-    </div>
+        <InfoField
+          label='Fecha de Aceptación'
+          value={
+            order.acceptedAt
+              ? new Date(order.acceptedAt).toLocaleString()
+              : 'Pendiente'
+          }
+        />
+      </CardContent>
+    </Card>
   )
 }
