@@ -6,7 +6,6 @@ import { User } from './user.type'
 export interface Order {
   id: number
 
-  userId: number
   user?: User
 
   businessId: number
@@ -19,8 +18,18 @@ export interface Order {
 
   total: number
 
-  mandaderoId?: number
-
   createdAt: string
   acceptedAt?: string
+}
+
+export type OrderResponse = {
+  data: Order[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
 }
