@@ -4,17 +4,21 @@ import { User } from './user.type'
 export type Owner = {
   id: number
 
-  user?: User
+  user: User
 
-  business?: Business
+  business: Business
   razonSocial: string
 
   identificationCardImage: string
 }
 
-export type UpdateOwner = {
-  name?: string
-  lastName?: string
-  cellphone?: string
-  razonSocial?: string
+export type OwnerResponse = {
+  data: Owner[]
+  pagination: {
+    total: number
+    page: number
+    limit: number
+    lastPage: number
+    hasNextPage: boolean
+  }
 }

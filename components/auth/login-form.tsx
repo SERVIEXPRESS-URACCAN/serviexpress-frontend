@@ -41,16 +41,21 @@ export function LoginForm({ className, ...props }: Props) {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  useEffect(() => {
-    if (!state.success) return
 
-    update().then((updatedSession) => {
-      if (!updatedSession) return
+useEffect(() => {
+  if (!state.success) return
+  let cancelled = false
+  update().then((updatedSession) => {
+    if (cancelled) return
+    if (!updatedSession) {
+      return
+    }
+    router.replace(getRedirectByRole(updatedSession.user.roles))
+  })
 
-      router.replace(getRedirectByRole(updatedSession.user.roles))
-    })
-  }, [state.success, update, router])
-
+  return () => { cancelled = true }
+}, [state.success])
+  
   const handleSubmit = async (formData: FormData) => {
     const email = formData.get('email') as string
     const password = formData.get('password') as string

@@ -25,78 +25,98 @@ export const CreateCategoryProductDialog = () => {
   const { session } = useAuth()
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [serverError, setServerError] = useState<string | null>(null)
 
-const handleConflict = async (error: CategoryConflictException) => {
-  if (!error.data.canRestore) {
-    await fireSwal({
-      icon: 'error',
-      title: 'Categoría duplicada',
-      text: error.message,
+
+  const handleConflict = async (
+    error: CategoryConflictException
+  ) => {
+    if (!error.data.canRestore) {
+      setServerError(error.message)
+      return
+    }
+    setOpen(false)
+    
+    const result = await fireSwal({
+      icon: 'question',
+      title: '¿Restaurar categoría?',
+      text: error.data.message,
+      showCancelButton: true,
+      confirmButtonText: 'Sí, restaurar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#dc2626',
     })
-    return
+
+    if (!result.isConfirmed) return
+
+    try {
+      await restoreCategoryProduct(error.data.id, session!.accessToken)
+      router.refresh()
+      await fireSwal({
+        icon: 'success',
+        title: 'Categoría restaurada',
+        timer: 2000,
+        showConfirmButton: false,
+      })
+    } catch (restoreError) {
+      const message = restoreError instanceof Error ? restoreError.message : 'Error al restaurar la categoría'
+      await fireSwal({ icon: 'error', title: 'Error', text: message })
+    }
   }
 
-  const result = await fireSwal({
-    icon: 'question',
-    title: '¿Restaurar categoría?',
-    text: error.data.message,
-    showCancelButton: true,
-    confirmButtonText: 'Sí, restaurar',
-    cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#16a34a',
-    cancelButtonColor: '#dc2626',
-  })
+  const handleOpenChange = (value: boolean) => {
+  setOpen(value)
 
-  if (!result.isConfirmed) return
-
-  try {
-    await restoreCategoryProduct(error.data.id, session!.accessToken)
-    router.refresh()
-    await fireSwal({
-      icon: 'success',
-      title: 'Categoría restaurada',
-      timer: 2000,
-      showConfirmButton: false,
-    })
-  } catch (restoreError) {
-    const message = restoreError instanceof Error ? restoreError.message : 'Error al restaurar la categoría'
-    await fireSwal({ icon: 'error', title: 'Error', text: message })
+  if (!value) {
+    setServerError(null)
   }
 }
 
-const handleCreate = async (data: { name: string }) => {
-  try {
-    setIsLoading(true)
-    await createCategoryProduct(data, session!.accessToken)
-    setOpen(false)
-    router.refresh()
-    await fireSwal({
-      icon: 'success',
-      title: 'Categoría creada',
-      text: `La categoría "${data.name}" fue creada exitosamente.`,
-      timer: 2000,
-      showConfirmButton: false,
-    })
-  } catch (error) {
-    setOpen(false)
-    if (error instanceof CategoryConflictException) {
-      await handleConflict(error)
-    }
+  const handleCreate = async (data: { name: string }) => {
+    try {
+      setIsLoading(true)
+      await createCategoryProduct(data, session!.accessToken)
+      setOpen(false)
+      router.refresh()
+      await fireSwal({
+        icon: 'success',
+        title: 'Categoría creada',
+        text: `La categoría "${data.name}" fue creada exitosamente.`,
+        timer: 2000,
+        showConfirmButton: false,
+      })
+    } catch (error) {
+      if (error instanceof CategoryConflictException) {
+        await handleConflict(error)
+        return
+      }
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error al crear la categoría'
+
+      await fireSwal({
+        icon: 'error',
+        title: 'Error',
+        text: message
+      })
   } finally {
     setIsLoading(false)
   }
 }
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Nueva categoría de producto</Button>
-      </DialogTrigger>
-      <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>Crear categoría de producto</DialogTitle>
-        </DialogHeader>
-        <CategoryProductForm onSubmitAction={handleCreate} isLoading={isLoading} />
-      </DialogContent>
-    </Dialog>
-  )
+return (
+  <Dialog open={open} onOpenChange={handleOpenChange}>
+    <DialogTrigger asChild>
+      <Button>Nueva categoría de producto</Button>
+    </DialogTrigger>
+    <DialogContent aria-describedby={undefined}>
+      <DialogHeader>
+        <DialogTitle>Crear categoría de producto</DialogTitle>
+      </DialogHeader>
+      <CategoryProductForm onSubmitAction={handleCreate} isLoading={isLoading} serverError={serverError} />
+    </DialogContent>
+  </Dialog>
+)
 }

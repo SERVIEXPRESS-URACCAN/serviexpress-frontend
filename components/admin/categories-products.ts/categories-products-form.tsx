@@ -10,12 +10,14 @@ type Props = {
   }
   onSubmitAction: (data: { name: string }) => Promise<void>
   isLoading?: boolean
+  serverError?: string | null
 }
 
 export const CategoryProductForm = ({
   defaultValues,
   onSubmitAction,
-  isLoading
+  isLoading,
+  serverError
 }: Props) => {
   const [name, setName] = useState(defaultValues?.name || '')
   const [error, setError] = useState<string | null>(null)
@@ -41,12 +43,23 @@ export const CategoryProductForm = ({
           value={name}
           onChange={(e) => {
             setName(e.target.value)
+
             if (error) setError(null)
           }}
           placeholder="Nombre de la categoría del producto"
           disabled={isLoading}
+          className={
+            error || serverError
+              ? 'border-destructive focus-visible:ring-destructive'
+              : ''
+          }
         />
-        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        {(error || serverError) && (
+          <p className="text-sm text-destructive">
+            {error || serverError}
+          </p>
+        )}
       </div>
       <Button type="submit" className="w-full" disabled={isLoading || !name.trim()}>
         {isLoading ? 'Guardando...' : 'Guardar'}

@@ -4,21 +4,23 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import {  CategoryProductResponse } from '@/types/categories-products'
-import { CategoryProductActions } from './categories-products-actions'
-import { Button } from '@/components/ui/button'
-
+  TableRow,
+} from "@/components/ui/table";
+import { CategoryProductResponse } from "@/types/categories-products";
+import { CategoryProductActions } from "./categories-products-actions";
+import { TablePaginationInput } from "@/components/shared/table-pagination";
 type Props = {
-  categoryProduct: CategoryProductResponse
-  currentPage:number
-}
+  categoryProduct: CategoryProductResponse;
+  currentPage: number;
+};
 
-export const CategoriesProductsTable = ({ categoryProduct, currentPage }: Props) => {
-  const { pagination } = categoryProduct
+export const CategoriesProductsTable = ({
+  categoryProduct,
+  currentPage,
+}: Props) => {
+  const { pagination } = categoryProduct;
 
-return (
+  return (
     <div className="space-y-4">
       <div className="rounded-md border">
         <Table>
@@ -52,22 +54,14 @@ return (
       </div>
 
       <div className="flex items-center justify-between px-2">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground whitespace-nowrap">
           Página {currentPage} de {pagination.lastPage}
         </p>
-        <div className="flex gap-2">
-          <a href={`?page=${currentPage - 1}`}>
-            <Button variant="outline" size="sm" disabled={currentPage <= 1}>
-              Anterior
-            </Button>
-          </a>
-          <a href={`?page=${currentPage + 1}`}>
-            <Button variant="outline" size="sm" disabled={!pagination.hasNextPage}>
-              Siguiente
-            </Button>
-          </a>
-        </div>
+        <TablePaginationInput
+          currentPage={currentPage}
+          lastPage={pagination.lastPage}
+        />
       </div>
     </div>
-  )
-}
+  );
+};

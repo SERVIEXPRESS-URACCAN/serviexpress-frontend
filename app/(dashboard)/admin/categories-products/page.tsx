@@ -1,28 +1,34 @@
-import { CategoriesProductsTable } from "@/components/admin/categories-products.ts"
-import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog"
-import { getCategoryProducts } from "@/services/categories-products.service"
+import { CategoriesProductsTable } from "@/components/admin/categories-products.ts";
+import { CreateCategoryProductDialog } from "@/components/admin/categories-products.ts/create-categories-products-dialog";
+import { SearchInput } from "@/components/shared/search-input";
+import { getCategoryProducts } from "@/services/categories-products.service";
 
-type Props = Readonly<{
-  searchParams: Promise<{ page?: string }>
-}>
+export default async function CategoryProductPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; search?: string }>;
+}) {
+  const params = await searchParams;
 
-export default async function CategoryProductPage({ searchParams }: Props) {
-  const { page } = await searchParams
-  const currentPage = Number(page) || 1
-  const categoryProducts = await getCategoryProducts(currentPage)
+  const currentPage = Number(params.page) || 1;
+  const search = params.search || "";
+  const categoryProducts = await getCategoryProducts(currentPage, search);
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Categorías de Productos</h1>
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Categorías de Productos</h1>
-        </div>
+        <SearchInput
+          placeholder="Buscar categoría de producto..."
+          className="w-full max-w-6xl"
+        />
         <CreateCategoryProductDialog />
       </div>
+
       <CategoriesProductsTable
         categoryProduct={categoryProducts}
         currentPage={currentPage}
       />
     </div>
-  )
+  );
 }

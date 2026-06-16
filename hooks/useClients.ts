@@ -1,0 +1,36 @@
+'use client'
+import { useEffect, useState, useCallback } from 'react'
+import { getClientes } from '@/services/clients.service'
+import { ClientsResponse } from '@/types/clients'
+import { useAuth } from './useAuth'
+import { useSearchParams } from 'next/navigation'
+
+export const useClients = () => {
+  const { session } = useAuth()
+  const searchParams = useSearchParams()
+  const page = Number(searchParams.get('page') || 1)
+
+  const [clients, setClients] = useState<ClientsResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
+
+  const fetchClients = useCallback(async () => {
+    if (!session?.accessToken) return;
+    try {
+      const data = await getClientes(session.accessToken, page);
+      if (data) setClients(data);
+      setError(null);  
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Error inesperado'));
+    } finally {
+      setLoading(false);
+    }
+  }, [session, page]);
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    fetchClients();
+  }, [fetchClients]);
+
+  return { clients, loading, error, fetchClients }
+}
