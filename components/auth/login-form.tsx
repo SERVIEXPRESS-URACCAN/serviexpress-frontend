@@ -17,7 +17,6 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 
 import { Input } from '@/components/ui/input'
 import { Eye, EyeOff } from 'lucide-react'
-import { setAuthToken } from '@/lib/fetch-auth'
 
 const initialState = {
   error: '',
@@ -51,7 +50,6 @@ useEffect(() => {
     if (!updatedSession) {
       return
     }
-    setAuthToken(updatedSession.accessToken, updatedSession.expiresAt)
     router.replace(getRedirectByRole(updatedSession.user.roles))
   })
 

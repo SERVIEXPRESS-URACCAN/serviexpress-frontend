@@ -8,7 +8,6 @@ export const getClientes = async (token: string, page = 1, limit = 10): Promise<
   const response = await fetchAuth(`${API_URL}/profiles?page=${page}&limit=${limit}`, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     cache: 'no-store',
   })
@@ -24,7 +23,6 @@ export const getClientById = async (token: string, id:number)=>{
   const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     cache: 'no-store',
   })
@@ -45,7 +43,6 @@ export const restoreClient = async (
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
@@ -61,7 +58,6 @@ export const createClient = async (data: CreateUserDto, token: string): Promise<
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
 
     body: JSON.stringify(data),
@@ -108,7 +104,6 @@ export const updateClientProfile = async (
     {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`
       },
       body: formData
     }
@@ -128,7 +123,6 @@ export const deleteClient = async (id: number, token: string): Promise<void> => 
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   })
 
