@@ -1,109 +1,108 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DialogTrigger
+} from '@/components/ui/dialog'
 import {
   createCategoryBusiness,
-  restoreCategoryBusiness,
-} from "@/services/categories-business.service";
+  restoreCategoryBusiness
+} from '@/services/categories-business.service'
 
-import { useState } from "react";
-import { CategoryBusinessForm } from "./categories-business-form";
-import { CategoryConflictException } from "@/types/api-errors.types";
-import Swal from "sweetalert2";
+import { CategoryConflictException } from '@/types/api-errors.types'
+import { useState } from 'react'
+import Swal from 'sweetalert2'
+import { CategoryBusinessForm } from './categories-business-form'
 
 type Props = {
-  refreshAction?: () =>Promise<void>
+  refreshAction?: () => Promise<void>
 }
-export const CreateCategoryBusinessDialog = ({refreshAction}:Props) => {
-
-  const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+export const CreateCategoryBusinessDialog = ({ refreshAction }: Props) => {
+  const [open, setOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleConflict = async (error: CategoryConflictException) => {
     if (!error.data.canRestore) {
-      setError(error.message);
-      return;
+      setError(error.message)
+      return
     }
 
     const result = await Swal.fire({
-      icon: "question",
-      title: "¿Restaurar categoría?",
+      icon: 'question',
+      title: '¿Restaurar categoría?',
       text: error.data.message,
       showCancelButton: true,
-      confirmButtonText: "Sí, restaurar",
-      cancelButtonText: "Cancelar",
-      confirmButtonColor: "#16a34a",
-      cancelButtonColor: "#dc2626",
-    });
-    if (!result.isConfirmed) return;
+      confirmButtonText: 'Sí, restaurar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#dc2626'
+    })
+    if (!result.isConfirmed) return
 
     try {
-      await restoreCategoryBusiness(error.data.id,);
-      setOpen(false);
+      await restoreCategoryBusiness(error.data.id)
+      setOpen(false)
       await refreshAction?.()
 
       await Swal.fire({
-        icon: "success",
-        title: "Categoría restaurada",
+        icon: 'success',
+        title: 'Categoría restaurada',
         timer: 2000,
-        showConfirmButton: false,
-      });
+        showConfirmButton: false
+      })
     } catch (restoreError) {
       await Swal.fire({
-        icon: "error",
-        title: "Error",
+        icon: 'error',
+        title: 'Error',
         text:
           restoreError instanceof Error
             ? restoreError.message
-            : "Error al restaurar la categoría",
-      });
+            : 'Error al restaurar la categoría'
+      })
     }
-  };
+  }
 
   const handleCreate = async (data: { name: string }) => {
     try {
-      setIsLoading(true);
-      setError("");
+      setIsLoading(true)
+      setError('')
 
-      await createCategoryBusiness(data);
-      setOpen(false);
+      await createCategoryBusiness(data)
+      setOpen(false)
       await refreshAction?.()
 
       await Swal.fire({
-        icon: "success",
-        title: "Categoría creada",
+        icon: 'success',
+        title: 'Categoría creada',
         text: `La categoría "${data.name}" fue creada exitosamente.`,
         timer: 2000,
-        showConfirmButton: false,
-      });
+        showConfirmButton: false
+      })
     } catch (error: unknown) {
       if (error instanceof CategoryConflictException) {
-        await handleConflict(error);
-        return;
+        await handleConflict(error)
+        return
       }
 
       setError(
-        error instanceof Error ? error.message : "Error al crear la categoría",
-      );
+        error instanceof Error ? error.message : 'Error al crear la categoría'
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog
       open={open}
       onOpenChange={(value) => {
-        setOpen(value);
-        if (!value) setError("");
+        setOpen(value)
+        if (!value) setError('')
       }}
     >
       <DialogTrigger asChild>
@@ -121,5 +120,5 @@ export const CreateCategoryBusinessDialog = ({refreshAction}:Props) => {
         />
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

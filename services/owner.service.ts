@@ -1,23 +1,22 @@
 import { API_URL } from '@/config/config'
 import { Owner, OwnerResponse } from '@/types/owner.types'
 
-import { CreateOwner, UpdateOwner } from '@/schemas/owner.schema'
 import { fetchAuth } from '@/lib/fetch-auth'
+import { CreateOwner, UpdateOwner } from '@/schemas/owner.schema'
 
 export const getOwner = async (
   page = 1,
-  search?: string,
+  search?: string
 ): Promise<OwnerResponse> => {
   const params = new URLSearchParams({
     page: String(page),
     limit: String(10),
-    ...(search && { search }),
+    ...(search && { search })
   })
 
   const response = await fetchAuth(`${API_URL}/owner?${params}`, {
-    headers: {
-    },
-    cache: 'no-store',
+    headers: {},
+    cache: 'no-store'
   })
 
   const result = await response.json()
@@ -29,9 +28,7 @@ export const getOwner = async (
   return result
 }
 
-export const createOwner = async (
-  data: CreateOwner,
-): Promise<Owner> => {
+export const createOwner = async (data: CreateOwner): Promise<Owner> => {
   const formData = new FormData()
 
   formData.append('razonSocial', data.razonSocial)
@@ -47,10 +44,9 @@ export const createOwner = async (
   const response = await fetchAuth(`${API_URL}/owner`, {
     method: 'POST',
 
-    headers: {
-    },
+    headers: {},
 
-    body: formData,
+    body: formData
   })
 
   const result = await response.json()
@@ -64,7 +60,7 @@ export const createOwner = async (
 
 export const updateOwner = async (
   id: number,
-  data: UpdateOwner,
+  data: UpdateOwner
 ): Promise<Owner> => {
   const formData = new FormData()
 
@@ -80,7 +76,7 @@ export const updateOwner = async (
 
   const response = await fetchAuth(`${API_URL}/owner/${id}`, {
     method: 'PATCH',
-    body: formData,
+    body: formData
   })
 
   const result = await response.json()
@@ -92,11 +88,9 @@ export const updateOwner = async (
   return result
 }
 
-export const getOwnerById = async (
-  id: number,
-): Promise<Owner> => {
+export const getOwnerById = async (id: number): Promise<Owner> => {
   const response = await fetchAuth(`${API_URL}/owner/${id}`, {
-    cache: 'no-store',
+    cache: 'no-store'
   })
 
   const result = await response.json()

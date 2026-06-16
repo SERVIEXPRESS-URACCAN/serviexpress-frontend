@@ -1,12 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import { getMandaderoById } from '@/services/mandadero.service'
 import { Mandadero } from '@/types/mandadero.type'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useMandadero = (id: number) => {
-  const [mandadero, setMandadero] =
-    useState<Mandadero | null>(null)
+  const [mandadero, setMandadero] = useState<Mandadero | null>(null)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
@@ -20,11 +19,7 @@ export const useMandadero = (id: number) => {
       setMandadero(response)
       setError(null)
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err
-          : new Error('Error inesperado')
-      )
+      setError(err instanceof Error ? err : new Error('Error inesperado'))
     } finally {
       setLoading(false)
     }
@@ -39,6 +34,6 @@ export const useMandadero = (id: number) => {
     mandadero,
     loading,
     error,
-    fetchMandadero,
+    fetchMandadero
   }
 }

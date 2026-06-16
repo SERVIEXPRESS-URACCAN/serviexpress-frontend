@@ -1,9 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { getCategoryProducts } from '@/services/categories-products.service'
 import { CategoryProductResponse } from '@/types/categories-products'
+import { useSearchParams } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useCategoryProducts = () => {
   const [data, setData] = useState<CategoryProductResponse | null>(null)
@@ -22,20 +22,16 @@ export const useCategoryProducts = () => {
       const response = await getCategoryProducts(page, search)
 
       setData(response)
-      setError(null)                                                    
+      setError(null)
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err
-          : new Error('Error inesperado')
-      )
+      setError(err instanceof Error ? err : new Error('Error inesperado'))
     } finally {
       setLoading(false)
     }
   }, [page, search])
 
   useEffect(() => {
-     // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCategoryProducts()
   }, [fetchCategoryProducts])
 
@@ -43,6 +39,6 @@ export const useCategoryProducts = () => {
     data,
     loading,
     error,
-    fetchCategoryProducts,
+    fetchCategoryProducts
   }
 }
