@@ -1,7 +1,6 @@
 import { InfoField } from '@/components/shared/Info-field'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { API_IMG_URL } from '@/config/config'
 import { Owner } from '@/types/owner.types'
 
@@ -19,7 +18,7 @@ export const OwnerInfo = ({ owner }: Props) => {
         </CardTitle>
       </CardHeader>
       <CardContent className='space-y-6'>
-        <div className='flex justify-center'>
+        <div className='flex justify-center  object-cover'>
           <Avatar className='h-32 w-32'>
             <AvatarImage
               src={
