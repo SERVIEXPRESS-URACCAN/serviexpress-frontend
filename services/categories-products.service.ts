@@ -1,4 +1,5 @@
 import { API_URL } from '@/config/config'
+import { fetchAuth } from '@/lib/fetch-auth'
 import { CategoryConflictException } from '@/types/api-errors.types'
 import {
   CategoryProduct,
@@ -11,7 +12,7 @@ export const getCategoryProducts = async (
   page = 1,
   search?: string,
 ): Promise<CategoryProductResponse> => {
-  const response = await fetch(
+  const response = await fetchAuth(
     `${API_URL}/categories-products?page=${page}&limit=10${search ? `&search=${search}` : ''}`,
   )
   if (!response.ok) {
@@ -26,13 +27,11 @@ export const getCategoryProducts = async (
 }
 export const restoreCategoryProduct = async (
   id: number,
-  token: string,
 ): Promise<{ message: string; id: number }> => {
-  const response = await fetch(`${API_URL}/categories-products/${id}/restore`, {
+  const response = await fetchAuth(`${API_URL}/categories-products/${id}/restore`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   })
 
@@ -44,13 +43,11 @@ export const restoreCategoryProduct = async (
 }
 export const createCategoryProduct = async (
   data: CreateCategoryProductDto,
-  token: string,
 ): Promise<CategoryProduct> => {
-  const response = await fetch(`${API_URL}/categories-products`, {
+  const response = await fetchAuth(`${API_URL}/categories-products`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
@@ -74,13 +71,11 @@ export const createCategoryProduct = async (
 export const updateCategoryProduct = async (
   id: number,
   data: UpdateCategoryProductDto,
-  token: string,
 ): Promise<CategoryProduct> => {
   const response = await fetch(`${API_URL}/categories-products/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
@@ -102,13 +97,9 @@ export const updateCategoryProduct = async (
 }
 export const deleteCategoryProduct = async (
   id: number,
-  token: string,
 ): Promise<void> => {
   const response = await fetch(`${API_URL}/categories-products/${id}`, {
     method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   })
 
   if (!response.ok) {
