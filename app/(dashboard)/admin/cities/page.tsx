@@ -1,9 +1,10 @@
+'use client'
 import { CitiesTable, CreateCityDialog } from '@/components/admin/cities'
+import { useCities } from '@/hooks/useCities'
 
-import { getCities } from '@/services/city.service'
 
-export default async function CitiesPage() {
-  const cities = await getCities()
+export default  function CitiesPage() {
+  const {cities} =  useCities()
 
   return (
     <div className="space-y-6">
