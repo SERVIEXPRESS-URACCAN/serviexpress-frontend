@@ -1,8 +1,8 @@
 'use client'
 
-import { Owner } from '@/types/owner.types'
-import { useEffect, useState, useCallback } from 'react'
 import { getOwnerById } from '@/services/owner.service'
+import { Owner } from '@/types/owner.types'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useOwner = (id: number) => {
   const [owner, setOwner] = useState<Owner | null>(null)
@@ -35,6 +35,6 @@ export const useOwner = (id: number) => {
     owner,
     loading,
     error,
-    fetchOwner,
+    fetchOwner
   }
 }
