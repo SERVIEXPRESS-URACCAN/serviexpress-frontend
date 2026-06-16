@@ -93,7 +93,7 @@ export const updateOwner = async (
 }
 
 export const getOwnerById = async (
-  id: string,
+  id: number,
 ): Promise<Owner> => {
   const response = await fetchAuth(`${API_URL}/owner/${id}`, {
     cache: 'no-store',
