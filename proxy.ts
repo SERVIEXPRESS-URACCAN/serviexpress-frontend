@@ -1,25 +1,43 @@
 import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+import { getRedirectByRole } from "./lib/redirect-by-role";
+import { Role } from "./constants/roles";
 
-const publicRoutes = [
-  "/",
-  "/login",
-  "/register",
-];
+const publicRoutes = ["/login"];
 
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
-  const isPublic = publicRoutes.some((route) => pathname.startsWith(route))
-  if (isPublic) return;
+  if (req.nextUrl.searchParams.has("_rsc")) {
+    return;
+  }
 
-  if (req.nextUrl.searchParams.has('_rsc')) return;
+  const isPublic = publicRoutes.includes(pathname);
+
+  if (pathname === "/login" && req.auth) {
+    const roles = req.auth.user?.roles as Role[];
+
+    return NextResponse.redirect(
+      new URL(
+        getRedirectByRole(roles),
+        req.nextUrl.origin
+      )
+    );
+  }
+
+  if (isPublic) {
+    return;
+  }
 
   if (!req.auth) {
-    return Response.redirect(new URL("/login", req.nextUrl.origin))
+    return NextResponse.redirect(
+      new URL("/login", req.nextUrl.origin)
+    );
   }
 });
+
 export const config = {
   matcher: [
-    String.raw`/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)`,
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
