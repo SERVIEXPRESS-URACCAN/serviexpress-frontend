@@ -2,7 +2,7 @@
 
 import { ProductTable } from '@/components/owner/product-table'
 import { SearchInput } from '@/components/shared/search-input'
-import { useProducts } from '@/hooks/owner/products'
+import { useProducts } from '@/hooks/owner/useOwnerProducts'
 
 export default function OwnerProductsPage() {
   const { products, loading, fetchProducts } = useProducts()
