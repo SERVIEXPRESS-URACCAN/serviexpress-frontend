@@ -3,8 +3,8 @@
 import { ProductTable } from '@/components/owner/products/product-table'
 import { SearchInput } from '@/components/shared/search-input'
 
-import { useProducts } from '@/hooks/owner/useOwnerProducts'
 import { CreateProductOwnerDialog } from '@/components/owner/products/create-product-owner-dialog'
+import { useProducts } from '@/hooks/owner/useOwnerProducts'
 import { useCategoryProducts } from '@/hooks/useCategoryProducts'
 
 export default function OwnerProductsPage() {
@@ -21,9 +21,9 @@ export default function OwnerProductsPage() {
   }
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold'>Productos</h1>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Productos</h1>
 
         <CreateProductOwnerDialog
           categories={categoryProducts}
@@ -31,10 +31,10 @@ export default function OwnerProductsPage() {
         />
       </div>
 
-      <div className='flex items-center justify-between'>
+      <div className="flex items-center justify-between">
         <SearchInput
-          placeholder='Buscar producto...'
-          className='w-full max-w-6xl'
+          placeholder="Buscar producto..."
+          className="w-full max-w-6xl"
         />
       </div>
 
