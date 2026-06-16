@@ -14,7 +14,6 @@ export const proxy = auth((req) => {
 
   const isPublic = publicRoutes.includes(pathname);
 
-  // Ya autenticado intentando entrar al login
   if (pathname === "/login" && req.auth) {
     const roles = req.auth.user?.roles as Role[];
 
@@ -26,12 +25,10 @@ export const proxy = auth((req) => {
     );
   }
 
-  // Rutas públicas
   if (isPublic) {
     return;
   }
 
-  // Rutas protegidas
   if (!req.auth) {
     return NextResponse.redirect(
       new URL("/login", req.nextUrl.origin)
