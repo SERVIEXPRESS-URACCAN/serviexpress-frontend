@@ -39,7 +39,9 @@ export const EditBusinessDialog = ({
   useEffect(() => {
     if (open && session) {
       getCities().then(setCities)
-      getCategoryBusiness().then((res) => setCategories(res.data))
+      getCategoryBusiness(session.accessToken).then((res) =>
+        setCategories(res.data),
+      )
     }
   }, [open, session])
 
