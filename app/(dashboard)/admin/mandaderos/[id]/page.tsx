@@ -1,5 +1,4 @@
-import { auth } from '@/auth'
-import { getMandaderoById } from '@/services/mandadero.service'
+'use client'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -7,15 +6,19 @@ import { MandaderoInfo } from '@/components/admin/mandadero/details/mandadero-in
 import { MandaderoPerfil } from '@/components/admin/mandadero/details/mandadero-perfil'
 import { MandaderoImages } from '@/components/admin/mandadero/details/mandadero-images'
 import { MandaderoMotorcycle } from '@/components/admin/mandadero/details/mandadero-moto'
+import { useParams } from 'next/navigation'
+import { useMandadero } from '@/hooks/useMandadero'
+import Loading from '../loading'
 
-export default async function MandaderoDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const session = await auth()
-  const mandadero = await getMandaderoById(Number(id), session!.accessToken)
+export default  function MandaderoDetailPage() {
+  const param = useParams()
+  const id = Number(param.id)
+  const { mandadero, loading } = useMandadero(id)
+  
+  if (loading || !mandadero) {
+    return <Loading />
+  }
+  
 
   return (
     <div className='space-y-6'>

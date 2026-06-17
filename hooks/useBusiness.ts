@@ -1,13 +1,11 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useAuth } from './useAuth'
 import { BusinessResponse } from '@/types/business.type'
 import { useCallback, useEffect, useState } from 'react'
 import { getBusinesses } from '@/services/business.service'
 
 export const useBusiness = () => {
-  const { session } = useAuth()
 
   const searchParams = useSearchParams()
 
@@ -16,26 +14,31 @@ export const useBusiness = () => {
 
   const [businesses, setBusinesses] = useState<BusinessResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
+
 
   const refreshBusiness = useCallback(async () => {
-    if (!session?.accessToken) return
-
+    setLoading(true)
     try {
-      setLoading(true)
-
-      const data = await getBusinesses(session.accessToken, page, search)
-
-      setBusinesses(data)
+      const data = await getBusinesses(page, search)
+      if (data) setBusinesses(data)
+      setError(null)
+    } catch (err) {
+      setError(
+        err instanceof Error ? err : new Error('Error inesperado')
+      )
     } finally {
       setLoading(false)
     }
-  }, [session?.accessToken, page, search])
+  }, [page, search])
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshBusiness()
   }, [refreshBusiness])
   return {
     businesses,
     loading,
     refreshBusiness,
+    error,
   }
 }

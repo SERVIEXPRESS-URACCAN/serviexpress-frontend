@@ -1,18 +1,25 @@
 'use client'
 
 import { useState } from 'react'
-
 import { CreateOwner } from '@/schemas/owner.schema'
 import { createOwner } from '@/services/owner.service'
 
 export const useCreateOwner = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
-  const execute = async (data: CreateOwner, token: string) => {
+  const execute = async (data: CreateOwner) => {
     try {
       setIsLoading(true)
+      setError(null)
 
-      await createOwner(data, token)
+      const result = await createOwner(data)
+
+      return result
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Error inesperado')
+      setError(error)
+      throw error
     } finally {
       setIsLoading(false)
     }
@@ -20,6 +27,7 @@ export const useCreateOwner = () => {
 
   return {
     execute,
-    isLoading
+    isLoading,
+    error,
   }
 }

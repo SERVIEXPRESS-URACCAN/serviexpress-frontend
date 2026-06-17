@@ -48,7 +48,7 @@ export const CreateProductAdminDialog = ({ businessId, categories }: Props) => {
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 
-      await createProduct(session.accessToken, formData)
+      await createProduct(formData)
       router.refresh()
       setOpen(false)
     } catch (error) {
