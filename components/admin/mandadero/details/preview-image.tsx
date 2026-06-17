@@ -44,22 +44,7 @@ export function PreviewImage({ src, alt }: Readonly<Props>) {
               transition-all
               group-hover:bg-black/20
             "
-          >
-            <span
-              className="
-                opacity-0
-                group-hover:opacity-100
-                rounded-md
-                bg-background/90
-                px-3 py-2
-                text-sm
-                font-medium
-                transition-opacity
-              "
-            >
-              Ver documento
-            </span>
-          </div>
+          ></div>
         </div>
       </DialogTrigger>
 
