@@ -5,7 +5,6 @@ import { UserConflictException } from '@/types/api-errors.types'
 import { Clients, ClientsResponse } from '@/types/clients'
 
 export const getClientes = async (
-  token: string,
   page = 1,
   limit = 10,
   search?: string,
@@ -33,7 +32,7 @@ export const getClientes = async (
 
   return result
 }
-export const getClientById = async (token: string, id: number) => {
+export const getClientById = async ( id: number) => {
   const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -51,7 +50,6 @@ export const getClientById = async (token: string, id: number) => {
 export const restoreClient = async (
   id: number,
   data: CreateUserDto,
-  token: string,
 ): Promise<Clients> => {
   const response = await fetchAuth(`${API_URL}/users/${id}/restore`, {
     method: 'PATCH',
@@ -69,7 +67,6 @@ export const restoreClient = async (
 }
 export const createClient = async (
   data: CreateUserDto,
-  token: string,
 ): Promise<Clients> => {
   const response = await fetchAuth(`${API_URL}/users`, {
     method: 'POST',
@@ -101,7 +98,6 @@ export const createClient = async (
 export const updateClientProfile = async (
   id: number,
   data: UpdateClientProfileDto,
-  token: string,
 ) => {
   const formData = new FormData()
 
@@ -119,7 +115,6 @@ export const updateClientProfile = async (
   const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
     method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${token}`,
     },
     body: formData,
   })
@@ -135,7 +130,6 @@ export const updateClientProfile = async (
 
 export const deleteClient = async (
   id: number,
-  token: string,
 ): Promise<void> => {
   const response = await fetchAuth(`${API_URL}/users/${id}`, {
     method: 'DELETE',

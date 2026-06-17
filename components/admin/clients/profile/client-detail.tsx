@@ -1,3 +1,4 @@
+'use client'
 import { Clients } from '@/types/clients'
 import { ClientProfileCard } from './client-profile-card'
 
@@ -7,11 +8,10 @@ type Props = {
 
 export function ClientDetail({ client }: Props) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
-      <ClientProfileCard client={client} />
-
-      <div>
+    <div className="min-h-screen flex justify-center items-start p-6">
+      <div className="w-full max-w-2xl">
+        <ClientProfileCard client={client} />
       </div>
     </div>
   )
-} 
+}

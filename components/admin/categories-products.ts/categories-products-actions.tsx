@@ -19,10 +19,11 @@ import { DeleteCategoryProductDialog } from './delete-categories-products'
 
 
 type Props = {
-  categoryProduct: CategoryProduct
+  categoryProduct: CategoryProduct,
+  refreshAction?: () => Promise<void>
 }
 
-export const CategoryProductActions = ({ categoryProduct }: Props) => {
+export const CategoryProductActions = ({ categoryProduct,refreshAction }: Props) => {
   const [editOpen, setEditOpen] = useState(false)
 
  return (
@@ -44,7 +45,9 @@ export const CategoryProductActions = ({ categoryProduct }: Props) => {
           </DropdownMenuItem>
 
           <DeleteCategoryProductDialog
-            categoryProduct={categoryProduct}
+           categoryProduct={categoryProduct}
+           refreshAction={refreshAction}
+
           />
         </DropdownMenuContent>
       </DropdownMenu>
@@ -53,6 +56,8 @@ export const CategoryProductActions = ({ categoryProduct }: Props) => {
         categoryProduct={categoryProduct}
         open={editOpen}
         onOpenChangeAction={setEditOpen}
+        refreshAction={refreshAction}
+
       />
 
     </>

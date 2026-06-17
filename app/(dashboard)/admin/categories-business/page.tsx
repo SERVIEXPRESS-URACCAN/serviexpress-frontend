@@ -22,7 +22,8 @@ export default function CategoriesBusinessPage() {
           className='w-full max-w-6xl'
         />
 
-        <CreateCategoryBusinessDialog />
+        <CreateCategoryBusinessDialog
+        refreshAction={fetchCategoryBusiness}/>
       </div>
 
       {loading ? (
