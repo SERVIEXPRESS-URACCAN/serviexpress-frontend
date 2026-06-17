@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react'
 
 import {
@@ -19,7 +20,7 @@ type Props = {
   genders: Gender[]
   open: boolean
   onOpenChangeAction: (open: boolean) => void
-  onUpdated: () => Promise<void>
+  onUpdatedAction: () => Promise<void>
 }
 
 export const EditClientDialog = ({
@@ -27,7 +28,7 @@ export const EditClientDialog = ({
   genders,
   open,
   onOpenChangeAction,
-  onUpdated,
+  onUpdatedAction,
 }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false)
@@ -56,7 +57,7 @@ export const EditClientDialog = ({
       ])
       onOpenChangeAction(false)
 
-      await onUpdated?.()
+      await onUpdatedAction?.()
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Error al actualizar'

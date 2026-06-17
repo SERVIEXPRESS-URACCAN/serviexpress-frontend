@@ -10,8 +10,8 @@ import { useOwner } from '@/hooks/owner/useOwner'
 export default  function OwnerDetailPage() {
   const params = useParams()
   const id = Number(params.id)
-  const { owners, loading } = useOwner(id)
-  if (loading || !owners) {
+  const { owner, loading } = useOwner(id)
+  if (loading || !owner) {
     return <Loading/>
   }
 
@@ -27,7 +27,7 @@ export default  function OwnerDetailPage() {
       </div>
 
       <div className='max-w-2xl mx-auto'>
-        <OwnerInfo owner={owners} />
+        <OwnerInfo owner={owner} />
       </div>
     </div>
   )
