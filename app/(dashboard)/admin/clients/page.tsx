@@ -8,9 +8,8 @@ import Loading from './loading'
 import { SearchInput } from '@/components/shared/search-input'
 
 export default function ClientsPage() {
-  const { session, isLoading: authLoading } = useAuth()
+  const {isLoading: authLoading } = useAuth()
   const { clients, loading, fetchClients } = useClients()
-  const token = session?.accessToken ?? ''
 
 
   const { genders, loading: loadingGenders } = useGenders()
@@ -30,7 +29,6 @@ export default function ClientsPage() {
           className='w-full max-w-6xl'
         />
         <CreateClientDialog
-          token={token}
           genders={genders}
           onCreatedAction={fetchClients}
         />

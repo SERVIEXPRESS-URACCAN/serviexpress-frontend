@@ -1,3 +1,4 @@
+'use client'
 import {
   Table,
   TableBody,
@@ -47,7 +48,8 @@ export const CategoriesProductsTable = ({
                   <TableCell>{cat.id}</TableCell>
                   <TableCell>{cat.name}</TableCell>
                   <TableCell>
-                    <CategoryProductActions categoryProduct={cat}
+                    <CategoryProductActions
+                      categoryProduct={cat}
                       refreshAction={refreshAction}/>
                   </TableCell>
                 </TableRow>

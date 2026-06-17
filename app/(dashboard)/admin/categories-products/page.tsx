@@ -26,7 +26,8 @@ export default function CategoryProductPage() {
           className="w-full max-w-6xl"
         />
 
-        <CreateCategoryProductDialog />
+        <CreateCategoryProductDialog
+        refreshAction={fetchCategoryProducts}/>
       </div>
 
       {loading ? (

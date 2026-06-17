@@ -1,5 +1,4 @@
 'use client'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 import {
@@ -18,9 +17,10 @@ const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
     setTimeout(() => resolve(Swal.fire(options)), 300)
   })
-
-export const CreateCategoryProductDialog = () => {
-  const router = useRouter()
+type Props = {
+  refreshAction?: () => Promise<void>
+}
+export const CreateCategoryProductDialog = ({refreshAction}:Props)=> {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -50,7 +50,9 @@ export const CreateCategoryProductDialog = () => {
 
     try {
       await restoreCategoryProduct(error.data.id,)
-      router.refresh()
+
+      await refreshAction?.()
+
       await fireSwal({
         icon: 'success',
         title: 'Categoría restaurada',
@@ -76,7 +78,9 @@ export const CreateCategoryProductDialog = () => {
       setIsLoading(true)
       await createCategoryProduct(data)
       setOpen(false)
-      router.refresh()
+
+      await refreshAction?.()
+
       await fireSwal({
         icon: 'success',
         title: 'Categoría creada',

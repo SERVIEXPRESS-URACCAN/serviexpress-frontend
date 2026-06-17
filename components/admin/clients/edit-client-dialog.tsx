@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-import { useAuth } from '@/hooks/useAuth'
 import { Clients } from '@/types/clients'
 import { UpdateClientProfileDto } from '@/schemas/client.schema'
 import { updateClientProfile } from '@/services/clients.service'
