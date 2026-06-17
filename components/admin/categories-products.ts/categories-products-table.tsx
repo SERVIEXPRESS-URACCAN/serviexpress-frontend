@@ -48,7 +48,7 @@ export const CategoriesProductsTable = ({
                   <TableCell>{cat.name}</TableCell>
                   <TableCell>
                     <CategoryProductActions categoryProduct={cat}
-                                  />
+                      refreshAction={refreshAction}/>
                   </TableCell>
                 </TableRow>
               ))

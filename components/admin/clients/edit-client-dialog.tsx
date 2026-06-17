@@ -30,7 +30,6 @@ export const EditClientDialog = ({
   onOpenChangeAction,
   onUpdated,
 }: Props) => {
-  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<{
@@ -42,7 +41,7 @@ export const EditClientDialog = ({
       setIsLoading(true)
       setServerError(null)
 
-      if (!client || !session?.accessToken) return
+      if (!client ) return
 
       if (!client.user?.id) {
         setServerError({
@@ -53,8 +52,8 @@ export const EditClientDialog = ({
       }
 
       await Promise.all([
-        updateClientProfile(client.id, data, session.accessToken),
-        updateUserStatus(client.user.id, data.status, session.accessToken),
+        updateClientProfile(client.id, data),
+        updateUserStatus(client.user.id, data.status),
       ])
       onOpenChangeAction(false)
 

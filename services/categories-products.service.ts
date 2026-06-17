@@ -72,7 +72,7 @@ export const updateCategoryProduct = async (
   id: number,
   data: UpdateCategoryProductDto,
 ): Promise<CategoryProduct> => {
-  const response = await fetch(`${API_URL}/categories-products/${id}`, {
+  const response = await fetchAuth(`${API_URL}/categories-products/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export const updateCategoryProduct = async (
 export const deleteCategoryProduct = async (
   id: number,
 ): Promise<void> => {
-  const response = await fetch(`${API_URL}/categories-products/${id}`, {
+  const response = await fetchAuth(`${API_URL}/categories-products/${id}`, {
     method: 'DELETE',
   })
 
