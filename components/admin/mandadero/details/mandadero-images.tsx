@@ -1,3 +1,4 @@
+'use client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { API_IMG_URL } from '@/config/config'
 import { Mandadero } from '@/types/mandadero.type'
