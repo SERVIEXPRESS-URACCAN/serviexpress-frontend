@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import {
@@ -19,10 +20,10 @@ type Props = {
   city: City
   open: boolean
   onOpenChangeAction: (open: boolean) => void
-  refreshAction: ()=> Promise<void>
 }
 
-export const EditCityDialog = ({ city, open, onOpenChangeAction,refreshAction }: Props) => {
+export const EditCityDialog = ({ city, open, onOpenChangeAction }: Props) => {
+  const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -34,7 +35,7 @@ export const EditCityDialog = ({ city, open, onOpenChangeAction,refreshAction }:
 
       onOpenChangeAction(false)
 
-      await refreshAction?.()
+      router.refresh()
     } finally {
       setIsLoading(false)
     }

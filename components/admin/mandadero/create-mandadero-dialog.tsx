@@ -34,8 +34,8 @@ export const CreateMandaderoDialog = () => {
   useEffect(() => {
     if (open && session) {
       Promise.all([
-        getUsers(),
-        getMandaderos(),
+        getUsers(session.accessToken),
+        getMandaderos(session.accessToken),
       ]).then(([usersResponse, mandaderosResponse]) => {
         const allUsers = (usersResponse as unknown as { data: User[] }).data
 
@@ -65,7 +65,7 @@ export const CreateMandaderoDialog = () => {
 
     try {
       setIsLoading(true)
-      await createMandaderoAdmin( data)
+      await createMandaderoAdmin(session.accessToken, data)
       router.refresh()
       await Swal.fire({
         icon: 'success',

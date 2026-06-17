@@ -5,7 +5,7 @@ import { OwnerTable } from '@/components/admin/owners/owner-table'
 import { CreateOwnerDialog } from '@/components/admin/owners/create-owner-dialog'
 
 import { useAvailableUsers } from '@/hooks/owner/useAvailableUsers'
-import { useOwners } from '@/hooks/useOwners'
+import { useOwners } from '@/hooks/useOwner'
 import { SearchInput } from '@/components/shared/search-input'
 
 export default function OwnersPage() {

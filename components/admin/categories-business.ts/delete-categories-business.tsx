@@ -21,6 +21,7 @@ export const DeleteCategoryBusinessDialog = ({
   CategoryBusiness,
   refreshAction,
 }: Props) => {
+  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -41,7 +42,7 @@ export const DeleteCategoryBusinessDialog = ({
     try {
       setIsLoading(true)
 
-      await deleteCategoryBusiness(CategoryBusiness.id)
+      await deleteCategoryBusiness(CategoryBusiness.id, session!.accessToken)
 
       refreshAction?.()
       await fireSwal({

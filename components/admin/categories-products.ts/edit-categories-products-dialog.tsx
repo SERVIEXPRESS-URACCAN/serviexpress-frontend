@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 
@@ -24,6 +25,8 @@ import { CategoryConflictException } from '@/types/api-errors.types'
 
 import { CategoryProductForm } from './categories-products-form'
 
+import { useAuth } from '@/hooks/useAuth'
+
 const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
     setTimeout(() => resolve(Swal.fire(options)), 300)
@@ -33,17 +36,15 @@ type Props = {
   categoryProduct: CategoryProduct
   open: boolean
   onOpenChangeAction: (open: boolean) => void
-  refreshAction?: () => Promise<void>
-
 }
 
 export const EditCategoryProductDialog = ({
   categoryProduct,
   open,
-  onOpenChangeAction,
-  refreshAction
-  
+  onOpenChangeAction
 }: Props) => {
+  const router = useRouter()
+  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -71,9 +72,11 @@ export const EditCategoryProductDialog = ({
     try {
       await restoreCategoryProduct(
         error.data.id,
+        session!.accessToken
       )
 
-    await refreshAction?.()
+      router.refresh()
+
       await fireSwal({
         icon: 'success',
         title: 'Categoría restaurada',
@@ -96,52 +99,51 @@ export const EditCategoryProductDialog = ({
     }
   }
 
-const handleUpdate = async (
-  data: UpdateCategoryProductDto
-) => {
-  try {
-    setIsLoading(true)
-    setServerError(null)
+  const handleUpdate = async (
+    data: UpdateCategoryProductDto
+  ) => {
+    try {
+      setIsLoading(true)
+      setServerError(null)
 
-    await updateCategoryProduct(
-      categoryProduct.id,
-      data
-    )
+      await updateCategoryProduct(
+        categoryProduct.id,
+        data,
+        session!.accessToken
+      )
 
-    onOpenChangeAction(false)
+      onOpenChangeAction(false)
 
-    await refreshAction?.()
+      router.refresh()
 
-    await fireSwal({
-      icon: 'success',
-      title: 'Categoría actualizada',
-      text: `La categoría "${data.name}" fue actualizada exitosamente.`,
-      timer: 2000,
-      showConfirmButton: false,
-      theme: 'auto'
-    })
-  } catch (error) {
-    if (error instanceof CategoryConflictException) {
-      await handleConflict(error)
-      return
+      await fireSwal({
+        icon: 'success',
+        title: 'Categoría actualizada',
+        text: `La categoría "${data.name}" fue actualizada exitosamente.`,
+        timer: 2000,
+        showConfirmButton: false,
+        theme: 'auto'
+      })
+    } catch (error) {
+      if (error instanceof CategoryConflictException) {
+        await handleConflict(error)
+        return
+      }
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error al actualizar la categoría'
+
+      await fireSwal({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        theme: 'auto'
+      })
+    } finally {
+      setIsLoading(false)
     }
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'Error al actualizar la categoría'
-
-    setServerError(message)
-
-    await fireSwal({
-      icon: 'error',
-      title: 'Error',
-      text: message,
-      theme: 'auto'
-    })
-  } finally {
-    setIsLoading(false)
-  }
   }
     const handleOpenChange = (value: boolean) => {
     onOpenChangeAction(value)

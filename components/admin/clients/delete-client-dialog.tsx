@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
+import { useAuth } from '@/hooks/useAuth'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { Clients } from '@/types/clients'
 import { deleteClient } from '@/services/clients.service'
@@ -20,10 +21,12 @@ export const DeleteClientDialog = ({
   client,
   onUpdatedAction,
 }: Props) => {
+  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
 
   const handleDelete = async () => {
+    if (!session?.accessToken) return
     const result = await fireSwal({
       title: '¿Estás segura?',
       text: `Se eliminará el cliente "${client.name}"`,
@@ -42,6 +45,7 @@ export const DeleteClientDialog = ({
 
       await deleteClient(
         client.user.id,
+        session.accessToken
       )
       await onUpdatedAction()
 
