@@ -39,8 +39,6 @@ export const EditProductAdminDialog = ({
   }
 
   const onSubmit = async (data: UpdateProductInput) => {
-    console.log('status:', data.status)
-    console.log('status string:', data.status ? 'true' : 'false')
     if (!session) return
 
     try {
