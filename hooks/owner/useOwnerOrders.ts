@@ -2,18 +2,15 @@
 
 import { useCallback, useEffect, useState } from 'react'
 
-import { useSearchParams } from 'next/navigation'
-import { useAuth } from '../useAuth'
 import { getBusinessOrders } from '@/services/owner/orders-owner.service'
 
 import { OrderResponse } from '@/types/order.type'
+import { useSearchParams } from 'next/navigation'
 
 export const useOwnerOrders = () => {
-  const { session } = useAuth()
-
   const searchParams = useSearchParams()
-  const search = searchParams.get('search') || undefined
   const page = Number(searchParams.get('page')) || 1
+  const search = searchParams.get('search')?.trim() || undefined
   const status = searchParams.get('status') || undefined
 
   const [data, setData] = useState<OrderResponse | null>(null)
@@ -21,11 +18,10 @@ export const useOwnerOrders = () => {
   const [error, setError] = useState<Error | null>(null)
 
   const fetchOrders = useCallback(async () => {
-    if (!session?.accessToken) return
     setLoading(true)
 
     try {
-      const data = await getBusinessOrders(page, status)
+      const data = await getBusinessOrders(page, status, search)
       if (data) setData(data)
       setError(null)
     } catch (err) {
@@ -33,7 +29,7 @@ export const useOwnerOrders = () => {
     } finally {
       setLoading(false)
     }
-  }, [session, page, status])
+  }, [page, status, search])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
