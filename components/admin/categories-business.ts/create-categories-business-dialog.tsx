@@ -13,14 +13,15 @@ import {
   restoreCategoryBusiness,
 } from "@/services/categories-business.service";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CategoryBusinessForm } from "./categories-business-form";
 import { CategoryConflictException } from "@/types/api-errors.types";
 import Swal from "sweetalert2";
 
-export const CreateCategoryBusinessDialog = () => {
-  const router = useRouter();
+type Props = {
+  refreshAction?: () =>Promise<void>
+}
+export const CreateCategoryBusinessDialog = ({refreshAction}:Props) => {
 
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +48,7 @@ export const CreateCategoryBusinessDialog = () => {
     try {
       await restoreCategoryBusiness(error.data.id,);
       setOpen(false);
-      router.refresh();
+      await refreshAction?.()
 
       await Swal.fire({
         icon: "success",
@@ -74,7 +75,7 @@ export const CreateCategoryBusinessDialog = () => {
 
       await createCategoryBusiness(data);
       setOpen(false);
-      router.refresh();
+      await refreshAction?.()
 
       await Swal.fire({
         icon: "success",
