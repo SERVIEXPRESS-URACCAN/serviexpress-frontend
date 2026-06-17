@@ -4,7 +4,7 @@ import { useCities } from '@/hooks/useCities'
 
 
 export default  function CitiesPage() {
-  const {cities} =  useCities()
+  const {cities,fetchCities} =  useCities()
 
   return (
     <div className="space-y-6">
@@ -13,10 +13,12 @@ export default  function CitiesPage() {
           <h1 className="text-2xl font-bold">Ciudades</h1>
         </div>
 
-        <CreateCityDialog />
+        <CreateCityDialog
+        refreshAction={fetchCities}/>
       </div>
 
-      <CitiesTable cities={cities} />
+      <CitiesTable cities={cities}
+      refreashAction={fetchCities}/>
     </div>
   )
 }
