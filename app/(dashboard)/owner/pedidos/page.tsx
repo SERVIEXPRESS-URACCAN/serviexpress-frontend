@@ -1,14 +1,14 @@
 'use client'
 
-import { OrdersTable } from '@/components/owner/orders-table'
+import { OrdersTable } from '@/components/owner/orders/orders-table'
 import { SearchInput } from '@/components/shared/search-input'
 import { useOwnerOrders } from '@/hooks/owner/useOwnerOrders'
 
 export default function OwnerOrdersPage() {
   const { data, loading } = useOwnerOrders()
 
-  if (loading) {
-    return <div>Cargando...</div>
+  if (!data && loading) {
+    return <div>Cargando Pedidos...</div>
   }
 
   if (!data) {

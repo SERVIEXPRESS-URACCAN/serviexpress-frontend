@@ -7,7 +7,7 @@ export const createProductSchema = z.object({
   categoryIds: z
     .array(z.number().min(1))
     .min(1, 'Selecciona al menos una categoría'),
-  businessId: z.coerce.number().min(1, 'El negocio es requerido'),
+
   image: z.instanceof(File).optional(),
 })
 
