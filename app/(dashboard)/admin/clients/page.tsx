@@ -9,12 +9,11 @@ import { SearchInput } from '@/components/shared/search-input'
 
 export default function ClientsPage() {
   const {isLoading: authLoading } = useAuth()
-  const { clients, loading, fetchClients } = useClients()
+  const { clients, fetchClients } = useClients()
 
 
   const { genders, loading: loadingGenders } = useGenders()
 
-  const isLoading = authLoading || loading || loadingGenders
 
   if (authLoading || loadingGenders || !clients) {
     return <Loading />
@@ -33,16 +32,13 @@ export default function ClientsPage() {
           onCreatedAction={fetchClients}
         />
       </div>
-      {isLoading ? (
-        <p>Cargando...</p>
-      ) : (
+
         <ClientesTable
           clients={clients}
           currentPage={clients.pagination.page}
           genders={genders}
           onUpdatedAction={fetchClients}
         />
-      )}
     </div>
   )
 }
