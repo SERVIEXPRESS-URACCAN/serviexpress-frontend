@@ -4,7 +4,7 @@ import { ProductResponse } from '@/types/products.type'
 
 export const getProducts = async (
   page: number,
-  search?: string,
+  search?: string
 ): Promise<ProductResponse> => {
   const params = new URLSearchParams()
 
@@ -15,9 +15,9 @@ export const getProducts = async (
 
   const response = await fetchAuth(`${API_URL}/products?${params.toString()}`, {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    cache: 'no-store',
+    cache: 'no-store'
   })
 
   const result = await response.json()
@@ -31,9 +31,9 @@ export const getProducts = async (
 export const getOwnerProductById = async (productId: number) => {
   const response = await fetchAuth(`${API_URL}/products/${productId}`, {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    cache: 'no-store',
+    cache: 'no-store'
   })
 
   if (!response.ok) {
@@ -46,7 +46,7 @@ export const getOwnerProductById = async (productId: number) => {
 export const createOwnerProduct = async (data: FormData) => {
   const response = await fetchAuth(`${API_URL}/products`, {
     method: 'POST',
-    body: data,
+    body: data
   })
 
   const errorText = await response.text()
@@ -61,7 +61,7 @@ export const createOwnerProduct = async (data: FormData) => {
 export const updateOwnerProduct = async (productId: number, data: FormData) => {
   const response = await fetchAuth(`${API_URL}/products/${productId}`, {
     method: 'PATCH',
-    body: data,
+    body: data
   })
 
   const errorText = await response.text()
@@ -76,8 +76,8 @@ export const deleteOwnerProduct = async (productId: number) => {
   const response = await fetchAuth(`${API_URL}/products/${productId}`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   })
 
   if (!response.ok) {
@@ -90,14 +90,14 @@ export const deleteOwnerProduct = async (productId: number) => {
 
 export const toggleProductStatus = async (
   productId: number,
-  status: boolean,
+  status: boolean
 ) => {
   const response = await fetchAuth(`${API_URL}/products/${productId}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status })
   })
 
   const result = await response.json()
