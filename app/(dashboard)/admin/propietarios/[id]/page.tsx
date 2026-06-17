@@ -1,5 +1,6 @@
 'use client'
 
+import { OwnerCirculationImage } from '@/components/admin/owners/details/owner-image'
 import { OwnerInfo } from '@/components/admin/owners/details/owner-info'
 import { Button } from '@/components/ui/button'
 import { useOwner } from '@/hooks/owner/useOwner'
@@ -26,8 +27,14 @@ export default function OwnerDetailPage() {
         <h1 className="text-xl font-bold">Detalle del Propietario</h1>
       </div>
 
-      <div className="max-w-2xl mx-auto">
-        <OwnerInfo owner={owner} />
+      <div className="flex justify-center gap-6 items-start">
+        <div className="w-[450px]">
+          <OwnerInfo owner={owner} />
+        </div>
+
+        <div className="w-[550px]">
+          <OwnerCirculationImage owner={owner} />
+        </div>
       </div>
     </div>
   )
