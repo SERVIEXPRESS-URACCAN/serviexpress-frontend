@@ -25,11 +25,13 @@ const fireSwal = (options: SweetAlertOptions) =>
   })
 
 type Props = {
+  token: string
   genders: Gender[]
   onCreatedAction: () => void
 }
 
 export const CreateClientDialog = ({
+  token,
   genders,
   onCreatedAction,
 }: Props) => {
@@ -72,7 +74,7 @@ export const CreateClientDialog = ({
     if (!result.isConfirmed) return
 
     try {
-      await restoreClient(error.data.id, data)
+      await restoreClient(error.data.id, data, token)
       setOpen(false)
       onCreatedAction()
       await fireSwal({
@@ -95,7 +97,7 @@ export const CreateClientDialog = ({
       setIsLoading(true)
       setServerError(null)
 
-      await createClient(data)
+      await createClient(data, token)
       setOpen(false)
 
       onCreatedAction()

@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import {
@@ -16,11 +17,8 @@ import { createCity } from '@/services/city.service'
 
 import { CityForm } from './city-form'
 
-type Props={
-  refreshAction?:() =>Promise<void>
-}
-
-export const CreateCityDialog = ({refreshAction}:Props) => {
+export const CreateCityDialog = () => {
+  const router = useRouter()
 
   const [open, setOpen] = useState(false)
 
@@ -34,7 +32,7 @@ export const CreateCityDialog = ({refreshAction}:Props) => {
 
       setOpen(false)
 
-      await refreshAction?.()
+      router.refresh()
     } finally {
       setIsLoading(false)
     }

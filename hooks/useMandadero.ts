@@ -1,44 +1,40 @@
 'use client'
 
+import { MandaderoResponse } from '@/types/mandadero.type'
 import { useCallback, useEffect, useState } from 'react'
-import { getMandaderoById } from '@/services/mandadero.service'
-import { Mandadero } from '@/types/mandadero.type'
+import { useAuth } from './useAuth'
+import { getMandaderos } from '@/services/mandadero.service'
+import { useSearchParams } from 'next/navigation'
 
-export const useMandadero = (id: number) => {
-  const [mandadero, setMandadero] =
-    useState<Mandadero | null>(null)
+export const useMandaderos = () => {
+  const { session } = useAuth()
 
+  const [mandaderos, setMandaderos] = useState<MandaderoResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
 
-  const fetchMandadero = useCallback(async () => {
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search') || undefined
+
+  const fetchMandaderos = useCallback(async () => {
+    if (!session?.accessToken) return
+
     try {
       setLoading(true)
 
-      const response = await getMandaderoById(id)
+      const response = await getMandaderos(session.accessToken, 1, search)
 
-      setMandadero(response)
-      setError(null)
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err
-          : new Error('Error inesperado')
-      )
+      setMandaderos(response)
     } finally {
       setLoading(false)
     }
-  }, [id])
-
+  }, [session?.accessToken, search])
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchMandadero()
-  }, [fetchMandadero])
+    fetchMandaderos()
+  }, [fetchMandaderos])
 
   return {
-    mandadero,
+    mandaderos,
     loading,
-    error,
-    fetchMandadero,
+    fetchMandaderos,
   }
 }

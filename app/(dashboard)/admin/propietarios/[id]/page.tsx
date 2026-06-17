@@ -1,19 +1,18 @@
-'use client'
-
+import { auth } from '@/auth'
+import { getOwnerById } from '@/services/owner.service'
 import { Button } from '@/components/ui/button'
+
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { OwnerInfo } from '@/components/admin/owners/details/owner-info'
-import { useParams } from 'next/navigation'
-import Loading from '../loading'
-import { useOwner } from '@/hooks/owner/useOwner'
-export default  function OwnerDetailPage() {
-  const params = useParams()
-  const id = Number(params.id)
-  const { owner, loading } = useOwner(id)
-  if (loading || !owner) {
-    return <Loading/>
-  }
+export default async function OwnerDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const session = await auth()
+  const owner = await getOwnerById(session!.accessToken, id)
 
   return (
     <div className='space-y-6 w-full'>

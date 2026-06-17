@@ -1,8 +1,8 @@
 import { API_URL } from '@/config/config'
-import { fetchAuth } from '@/lib/fetch-auth'
 import { Business, BusinessResponse } from '@/types/business.type'
 
 export const getBusinesses = async (
+  token: string,
   page: number,
   search?: string,
 ): Promise<BusinessResponse> => {
@@ -11,7 +11,10 @@ export const getBusinesses = async (
   params.set('limit', '10')
   if (search) params.set('search', search)
 
-  const response = await fetchAuth(`${API_URL}/business?${params.toString()}`, {
+  const response = await fetch(`${API_URL}/business?${params.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     cache: 'no-store',
   })
   const result = await response.json()
@@ -22,9 +25,13 @@ export const getBusinesses = async (
 }
 
 export const getBusinessById = async (
+  token: string,
   id: number,
 ): Promise<{ data: Business }> => {
-  const response = await fetchAuth(`${API_URL}/business/${id}`, {
+  const response = await fetch(`${API_URL}/business/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     cache: 'no-store',
   })
   const result = await response.json()
@@ -35,11 +42,15 @@ export const getBusinessById = async (
 }
 
 export const updateBusiness = async (
+  token: string,
   id: number,
   data: FormData,
 ) => {
-  const response = await fetchAuth(`${API_URL}/business/${id}`, {
+  const response = await fetch(`${API_URL}/business/${id}`, {
     method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: data,
   })
   const result = await response.json()

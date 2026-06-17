@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 import {
@@ -12,15 +13,16 @@ import { Button } from '@/components/ui/button'
 import { CategoryProductForm } from './categories-products-form'
 import { createCategoryProduct, restoreCategoryProduct } from '@/services/categories-products.service'
 import { CategoryConflictException } from '@/types/api-errors.types'
+import { useAuth } from '@/hooks/useAuth'
 
 const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
     setTimeout(() => resolve(Swal.fire(options)), 300)
   })
-type Props = {
-  refreshAction?: () => Promise<void>
-}
-export const CreateCategoryProductDialog = ({refreshAction}:Props)=> {
+
+export const CreateCategoryProductDialog = () => {
+  const router = useRouter()
+  const { session } = useAuth()
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -49,10 +51,8 @@ export const CreateCategoryProductDialog = ({refreshAction}:Props)=> {
     if (!result.isConfirmed) return
 
     try {
-      await restoreCategoryProduct(error.data.id,)
-
-      await refreshAction?.()
-
+      await restoreCategoryProduct(error.data.id, session!.accessToken)
+      router.refresh()
       await fireSwal({
         icon: 'success',
         title: 'Categoría restaurada',
@@ -76,11 +76,9 @@ export const CreateCategoryProductDialog = ({refreshAction}:Props)=> {
   const handleCreate = async (data: { name: string }) => {
     try {
       setIsLoading(true)
-      await createCategoryProduct(data)
+      await createCategoryProduct(data, session!.accessToken)
       setOpen(false)
-
-      await refreshAction?.()
-
+      router.refresh()
       await fireSwal({
         icon: 'success',
         title: 'Categoría creada',

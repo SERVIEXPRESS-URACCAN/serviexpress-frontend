@@ -1,18 +1,19 @@
 import { API_URL } from "@/config/config";
-import { fetchAuth } from "@/lib/fetch-auth";
 
 export const updateMandaderoProfile = async (
   id: number,
+  token: string,
   data: {
     name: string;
     lastName: string;
     cellphone: string;
   },
 ) => {
-  const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
+  const response = await fetch(`${API_URL}/profiles/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   });

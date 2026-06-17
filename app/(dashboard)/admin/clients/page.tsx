@@ -8,12 +8,14 @@ import Loading from './loading'
 import { SearchInput } from '@/components/shared/search-input'
 
 export default function ClientsPage() {
-  const {isLoading: authLoading } = useAuth()
-  const { clients, fetchClients } = useClients()
+  const { session, isLoading: authLoading } = useAuth()
+  const { clients, loading, fetchClients } = useClients()
+  const token = session?.accessToken ?? ''
 
 
   const { genders, loading: loadingGenders } = useGenders()
 
+  const isLoading = authLoading || loading || loadingGenders
 
   if (authLoading || loadingGenders || !clients) {
     return <Loading />
@@ -28,17 +30,21 @@ export default function ClientsPage() {
           className='w-full max-w-6xl'
         />
         <CreateClientDialog
+          token={token}
           genders={genders}
           onCreatedAction={fetchClients}
         />
       </div>
-
+      {isLoading ? (
+        <p>Cargando...</p>
+      ) : (
         <ClientesTable
           clients={clients}
           currentPage={clients.pagination.page}
           genders={genders}
           onUpdatedAction={fetchClients}
         />
+      )}
     </div>
   )
 }

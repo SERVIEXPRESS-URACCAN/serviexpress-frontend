@@ -19,10 +19,9 @@ import { EditCityDialog } from './edit-city-dialog'
 
 type Props = {
   city: City
-  refreshAction: ()=> Promise<void>
 }
 
-export const CityActions = ({ city, refreshAction}: Props) => {
+export const CityActions = ({ city }: Props) => {
   const [editOpen, setEditOpen] = useState(false)
 
   return (
@@ -49,7 +48,6 @@ export const CityActions = ({ city, refreshAction}: Props) => {
         city={city}
         open={editOpen}
         onOpenChangeAction={setEditOpen}
-        refreshAction={refreshAction}
       />
     </>
   )

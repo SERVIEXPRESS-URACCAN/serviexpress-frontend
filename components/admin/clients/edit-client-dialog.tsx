@@ -1,4 +1,3 @@
-'use client'
 import { useState } from 'react'
 
 import {
@@ -8,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
+import { useAuth } from '@/hooks/useAuth'
 import { Clients } from '@/types/clients'
 import { UpdateClientProfileDto } from '@/schemas/client.schema'
 import { updateClientProfile } from '@/services/clients.service'
@@ -20,7 +20,7 @@ type Props = {
   genders: Gender[]
   open: boolean
   onOpenChangeAction: (open: boolean) => void
-  onUpdatedAction: () => Promise<void>
+  onUpdated: () => Promise<void>
 }
 
 export const EditClientDialog = ({
@@ -28,8 +28,9 @@ export const EditClientDialog = ({
   genders,
   open,
   onOpenChangeAction,
-  onUpdatedAction,
+  onUpdated,
 }: Props) => {
+  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<{
@@ -41,7 +42,7 @@ export const EditClientDialog = ({
       setIsLoading(true)
       setServerError(null)
 
-      if (!client ) return
+      if (!client || !session?.accessToken) return
 
       if (!client.user?.id) {
         setServerError({
@@ -52,12 +53,12 @@ export const EditClientDialog = ({
       }
 
       await Promise.all([
-        updateClientProfile(client.id, data),
-        updateUserStatus(client.user.id, data.status),
+        updateClientProfile(client.id, data, session.accessToken),
+        updateUserStatus(client.user.id, data.status, session.accessToken),
       ])
       onOpenChangeAction(false)
 
-      await onUpdatedAction?.()
+      await onUpdated?.()
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Error al actualizar'

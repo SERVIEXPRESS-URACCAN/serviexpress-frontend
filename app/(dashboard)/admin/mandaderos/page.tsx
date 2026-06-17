@@ -3,7 +3,7 @@
 import { MandaderoTable } from '@/components/admin/mandadero/mandadero-table'
 import { CreateMandaderoDialog } from '@/components/admin/mandadero/create-mandadero-dialog'
 import { SearchInput } from '@/components/shared/search-input'
-import { useMandaderos } from '@/hooks/useMandaderos'
+import { useMandaderos } from '@/hooks/useMandadero'
 
 export default function MandaderoPage() {
   const { mandaderos, loading, fetchMandaderos } = useMandaderos()
