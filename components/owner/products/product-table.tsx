@@ -39,6 +39,7 @@ export const ProductTable = ({
               <TableHead>Descripción</TableHead>
               <TableHead>Precio</TableHead>
               <TableHead>Categorías</TableHead>
+              <TableHead>Estado</TableHead>
               <TableHead>Acciones</TableHead>
             </TableRow>
           </TableHeader>
@@ -46,38 +47,52 @@ export const ProductTable = ({
           <TableBody>
             {products.data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className='h-24 text-center'>
+                <TableCell colSpan={7} className='h-24 text-center'>
                   No hay productos registrados
                 </TableCell>
               </TableRow>
             ) : (
-              products.data.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>{product.id}</TableCell>
+              products.data.map((product) => {
+                const isActive = product.status
 
-                  <TableCell>{product.name}</TableCell>
+                return (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.id}</TableCell>
 
-                  <TableCell>{product.description}</TableCell>
+                    <TableCell>{product.name}</TableCell>
 
-                  <TableCell>C${product.price}</TableCell>
+                    <TableCell>{product.description}</TableCell>
 
-                  <TableCell>
-                    {product.categories && product.categories.length > 0
-                      ? product.categories
-                          .map((category) => category.name)
-                          .join(', ')
-                      : '-'}
-                  </TableCell>
+                    <TableCell>C${product.price}</TableCell>
 
-                  <TableCell>
-                    <ProductOwnerActions
-                      product={product}
-                      categories={categories}
-                      onSuccessAction={onSuccessAction}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))
+                    <TableCell>
+                      {product.categories?.length
+                        ? product.categories.map((c) => c.name).join(', ')
+                        : '-'}
+                    </TableCell>
+
+                    <TableCell>
+                      <span
+                        className={`px-2 py-1 rounded-full text-sm font-bold ${
+                          isActive
+                            ? 'bg-green-200 text-green-800'
+                            : 'bg-red-200 text-red-800'
+                        }`}
+                      >
+                        {isActive ? 'Activo' : 'Inactivo'}
+                      </span>
+                    </TableCell>
+
+                    <TableCell>
+                      <ProductOwnerActions
+                        product={product}
+                        categories={categories}
+                        onSuccessAction={onSuccessAction}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             )}
           </TableBody>
         </Table>
