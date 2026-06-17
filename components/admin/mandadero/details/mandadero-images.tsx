@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { API_IMG_URL } from '@/config/config'
 import { Mandadero } from '@/types/mandadero.type'
-import Image from 'next/image'
+import { PreviewImage } from './preview-image'
 
 type Props = {
   mandadero: Mandadero
@@ -10,70 +10,57 @@ type Props = {
 
 export const MandaderoImages = ({ mandadero }: Props) => {
   return (
-    <div className='grid grid-cols-3 gap-4'>
-      <Card>
-        <CardHeader className='pb-2'>
-          <CardTitle className='text-sm font-bold uppercase tracking-wide'>
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {' '}
+      <Card className="overflow-hiddens">
+        <CardHeader className="border-b bg-muted/30">
+          <CardTitle className="text-sm font-bold uppercase tracking-wide">
             Licencia de Conducir
           </CardTitle>
         </CardHeader>
-        <CardContent className='flex justify-center py-2'>
+        <CardContent className="flex justify-center py-2">
           {' '}
           {mandadero.imageIdentification ? (
-            <Image
+            <PreviewImage
               src={`${API_IMG_URL}/uploads/mandaderos/${mandadero.imageIdentification}`}
-              alt='Identificación'
-              width={300}
-              height={250}
-              unoptimized
-              className='object-contain h-32 w-auto mx-auto'
+              alt="Identificación"
             />
           ) : (
-            <p className='text-sm text-muted-foreground'>Sin imagen</p>
+            <p className="text-sm text-muted-foreground">Sin imagen</p>
           )}
         </CardContent>
       </Card>
-
       <Card>
-        <CardHeader className='pb-2'>
-          <CardTitle className='text-sm font-bold uppercase tracking-wide'>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold uppercase tracking-wide">
             Tarjeta de circulación
           </CardTitle>
         </CardHeader>
-        <CardContent className='flex justify-center py-2'>
+        <CardContent className="flex justify-center py-2">
           {mandadero.motorcycle?.circulationImage ? (
-            <Image
+            <PreviewImage
               src={`${API_IMG_URL}/uploads/motorcycles/${mandadero.motorcycle.circulationImage}`}
-              alt='Circulación'
-              width={300}
-              height={250}
-              unoptimized
-              className='object-contain h-32 w-auto mx-auto'
+              alt="Circulación"
             />
           ) : (
-            <p className='text-sm text-muted-foreground'>Sin imagen</p>
+            <p className="text-sm text-muted-foreground">Sin imagen</p>
           )}
         </CardContent>
       </Card>
-
       <Card>
-        <CardHeader className='pb-2'>
-          <CardTitle className='text-sm font-bold uppercase tracking-wide'>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold uppercase tracking-wide">
             Seguro
           </CardTitle>
         </CardHeader>
-        <CardContent className='flex justify-center py-2'>
+        <CardContent className="flex justify-center py-2">
           {mandadero.motorcycle?.insuranceImage ? (
-            <Image
+            <PreviewImage
               src={`${API_IMG_URL}/uploads/motorcycles/${mandadero.motorcycle.insuranceImage}`}
-              alt='Seguro'
-              width={300}
-              height={250}
-              unoptimized
-              className='object-contain h-32 w-auto mx-auto'
+              alt="Seguro"
             />
           ) : (
-            <p className='text-sm text-muted-foreground'>Sin imagen</p>
+            <p className="text-sm text-muted-foreground">Sin imagen</p>
           )}
         </CardContent>
       </Card>
