@@ -2,23 +2,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Mandadero } from '@/types/mandadero.type'
 
-import { API_IMG_URL } from '@/config/config'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { API_IMG_URL } from '@/config/config'
 type Props = {
   mandadero: Mandadero
 }
 
 export const MandaderoPerfil = ({ mandadero }: Props) => {
   return (
-    <Card className='h-full'>
-      <CardHeader className='pb-2'>
-        <CardTitle className='text-lg font-bold uppercase tracking-wide'>
+    <Card className="h-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-bold uppercase tracking-wide">
           Perfil
         </CardTitle>
       </CardHeader>
 
-      <CardContent className='flex flex-col items-center gap-4 py-3'>
-        <Avatar className='h-32 w-32'>
+      <CardContent className="flex flex-col items-center gap-4 py-3">
+        <Avatar className="h-32 w-32">
           <AvatarImage
             src={
               mandadero.user?.profile?.profileImage
@@ -26,23 +26,23 @@ export const MandaderoPerfil = ({ mandadero }: Props) => {
                 : undefined
             }
             alt={`${mandadero.user?.profile?.name} ${mandadero.user?.profile?.lastName}`}
-            className='h-full w-full object-cover'
+            className="h-full w-full object-cover"
           />
 
-          <AvatarFallback className='text-2xl font-bold'>
+          <AvatarFallback className="text-2xl font-bold">
             {mandadero.user?.profile?.name?.charAt(0).toUpperCase() ?? '?'}
             {mandadero.user?.profile?.lastName?.charAt(0).toUpperCase() ?? '?'}
           </AvatarFallback>
         </Avatar>
 
-        <p className='text-lg font-bold text-center'>
+        <p className="text-lg font-bold text-center">
           {' '}
           {mandadero.user?.email}
         </p>
 
-        <div className='w-full space-y-6'>
-          <div className='flex flex-col items-center gap-2'>
-            <p className='text-lg font-semibold'>Estado</p>
+        <div className="w-full space-y-6">
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-lg font-semibold">Estado</p>
             <span
               className={`inline-flex items-center justify-center w-3xs h-10 rounded-lg text-base font-semibold ${
                 mandadero.isActive
@@ -54,8 +54,8 @@ export const MandaderoPerfil = ({ mandadero }: Props) => {
             </span>
           </div>
 
-          <div className='flex flex-col items-center gap-2'>
-            <p className='text-lg font-semibold'>Disponibilidad</p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-lg font-semibold">Disponibilidad</p>
             <span
               className={`inline-flex items-center justify-center w-3xs h-10 rounded-lg text-base font-semibold ${
                 mandadero.available
