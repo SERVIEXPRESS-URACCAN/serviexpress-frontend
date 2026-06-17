@@ -87,3 +87,24 @@ export const deleteOwnerProduct = async (productId: number) => {
 
   return response.json()
 }
+
+export const toggleProductStatus = async (
+  productId: number,
+  status: boolean,
+) => {
+  const response = await fetchAuth(`${API_URL}/products/${productId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Error actualizando estado')
+  }
+
+  return result
+}

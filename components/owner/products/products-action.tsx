@@ -13,6 +13,8 @@ import { useState } from 'react'
 import { CategoryProduct } from '@/types/categories-products'
 import { EditProductOwnerDialog } from './edit-product-owner-dialog'
 import { DeleteProductOwnerDialog } from './delete-product'
+import { toggleProductStatus } from '@/services/owner/product-owner.service'
+import Swal from 'sweetalert2'
 
 type Props = {
   product: Product
@@ -27,6 +29,20 @@ export const ProductOwnerActions = ({
 }: Props) => {
   const [openEdit, setOpenEdit] = useState(false)
 
+  const handleToggleStatus = async () => {
+    try {
+      await toggleProductStatus(product.id, !product.status)
+      await onSuccessAction?.()
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text:
+          error instanceof Error ? error.message : 'Error al actualizar estado',
+      })
+    }
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -35,9 +51,14 @@ export const ProductOwnerActions = ({
             <MoreVertical className='size-4' />
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align='end'>
           <DropdownMenuItem onClick={() => setOpenEdit(true)}>
             Editar
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={handleToggleStatus}>
+            <span>{product.status ? 'Activo' : 'Inactivo'}</span>
           </DropdownMenuItem>
 
           <DeleteProductOwnerDialog
