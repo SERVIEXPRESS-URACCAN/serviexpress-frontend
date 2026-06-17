@@ -98,7 +98,6 @@ export const createClient = async (
 export const updateClientProfile = async (
   id: number,
   data: UpdateClientProfileDto,
-  token: string,
 ) => {
   const formData = new FormData()
 
@@ -116,7 +115,6 @@ export const updateClientProfile = async (
   const response = await fetchAuth(`${API_URL}/profiles/${id}`, {
     method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${token}`,
     },
     body: formData,
   })

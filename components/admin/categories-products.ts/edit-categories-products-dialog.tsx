@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 
@@ -45,7 +44,6 @@ export const EditCategoryProductDialog = ({
   refreshAction
   
 }: Props) => {
-  const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -75,8 +73,7 @@ export const EditCategoryProductDialog = ({
         error.data.id,
       )
 
-      router.refresh()
-
+    await refreshAction?.()
       await fireSwal({
         icon: 'success',
         title: 'Categoría restaurada',
