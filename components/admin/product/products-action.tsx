@@ -36,7 +36,10 @@ export const ProductActions = ({ product, categories, refreshAction }: Props) =>
             Editar
           </DropdownMenuItem>
 
-          <DeleteProductDialog product={product} />
+          <DeleteProductDialog
+            product={product}
+            refreshAction={refreshAction}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
 
