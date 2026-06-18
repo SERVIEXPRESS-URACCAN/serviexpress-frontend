@@ -111,7 +111,7 @@ export default function BusinessDetailPage() {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 ">
             {[
               {
                 label: 'Nombre',
@@ -136,7 +136,7 @@ export default function BusinessDetailPage() {
             ].map(({ label, value }) => (
               <div key={label}>
                 <FormField label={label}>
-                  <Input value={value ?? '-'} disabled readOnly />
+                  <Input value={value ?? '-'} readOnly />
                 </FormField>
               </div>
             ))}
