@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 
 import { OrderInfo } from '@/components/admin/orders/orders-info'
 import { useOrder } from '@/hooks/orders/useOrder'
+import Loading from '../loading'
 
 export default function OrderPage() {
   const params = useParams()
@@ -18,7 +19,7 @@ export default function OrderPage() {
   const { order, loading } = useOrder(id)
 
   if (loading) {
-    return 'error'
+    return <Loading/>
   }
 
   if (!order) {
