@@ -3,7 +3,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
@@ -77,7 +76,6 @@ export const EditProductOwnerDialog = ({
       >
         <DialogHeader>
           <DialogTitle>Editar Producto</DialogTitle>
-          <DialogDescription>Editar Producto</DialogDescription>
         </DialogHeader>
         <EditProductOwnerForm
           product={product}
