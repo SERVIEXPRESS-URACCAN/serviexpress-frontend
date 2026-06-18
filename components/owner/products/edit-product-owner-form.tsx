@@ -18,8 +18,8 @@ import {
 } from '@/components/ui/popover'
 
 import {
-  UpdateProductInput,
-  updateProductSchema,
+  UpdateProductOwnerInput,
+  updateProductOwnerSchema,
 } from '@/schemas/products.schema'
 import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
@@ -32,7 +32,7 @@ import { Controller, useForm } from 'react-hook-form'
 type Props = {
   product: Product
   categories: CategoryProduct[]
-  onSubmitAction: (data: UpdateProductInput) => Promise<void>
+  onSubmitAction: (data: UpdateProductOwnerInput) => Promise<void>
   isSubmitting?: boolean
   error?: string | null
 }
@@ -44,8 +44,8 @@ export const EditProductOwnerForm = ({
   isSubmitting,
   error,
 }: Props) => {
-  const form = useForm<UpdateProductInput>({
-    resolver: zodResolver(updateProductSchema),
+  const form = useForm<UpdateProductOwnerInput>({
+    resolver: zodResolver(updateProductOwnerSchema),
     defaultValues: {
       name: product.name ?? '',
       description: product.description ?? '',
