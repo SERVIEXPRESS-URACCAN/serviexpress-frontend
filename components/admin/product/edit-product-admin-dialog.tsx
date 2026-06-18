@@ -10,7 +10,6 @@ import { UpdateProductInput } from '@/schemas/products.schema'
 import { updateProduct } from '@/services/products.service'
 import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
-import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
 import { EditProductAdminForm } from './edit-product-admin-form'
@@ -20,6 +19,7 @@ type Props = {
   categories: CategoryProduct[]
   open: boolean
   onOpenChangeAction: (open: boolean) => void
+  refreshAction?: () => Promise<void>
 }
 
 export const EditProductAdminDialog = ({
@@ -27,8 +27,8 @@ export const EditProductAdminDialog = ({
   categories,
   open,
   onOpenChangeAction,
+  refreshAction
 }: Props) => {
-  const router = useRouter()
   const { session } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -56,7 +56,7 @@ export const EditProductAdminDialog = ({
       if (data.image) formData.append('image', data.image)
 
       await updateProduct( product.id, formData)
-      router.refresh()
+      await refreshAction?.()
       onOpenChangeAction(false)
     } catch (error) {
       const message =

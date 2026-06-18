@@ -8,11 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useAuth } from '@/hooks/useAuth'
 import { CreateProductInput } from '@/schemas/products.schema'
 import { createProduct } from '@/services/products.service'
 import { CategoryProduct } from '@/types/categories-products'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { CreateProductAdminForm } from './create-product-admin-form'
 import { Button } from '@/components/ui/button'
@@ -20,11 +18,10 @@ import { Button } from '@/components/ui/button'
 type Props = {
   businessId: number
   categories: CategoryProduct[]
+  refreshAction?: () => Promise<void>
 }
 
-export const CreateProductAdminDialog = ({ businessId, categories }: Props) => {
-  const router = useRouter()
-  const { session } = useAuth()
+export const CreateProductAdminDialog = ({ businessId, categories,refreshAction }: Props) => {
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -35,7 +32,6 @@ export const CreateProductAdminDialog = ({ businessId, categories }: Props) => {
   }
 
   const onSubmit = async (data: CreateProductInput) => {
-    if (!session) return
     try {
       setIsSubmitting(true)
       const formData = new FormData()
@@ -49,7 +45,9 @@ export const CreateProductAdminDialog = ({ businessId, categories }: Props) => {
       if (data.image) formData.append('image', data.image)
 
       await createProduct(formData)
-      router.refresh()
+
+      await refreshAction?.()
+
       setOpen(false)
     } catch (error) {
       const message =
