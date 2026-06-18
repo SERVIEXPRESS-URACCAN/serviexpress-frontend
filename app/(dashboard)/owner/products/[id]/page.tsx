@@ -25,7 +25,7 @@ export default function OwnerProductPage() {
   return (
     <div>
       <Button variant='ghost' asChild>
-        <Link href='/owner/pedidos'>
+        <Link href='/owner/products'>
           <ArrowLeft className='size-4' />
         </Link>
       </Button>

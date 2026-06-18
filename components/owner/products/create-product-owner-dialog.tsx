@@ -9,13 +9,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { CreateProductInput } from '@/schemas/products.schema'
 
 import { CategoryProduct } from '@/types/categories-products'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CreateProductOwnerForm } from './create-product-owner-form'
 import { createOwnerProduct } from '@/services/owner/product-owner.service'
+import { CreateProductOwnerInput } from '@/schemas/products.schema'
 
 type Props = {
   categories: CategoryProduct[]
@@ -36,14 +36,13 @@ export const CreateProductOwnerDialog = ({
     setOpen(value)
   }
 
-  const onSubmit = async (data: CreateProductInput) => {
+  const onSubmit = async (data: CreateProductOwnerInput) => {
     if (!session) return
     try {
       setIsSubmitting(true)
       const formData = new FormData()
       formData.append('name', data.name)
       formData.append('price', String(data.price))
-
       data.categoryIds.forEach((id) => {
         formData.append('categoryIds', String(id))
       })
