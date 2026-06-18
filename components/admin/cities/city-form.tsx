@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { FormError } from '@/components/shared/form-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -22,13 +23,24 @@ export const CityForm = ({
   isLoading
 }: Props) => {
   const [name, setName] = useState(defaultValues?.name || '')
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    await onSubmitAction({
-      name
-    })
+    try {
+      setError('')
+
+      await onSubmitAction({
+        name
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Ha ocurrido un error')
+      }
+    }
   }
 
   return (
@@ -39,9 +51,17 @@ export const CityForm = ({
         <Input
           id="name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value)
+
+            if (error) {
+              setError('')
+            }
+          }}
           placeholder="Nombre de la ciudad"
         />
+
+        <FormError message={error} />
       </div>
 
       <Button type="submit" className="w-full" disabled={isLoading}>
