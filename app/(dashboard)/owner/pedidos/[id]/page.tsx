@@ -4,6 +4,8 @@ import { OrderOwnerInfo } from '@/components/owner/orders/owner-order-info'
 
 import { Button } from '@/components/ui/button'
 import { useOwnerOrder } from '@/hooks/owner/useOwnerOrder'
+import { updateOrderStatus } from '@/services/owner/orders-owner.service'
+import { OrderStatus } from '@/types/status.type'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -13,13 +15,22 @@ export default function OwnerOrderPage() {
 
   const id = Number(params.id)
 
-  const { order, loading } = useOwnerOrder(id)
+  const { order, loading, fetchOrderOwner } = useOwnerOrder(id)
 
   if (loading) {
     return 'Cargando...'
   }
   if (!order) {
     return <p>Orden no encontrada</p>
+  }
+  const handleStatusChange = async (status: OrderStatus) => {
+    try {
+      await updateOrderStatus(order.id, status)
+
+      await fetchOrderOwner()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -34,7 +45,7 @@ export default function OwnerOrderPage() {
         <h1 className='text-xl font-bold'>Detalle de la Orden #{order.id}</h1>
       </div>
 
-      <OrderOwnerInfo order={order} />
+      <OrderOwnerInfo order={order} onChangeStatusAction={handleStatusChange} />
     </div>
   )
 }

@@ -2,11 +2,14 @@
 
 import { deliveryStatusColors, orderStatusColors } from '@/constants/colors'
 import { Order } from '@/types/order.type'
+import { OrderStatusActions } from './order-status-action'
+import { OrderStatus } from '@/types/status.type'
 type Props = {
   order: Order
+  onChangeStatusAction: (status: OrderStatus) => void
 }
 
-export const OrderOwnerInfo = ({ order }: Props) => {
+export const OrderOwnerInfo = ({ order, onChangeStatusAction }: Props) => {
   return (
     <div className='mx-auto max-w-md'>
       <div className='relative overflow-hidden rounded-lg border bg-background font-mono shadow-md'>
@@ -115,6 +118,10 @@ export const OrderOwnerInfo = ({ order }: Props) => {
           <h3 className='mb-4 text-center text-xs font-bold tracking-[0.3em] text-muted-foreground'>
             ACCIONES
           </h3>
+          <OrderStatusActions
+            order={order}
+            onChangeStatusAction={onChangeStatusAction}
+          />
         </div>
 
         <div className='border-t border-dashed p-6'>

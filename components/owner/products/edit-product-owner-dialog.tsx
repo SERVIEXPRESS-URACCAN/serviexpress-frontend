@@ -40,12 +40,6 @@ export const EditProductOwnerDialog = ({
   }
 
   const onSubmit = async (data: UpdateProductInput) => {
-    const formData = new FormData()
-
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1])
-    }
-
     if (!session) return
 
     try {
