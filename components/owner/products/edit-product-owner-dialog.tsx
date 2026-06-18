@@ -3,18 +3,17 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
 import { UpdateProductInput } from '@/schemas/products.schema'
 import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
 
+import { updateOwnerProduct } from '@/services/owner/product-owner.service'
 import { useState } from 'react'
 import { EditProductOwnerForm } from './edit-product-owner-form'
-import { updateOwnerProduct } from '@/services/owner/product-owner.service'
 
 type Props = {
   product: Product
@@ -29,7 +28,7 @@ export const EditProductOwnerDialog = ({
   categories = [],
   open,
   onOpenChangeAction,
-  onSuccessAction,
+  onSuccessAction
 }: Props) => {
   const { session } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -72,12 +71,11 @@ export const EditProductOwnerDialog = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className='max-h-[90vh] overflow-y-auto'
+        className="max-h-[90vh] overflow-y-auto"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>Editar Producto</DialogTitle>
-          <DialogDescription>Editar Producto</DialogDescription>
         </DialogHeader>
         <EditProductOwnerForm
           product={product}

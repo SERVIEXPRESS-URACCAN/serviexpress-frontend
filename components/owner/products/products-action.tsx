@@ -5,16 +5,16 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { toggleProductStatus } from '@/services/owner/product-owner.service'
+import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
 import { MoreVertical } from 'lucide-react'
 import { useState } from 'react'
-import { CategoryProduct } from '@/types/categories-products'
-import { EditProductOwnerDialog } from './edit-product-owner-dialog'
-import { DeleteProductOwnerDialog } from './delete-product'
-import { toggleProductStatus } from '@/services/owner/product-owner.service'
 import Swal from 'sweetalert2'
+import { DeleteProductOwnerDialog } from './delete-product'
+import { EditProductOwnerDialog } from './edit-product-owner-dialog'
 
 type Props = {
   product: Product
@@ -25,7 +25,7 @@ type Props = {
 export const ProductOwnerActions = ({
   product,
   categories = [],
-  onSuccessAction,
+  onSuccessAction
 }: Props) => {
   const [openEdit, setOpenEdit] = useState(false)
 
@@ -38,7 +38,7 @@ export const ProductOwnerActions = ({
         icon: 'error',
         title: 'Error',
         text:
-          error instanceof Error ? error.message : 'Error al actualizar estado',
+          error instanceof Error ? error.message : 'Error al actualizar estado'
       })
     }
   }
@@ -47,18 +47,18 @@ export const ProductOwnerActions = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' size='icon'>
-            <MoreVertical className='size-4' />
+          <Button variant="ghost" size="icon">
+            <MoreVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='end'>
+        <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setOpenEdit(true)}>
             Editar
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={handleToggleStatus}>
-            <span>{product.status ? 'Activo' : 'Inactivo'}</span>
+            <span>{product.status ? 'Desactivar' : 'Activar'}</span>
           </DropdownMenuItem>
 
           <DeleteProductOwnerDialog

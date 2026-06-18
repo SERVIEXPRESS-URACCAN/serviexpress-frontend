@@ -20,7 +20,7 @@ type Props = {
 
 export const DeleteProductOwnerDialog = ({
   product,
-  onSuccessAction,
+  onSuccessAction
 }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -33,7 +33,7 @@ export const DeleteProductOwnerDialog = ({
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#dc2626',
-      theme: 'auto',
+      theme: 'auto'
     })
 
     if (!result.isConfirmed) return
@@ -49,7 +49,7 @@ export const DeleteProductOwnerDialog = ({
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
-        theme: 'auto',
+        theme: 'auto'
       })
     } catch {
       await fireSwal({
@@ -58,7 +58,7 @@ export const DeleteProductOwnerDialog = ({
         icon: 'error',
         timer: 2000,
         showConfirmButton: false,
-        theme: 'auto',
+        theme: 'auto'
       })
     } finally {
       setIsLoading(false)
@@ -69,7 +69,7 @@ export const DeleteProductOwnerDialog = ({
     <DropdownMenuItem
       onClick={handleDelete}
       disabled={isLoading}
-      className='text-red-600'
+      className="text-red-400"
     >
       {isLoading ? 'Eliminando...' : 'Eliminar'}
     </DropdownMenuItem>
