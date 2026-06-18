@@ -28,7 +28,7 @@ export const EditProductAdminDialog = ({
   businessId,
   open,
   onOpenChangeAction,
-  refreshAction
+  refreshAction,
 }: Props) => {
   const { session } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
