@@ -92,9 +92,7 @@ export const updateCategoryBusiness = async (
   return response.json()
 }
 
-export const deleteCategoryBusiness = async (
-  id: number,
-): Promise<void> => {
+export const deleteCategoryBusiness = async (id: number): Promise<void> => {
   const response = await fetchAuth(`${API_URL}/categories-business/${id}`, {
     method: 'DELETE',
   })

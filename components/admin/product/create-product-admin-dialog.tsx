@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { CreateProductInput } from '@/schemas/products.schema'
+import { CreateProductAdminInput } from '@/schemas/products.schema'
 import { createProduct } from '@/services/products.service'
 import { CategoryProduct } from '@/types/categories-products'
 import { useState } from 'react'
@@ -21,7 +21,11 @@ type Props = {
   refreshAction?: () => Promise<void>
 }
 
-export const CreateProductAdminDialog = ({ businessId, categories,refreshAction }: Props) => {
+export const CreateProductAdminDialog = ({
+  businessId,
+  categories,
+  refreshAction,
+}: Props) => {
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -31,7 +35,7 @@ export const CreateProductAdminDialog = ({ businessId, categories,refreshAction 
     setOpen(value)
   }
 
-  const onSubmit = async (data: CreateProductInput) => {
+  const onSubmit = async (data: CreateProductAdminInput) => {
     try {
       setIsSubmitting(true)
       const formData = new FormData()
