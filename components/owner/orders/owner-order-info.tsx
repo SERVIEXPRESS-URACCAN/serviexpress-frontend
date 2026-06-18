@@ -1,11 +1,15 @@
+'use client'
+
 import { deliveryStatusColors, orderStatusColors } from '@/constants/colors'
 import { Order } from '@/types/order.type'
-
+import { OrderStatusActions } from './order-status-action'
+import { OrderStatus } from '@/types/status.type'
 type Props = {
   order: Order
+  onChangeStatusAction: (status: OrderStatus) => void
 }
 
-export const OrderInfo = ({ order }: Props) => {
+export const OrderOwnerInfo = ({ order, onChangeStatusAction }: Props) => {
   return (
     <div className='mx-auto max-w-md'>
       <div className='relative overflow-hidden rounded-lg border bg-background font-mono shadow-md'>
@@ -45,20 +49,10 @@ export const OrderInfo = ({ order }: Props) => {
             </span>
           </div>
 
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Mandadero</span>
+          <div className='flex justify-between'>
+            <span className='text-muted-foreground'>Mandadero</span>
 
-            <span className="font-semibold text-right">
-              {order.mandadero?.profile
-                ? `${order.mandadero.profile.name} ${order.mandadero.profile.lastName}`
-                : 'Sin asignar'}
-            </span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Mandadero</span>
-
-            <span className="font-semibold text-right">
+            <span className='font-semibold text-right'>
               {order.mandadero?.profile
                 ? `${order.mandadero.profile.name} ${order.mandadero.profile.lastName}`
                 : 'Sin asignar'}
@@ -121,9 +115,18 @@ export const OrderInfo = ({ order }: Props) => {
         </div>
 
         <div className='border-t border-dashed p-6'>
+          <h3 className='mb-4 text-center text-xs font-bold tracking-[0.3em] text-muted-foreground'>
+            ACCIONES
+          </h3>
+          <OrderStatusActions
+            order={order}
+            onChangeStatusAction={onChangeStatusAction}
+          />
+        </div>
+
+        <div className='border-t border-dashed p-6'>
           <div className='flex justify-between text-xl font-bold'>
             <span>TOTAL</span>
-
             <span>C$ {Number(order.total).toFixed(2)}</span>
           </div>
         </div>

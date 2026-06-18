@@ -1,3 +1,6 @@
+'use client'
+import { OrderResponse } from '@/types/order.type'
+
 import {
   Table,
   TableBody,
@@ -5,49 +8,39 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-
+} from '../../ui/table'
+import { OrderOwnerActions } from './owner-action-orders'
 import { TablePaginationInput } from '@/components/shared/table-pagination'
-
-import { OrderResponse } from '@/types/order.type'
-import { OrderActions } from './orders-actions'
 
 type Props = {
   orders: OrderResponse
-  currentPage: number
+  currentPage?: number
 }
 
-export const OrderTable = ({ orders, currentPage }: Props) => {
+export const OrdersTable = ({ orders }: Props) => {
   const { meta } = orders
-
   return (
-    <div className='space-y-4'>
-      <div className='rounded-md border'>
+    <div>
+      <div>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-
               <TableHead>Cliente</TableHead>
-
               <TableHead>Negocio</TableHead>
-
               <TableHead>Total</TableHead>
-
               <TableHead>Estado</TableHead>
-
-              <TableHead>Delivery</TableHead>
-
+              <TableCell>Mandadero Estado</TableCell>
+              <TableHead>Productos</TableHead>
               <TableHead>Fecha</TableHead>
-              <TableHead className='w-20'></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {orders.data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className='h-24 text-center'>
-                  No hay órdenes disponibles
+                <TableCell colSpan={8} className='text-center py-4'>
+                  No se encontraron pedidos.
                 </TableCell>
               </TableRow>
             ) : (
@@ -61,19 +54,27 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
                       : 'Sin usuario'}
                   </TableCell>
 
-                  <TableCell>{order.business?.name}</TableCell>
+                  <TableCell>{order.business?.name ?? 'Sin negocio'}</TableCell>
 
-                  <TableCell>C$ {Number(order.total).toFixed(2)}</TableCell>
+                  <TableCell>${Number(order.total).toFixed(2)}</TableCell>
 
                   <TableCell>{order.status}</TableCell>
 
                   <TableCell>{order.deliveryStatus}</TableCell>
 
                   <TableCell>
-                    {new Date(order.createdAt).toLocaleDateString()}
+                    {order.items.map((i) => i.nameSnapshot).join(', ')}
+                  </TableCell>
+
+                  <TableCell>
+                    {new Date(order.createdAt).toLocaleDateString('es-ES', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                    })}
                   </TableCell>
                   <TableCell>
-                    <OrderActions order={order} />
+                    <OrderOwnerActions order={order} />
                   </TableCell>
                 </TableRow>
               ))
@@ -81,14 +82,13 @@ export const OrderTable = ({ orders, currentPage }: Props) => {
           </TableBody>
         </Table>
       </div>
-
       <div className='flex items-center justify-between px-2'>
         <p className='text-sm text-muted-foreground'>
-          Página {currentPage} de {meta.totalPages}
+          Página {meta.page} de {meta.totalPages}
         </p>
 
         <TablePaginationInput
-          currentPage={currentPage}
+          currentPage={meta.page}
           lastPage={meta.totalPages}
         />
       </div>

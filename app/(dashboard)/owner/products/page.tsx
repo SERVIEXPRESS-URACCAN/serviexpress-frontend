@@ -1,19 +1,35 @@
 'use client'
 
-import { ProductTable } from '@/components/owner/product-table'
+import { ProductTable } from '@/components/owner/products/product-table'
 import { SearchInput } from '@/components/shared/search-input'
-import { useProducts } from '@/hooks/owner/products'
+
+import { useProducts } from '@/hooks/owner/useOwnerProducts'
+import { CreateProductOwnerDialog } from '@/components/owner/products/create-product-owner-dialog'
+import { useCategoryProducts } from '@/hooks/useCategoryProducts'
 
 export default function OwnerProductsPage() {
   const { products, loading, fetchProducts } = useProducts()
+  const { data: categoryResponse } = useCategoryProducts()
 
+  const categoryProducts = categoryResponse?.data || []
+
+  if (!products && loading) {
+    return <div>Cargando productos...</div>
+  }
   if (!products) {
-    return <div>Cargando...</div>
+    return <div>No se encontraron productos.</div>
   }
 
   return (
     <div className='space-y-6'>
-      <h1 className='text-2xl font-bold'>Productos</h1>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-bold'>Productos</h1>
+
+        <CreateProductOwnerDialog
+          categories={categoryProducts}
+          onSuccessAction={fetchProducts}
+        />
+      </div>
 
       <div className='flex items-center justify-between'>
         <SearchInput
@@ -22,15 +38,12 @@ export default function OwnerProductsPage() {
         />
       </div>
 
-      {loading ? (
-        <p>Cargando...</p>
-      ) : (
-        <ProductTable
-          products={products}
-          currentPage={products.pagination.page}
-          refreshAction={fetchProducts}
-        />
-      )}
+      <ProductTable
+        products={products}
+        categories={categoryProducts}
+        currentPage={products.pagination.page}
+        onSuccessAction={fetchProducts}
+      />
     </div>
   )
 }

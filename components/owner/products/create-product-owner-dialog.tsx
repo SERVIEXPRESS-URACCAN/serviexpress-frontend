@@ -1,83 +1,84 @@
+'use client'
+
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { UpdateProductInput } from '@/schemas/products.schema'
-import { updateProduct } from '@/services/products.service'
-import { CategoryProduct } from '@/types/categories-products'
-import { Product } from '@/types/products.type'
-import { useRouter } from 'next/navigation'
+import { CreateProductInput } from '@/schemas/products.schema'
 
+import { CategoryProduct } from '@/types/categories-products'
 import { useState } from 'react'
-import { EditProductAdminForm } from './edit-product-admin-form'
+import { Button } from '@/components/ui/button'
+import { CreateProductOwnerForm } from './create-product-owner-form'
+import { createOwnerProduct } from '@/services/owner/product-owner.service'
 
 type Props = {
-  product: Product
   categories: CategoryProduct[]
-  open: boolean
-  onOpenChangeAction: (open: boolean) => void
+  onSuccessAction?: () => Promise<void>
 }
 
-export const EditProductAdminDialog = ({
-  product,
+export const CreateProductOwnerDialog = ({
   categories,
-  open,
-  onOpenChangeAction,
+  onSuccessAction,
 }: Props) => {
-  const router = useRouter()
   const { session } = useAuth()
+  const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleOpenChange = (value: boolean) => {
     if (!value) setError(null)
-    onOpenChangeAction(value)
+    setOpen(value)
   }
 
-  const onSubmit = async (data: UpdateProductInput) => {
+  const onSubmit = async (data: CreateProductInput) => {
     if (!session) return
-
     try {
       setIsSubmitting(true)
       const formData = new FormData()
-      formData.append('name', data.name || '')
+      formData.append('name', data.name)
       formData.append('price', String(data.price))
-      data.categoryIds?.forEach((id) => {
-        formData.append('categoryIds[]', String(id))
+
+      data.categoryIds.forEach((id) => {
+        formData.append('categoryIds', String(id))
       })
-      formData.append('status', data.status ? 'true' : 'false')
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 
-      await updateProduct( product.id, formData)
-      router.refresh()
-      onOpenChangeAction(false)
+      await createOwnerProduct(formData)
+      await onSuccessAction?.()
+      setOpen(false)
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : 'Error actualizando el producto'
+        error instanceof Error ? error.message : 'Error creando el producto'
       setError(message)
     } finally {
       setIsSubmitting(false)
     }
   }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button>Agregar Producto</Button>
+      </DialogTrigger>
       <DialogContent
         className='max-h-[90vh] overflow-y-auto'
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Editar Producto</DialogTitle>
-          <DialogDescription>Editar Producto</DialogDescription>
+          <DialogTitle>Crear Producto</DialogTitle>
+          <DialogDescription>
+            Completa los datos para agregar un nuevo producto.
+          </DialogDescription>
         </DialogHeader>
-        <EditProductAdminForm
-          product={product}
+        <CreateProductOwnerForm
+          key={open ? 'open' : 'closed'}
           categories={categories}
           onSubmitAction={onSubmit}
           isSubmitting={isSubmitting}
