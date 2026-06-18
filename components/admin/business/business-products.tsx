@@ -1,3 +1,5 @@
+
+
 import {
   Table,
   TableBody,
@@ -19,6 +21,7 @@ type Props = {
   currentPage: number
   businessId: number
   categories: CategoryProduct[]
+  refreshAction?: ()=> Promise<void>
 }
 
 export const BusinessProducts = ({
@@ -26,6 +29,7 @@ export const BusinessProducts = ({
   currentPage,
   businessId,
   categories,
+  refreshAction
 }: Props) => {
   const { pagination } = products
 
@@ -40,6 +44,7 @@ export const BusinessProducts = ({
           <CreateProductAdminDialog
             businessId={businessId}
             categories={categories}
+            refreshAction={refreshAction}
           />
         </div>
       </CardHeader>
@@ -89,6 +94,7 @@ export const BusinessProducts = ({
                       <ProductActions
                         product={product}
                         categories={categories}
+                        refreshAction={refreshAction}
                       />
                     </TableCell>
                   </TableRow>
