@@ -44,6 +44,7 @@ export const BusinessProducts = ({
           <CreateProductAdminDialog
             businessId={businessId}
             categories={categories}
+            refreshAction={refreshAction}
           />
         </div>
       </CardHeader>
