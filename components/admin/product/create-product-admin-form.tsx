@@ -10,8 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { CategoryProduct } from '@/types/categories-products'
 import {
-  CreateProductInput,
-  createProductSchema,
+  CreateProductAdminInput,
+  createProductAdminSchema,
 } from '@/schemas/products.schema'
 
 import {
@@ -31,7 +31,7 @@ import { Check } from 'lucide-react'
 type Props = {
   categories: CategoryProduct[]
   businessId: number
-  onSubmitAction: (data: CreateProductInput) => Promise<void>
+  onSubmitAction: (data: CreateProductAdminInput) => Promise<void>
   isSubmitting?: boolean
   error?: string | null
 }
@@ -43,8 +43,8 @@ export const CreateProductAdminForm = ({
   isSubmitting,
   error,
 }: Props) => {
-  const form = useForm<CreateProductInput>({
-    resolver: zodResolver(createProductSchema),
+  const form = useForm<CreateProductAdminInput>({
+    resolver: zodResolver(createProductAdminSchema),
     defaultValues: {
       businessId,
     },
@@ -53,7 +53,8 @@ export const CreateProductAdminForm = ({
   const {
     formState: { errors },
   } = form
-
+  console.log('BUSINESS ID PROP:', businessId)
+  console.log('TYPE:', typeof businessId)
   return (
     <form onSubmit={form.handleSubmit(onSubmitAction)} className='space-y-4'>
       <FormField label='Nombre' error={errors.name?.message}>
@@ -66,10 +67,13 @@ export const CreateProductAdminForm = ({
 
       <FormField label='Precio' error={errors.price?.message}>
         <Input
-          {...form.register('price')}
           type='number'
-          step='0.01'
-          placeholder='0.00'
+          {...form.register('price')}
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement
+            target.value = target.value.slice(0, 6)
+          }}
+          placeholder='Precio'
         />
       </FormField>
 

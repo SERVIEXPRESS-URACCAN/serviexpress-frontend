@@ -16,11 +16,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Switch } from '@/components/ui/switch'
 
 import {
-  UpdateProductInput,
-  updateProductSchema,
+  UpdateProductAdminInput,
+  updateProductAdminSchema,
 } from '@/schemas/products.schema'
 import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
@@ -32,8 +31,9 @@ import { Controller, useForm } from 'react-hook-form'
 
 type Props = {
   product: Product
+  businessId: number
   categories: CategoryProduct[]
-  onSubmitAction: (data: UpdateProductInput) => Promise<void>
+  onSubmitAction: (data: UpdateProductAdminInput) => Promise<void>
   isSubmitting?: boolean
   error?: string | null
 }
@@ -41,16 +41,18 @@ type Props = {
 export const EditProductAdminForm = ({
   product,
   categories,
+  businessId,
   onSubmitAction,
   isSubmitting,
   error,
 }: Props) => {
-  const form = useForm<UpdateProductInput>({
-    resolver: zodResolver(updateProductSchema),
+  const form = useForm<UpdateProductAdminInput>({
+    resolver: zodResolver(updateProductAdminSchema),
     defaultValues: {
       name: product.name ?? '',
       description: product.description ?? '',
       price: Number(product.price) ?? 0,
+      businessId: businessId,
       categoryIds: product.categories?.map((c) => c.id) ?? [],
       status: product.status ?? true,
     },
@@ -65,10 +67,11 @@ export const EditProductAdminForm = ({
       name: product.name,
       description: product.description || '',
       price: product.price,
+      businessId: businessId,
       categoryIds: product.categories?.map((c) => c.id) ?? [],
       status: product.status,
     })
-  }, [product, form])
+  }, [product, businessId, form])
 
   return (
     <form onSubmit={form.handleSubmit(onSubmitAction)} className='space-y-4'>
@@ -156,17 +159,7 @@ export const EditProductAdminForm = ({
       </FormField>
 
       <FormError message={error ?? undefined} />
-      <Controller
-        name='status'
-        control={form.control}
-        render={({ field }) => (
-          <div className='flex items-center justify-between'>
-            <span className='text-sm font-bold'>Estado</span>
 
-            <Switch checked={field.value} onCheckedChange={field.onChange} />
-          </div>
-        )}
-      />
       <Button type='submit' className='w-full' disabled={isSubmitting}>
         {isSubmitting ? 'Guardando...' : 'Guardar cambios'}
       </Button>
