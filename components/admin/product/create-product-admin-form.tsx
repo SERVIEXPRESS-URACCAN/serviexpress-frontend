@@ -1,31 +1,31 @@
 // components/admin/business/create-product-form.tsx
 'use client'
 
+import { FormError } from '@/components/shared/form-error'
+import { FormField } from '@/components/shared/form-field'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { FormField } from '@/components/shared/form-field'
-import { FormError } from '@/components/shared/form-error'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
-import { CategoryProduct } from '@/types/categories-products'
 import {
   CreateProductAdminInput,
-  createProductAdminSchema,
+  createProductAdminSchema
 } from '@/schemas/products.schema'
+import { CategoryProduct } from '@/types/categories-products'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem,
+  CommandItem
 } from '@/components/ui/command'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
 import { Check } from 'lucide-react'
 
 type Props = {
@@ -41,43 +41,43 @@ export const CreateProductAdminForm = ({
   businessId,
   onSubmitAction,
   isSubmitting,
-  error,
+  error
 }: Props) => {
   const form = useForm<CreateProductAdminInput>({
     resolver: zodResolver(createProductAdminSchema),
     defaultValues: {
-      businessId,
-    },
+      businessId
+    }
   })
 
   const {
-    formState: { errors },
+    formState: { errors }
   } = form
   return (
-    <form onSubmit={form.handleSubmit(onSubmitAction)} className='space-y-4'>
-      <FormField label='Nombre' error={errors.name?.message}>
-        <Input {...form.register('name')} placeholder='Nombre del producto' />
+    <form onSubmit={form.handleSubmit(onSubmitAction)} className="space-y-4">
+      <FormField label="Nombre" error={errors.name?.message}>
+        <Input {...form.register('name')} placeholder="Nombre del producto" />
       </FormField>
 
-      <FormField label='Descripción' error={errors.description?.message}>
-        <Input {...form.register('description')} placeholder='Descripción' />
+      <FormField label="Descripción" error={errors.description?.message}>
+        <Input {...form.register('description')} placeholder="Descripción" />
       </FormField>
 
-      <FormField label='Precio' error={errors.price?.message}>
+      <FormField label="Precio" error={errors.price?.message}>
         <Input
-          type='number'
+          type="number"
           {...form.register('price')}
           onInput={(e) => {
             const target = e.target as HTMLInputElement
             target.value = target.value.slice(0, 6)
           }}
-          placeholder='Precio'
+          placeholder="Precio"
         />
       </FormField>
 
-      <FormField label='Categorías' error={errors.categoryIds?.message}>
+      <FormField label="Categorías" error={errors.categoryIds?.message}>
         <Controller
-          name='categoryIds'
+          name="categoryIds"
           control={form.control}
           render={({ field }) => {
             const selected = field.value ?? []
@@ -85,7 +85,7 @@ export const CreateProductAdminForm = ({
             return (
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant='outline' className='w-full justify-start'>
+                  <Button variant="outline" className="w-full justify-start">
                     {selected.length > 0
                       ? categories
                           .filter((c) => selected.includes(c.id))
@@ -95,9 +95,9 @@ export const CreateProductAdminForm = ({
                   </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className='w-72 p-0'>
+                <PopoverContent className="w-72 p-0">
                   <Command>
-                    <CommandInput placeholder='Buscar categorías...' />
+                    <CommandInput placeholder="Buscar categorías..." />
                     <CommandEmpty>No encontradas</CommandEmpty>
 
                     <CommandGroup>
@@ -134,10 +134,10 @@ export const CreateProductAdminForm = ({
         />
       </FormField>
 
-      <FormField label='Imagen' error={errors.image?.message}>
+      <FormField label="Imagen" error={errors.image?.message}>
         <Input
-          type='file'
-          accept='image/*'
+          type="file"
+          accept="image/*"
           onChange={(e) => {
             const file = e.target.files?.[0]
             if (file) form.setValue('image', file)
@@ -147,7 +147,7 @@ export const CreateProductAdminForm = ({
 
       <FormError message={error ?? undefined} />
 
-      <Button type='submit' className='w-full' disabled={isSubmitting}>
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? 'Guardando...' : 'Crear Producto'}
       </Button>
     </form>
