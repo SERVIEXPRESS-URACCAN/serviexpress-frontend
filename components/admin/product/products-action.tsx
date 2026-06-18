@@ -17,9 +17,10 @@ import { DeleteProductDialog } from './delete-product'
 type Props = {
   product: Product
   categories: CategoryProduct[]
+  refreshAction?: ()=> Promise<void>
 }
 
-export const ProductActions = ({ product, categories }: Props) => {
+export const ProductActions = ({ product, categories, refreshAction }: Props) => {
   const [openEdit, setOpenEdit] = useState(false)
 
   return (
@@ -44,6 +45,7 @@ export const ProductActions = ({ product, categories }: Props) => {
         categories={categories}
         open={openEdit}
         onOpenChangeAction={setOpenEdit}
+        refreshAction={refreshAction}
       />
     </>
   )

@@ -17,6 +17,7 @@ import { useProductsByBusiness } from '@/hooks/business/useProductByBusines'
 
 import { getCategoryProducts } from '@/services/categories-products.service'
 import { CategoryProduct } from '@/types/categories-products'
+import Loading from '../loading'
 
 export default function BusinessDetailPage() {
   const params = useParams()
@@ -32,6 +33,7 @@ export default function BusinessDetailPage() {
     products,
     loading: productsLoading,
     error,
+    fetchProducts
   } = useProductsByBusiness(
     id,
     currentPage,
@@ -52,7 +54,7 @@ export default function BusinessDetailPage() {
   }, [])
 
   if (businessLoading || productsLoading) {
-    return <div>Cargando...</div>
+    return <Loading/>
   }
 
   if (error) {
@@ -157,13 +159,14 @@ export default function BusinessDetailPage() {
         </Card>
 
         {products && (
-  <BusinessProducts
-    products={products}
-    currentPage={currentPage}
-    businessId={id}
-    categories={categories}
-  />
-)}
+          <BusinessProducts
+            products={products}
+            currentPage={currentPage}
+            businessId={id}
+            categories={categories}
+            refreshAction={fetchProducts}
+          />
+        )}
       </div>
     </div>
   )
