@@ -9,8 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { CategoryProduct } from '@/types/categories-products'
 import {
-  CreateProductInput,
-  createProductSchema,
+  CreateProductOwnerInput,
+  createProductOwnerSchema,
 } from '@/schemas/products.schema'
 
 import {
@@ -30,7 +30,7 @@ import { Check } from 'lucide-react'
 type Props = {
   categories: CategoryProduct[]
 
-  onSubmitAction: (data: CreateProductInput) => Promise<void>
+  onSubmitAction: (data: CreateProductOwnerInput) => Promise<void>
   isSubmitting?: boolean
   error?: string | null
 }
@@ -41,12 +41,12 @@ export const CreateProductOwnerForm = ({
   isSubmitting,
   error,
 }: Props) => {
-  const form = useForm<CreateProductInput>({
-    resolver: zodResolver(createProductSchema),
+  const form = useForm<CreateProductOwnerInput>({
+    resolver: zodResolver(createProductOwnerSchema),
     defaultValues: {
       name: '',
       description: '',
-      price: 0,
+      price: '',
       categoryIds: [],
     },
   })

@@ -7,7 +7,13 @@ export interface Product {
   price: number
   imageUrl?: string
   status: boolean
+  businessId: number
   categories?: CategoryProduct[]
+
+  business?: {
+    id: number
+    name?: string
+  }
 }
 
 export type ProductResponse = {

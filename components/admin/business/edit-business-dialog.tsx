@@ -39,9 +39,7 @@ export const EditBusinessDialog = ({
   useEffect(() => {
     if (open && session) {
       getCities().then(setCities)
-      getCategoryBusiness(session.accessToken).then((res) =>
-        setCategories(res.data),
-      )
+      getCategoryBusiness().then((res) => setCategories(res.data))
     }
   }, [open, session])
 
@@ -71,7 +69,7 @@ export const EditBusinessDialog = ({
       if (data.logoImage) formData.append('logoImage', data.logoImage)
       if (data.bannerImage) formData.append('bannerImage', data.bannerImage)
 
-      await updateBusiness( business.id, formData)
+      await updateBusiness(business.id, formData)
 
       await refreshAction?.()
       onOpenChangeAction(false)
