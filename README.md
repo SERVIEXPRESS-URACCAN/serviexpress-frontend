@@ -185,6 +185,9 @@ app/
 * Gestiona ciudades.
 * Gestiona negocios.
 * Gestiona pedidos.
+* Gestiona mandaderos.
+* Gestiona propietarios.
+* Gestiona productos
 
 ### Propietario
 
