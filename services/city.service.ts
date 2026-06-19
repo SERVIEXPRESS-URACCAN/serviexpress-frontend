@@ -21,7 +21,8 @@ export const createCity = async (data: CreateCityDto): Promise<City> => {
   })
 
   if (!response.ok) {
-    throw new Error(`Error creating city: `)
+    const error = await response.json()
+    throw new Error(error.message)
   }
 
   return response.json()
@@ -40,7 +41,9 @@ export const updateCity = async (
   })
 
   if (!response.ok) {
-    throw new Error(`Error updating city with id ${id}: `)
+    const error = await response.json()
+
+    throw new Error(error.message)
   }
 
   return response.json()

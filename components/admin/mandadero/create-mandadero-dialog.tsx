@@ -16,15 +16,17 @@ import {
 import { CreateMandaderoAdminDto } from '@/types/mandadero.type'
 import { useEffect, useState } from 'react'
 import { MandaderoForm } from './create-mandadero-form'
-import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { UseFormSetError } from 'react-hook-form'
 import { CreateMandaderoInput } from '@/schemas/mandaderos.schema'
 import { User } from '@/types/user.type'
 import { Button } from '@/components/ui/button'
 
-export const CreateMandaderoDialog = () => {
-  const router = useRouter()
+
+type Props={
+refreshAction?: ()=> Promise<void>
+}
+export const CreateMandaderoDialog = ({refreshAction}:Props) => {
   const { session } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [users, setUsers] = useState<User[]>([])
@@ -65,8 +67,10 @@ export const CreateMandaderoDialog = () => {
 
     try {
       setIsLoading(true)
-      await createMandaderoAdmin(session.accessToken, data)
-      router.refresh()
+      await createMandaderoAdmin( data)
+      
+      await refreshAction?.()
+
       await Swal.fire({
         icon: 'success',
         title: 'Mandadero creado',

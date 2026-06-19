@@ -12,26 +12,33 @@ export const useOrders = () => {
 
   const searchParams = useSearchParams()
   const search = searchParams.get('search') || undefined
+  const page = Number(searchParams.get('page')) || 1
+
+  const [error, setError] = useState<Error | null>(null)
 
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true)
 
-      const response = await getOrders(1, 10, search)
+      const response = await getOrders(page, 10, search)
 
       setOrders(response)
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('error inesperado'))
     } finally {
       setLoading(false)
     }
-  }, [search])
+  }, [search, page])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOrders()
   }, [fetchOrders])
 
   return {
     orders,
     loading,
-    fetchOrders
+    fetchOrders,
+    error,
   }
 }

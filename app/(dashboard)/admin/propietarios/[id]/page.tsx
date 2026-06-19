@@ -1,32 +1,40 @@
-import { auth } from '@/auth'
-import { getOwnerById } from '@/services/owner.service'
-import { Button } from '@/components/ui/button'
+'use client'
 
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { OwnerCirculationImage } from '@/components/admin/owners/details/owner-image'
 import { OwnerInfo } from '@/components/admin/owners/details/owner-info'
-export default async function OwnerDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const session = await auth()
-  const owner = await getOwnerById(session!.accessToken, id)
+import { Button } from '@/components/ui/button'
+import { useOwner } from '@/hooks/owner/useOwner'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import Loading from '../loading'
+export default function OwnerDetailPage() {
+  const params = useParams()
+  const id = Number(params.id)
+  const { owner, loading } = useOwner(id)
+  if (loading || !owner) {
+    return <Loading />
+  }
 
   return (
-    <div className='space-y-6 w-full'>
-      <div className='flex items-center gap-3'>
-        <Button variant='ghost' asChild>
-          <Link href='/admin/propietarios'>
-            <ArrowLeft className='size-4' />
+    <div className="space-y-6 w-full">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" asChild>
+          <Link href="/admin/propietarios">
+            <ArrowLeft className="size-4" />
           </Link>
         </Button>
-        <h1 className='text-xl font-bold'>Detalle del Propietario</h1>
+        <h1 className="text-xl font-bold">Detalle del Propietario</h1>
       </div>
 
-      <div className='max-w-2xl mx-auto'>
-        <OwnerInfo owner={owner} />
+      <div className="flex justify-center gap-6 items-start">
+        <div className="w-[450px]">
+          <OwnerInfo owner={owner} />
+        </div>
+
+        <div className="w-[550px]">
+          <OwnerCirculationImage owner={owner} />
+        </div>
       </div>
     </div>
   )

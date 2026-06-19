@@ -2,7 +2,7 @@
 
 import { BusinessTable } from '@/components/admin/business/business-table'
 import { SearchInput } from '@/components/shared/search-input'
-import { useBusiness } from '@/hooks/useBusiness'
+import { useBusiness } from '@/hooks/business/useBusiness'
 
 export default function BusinessPage() {
   const { businesses, loading, refreshBusiness } = useBusiness()

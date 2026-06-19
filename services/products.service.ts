@@ -1,5 +1,6 @@
 import { API_URL } from '@/config/config'
-import { ProductResponse } from '@/types/products.type'
+import { fetchAuth } from '@/lib/fetch-auth'
+import { Product, ProductResponse } from '@/types/products.type'
 
 export const getProductsByBusiness = async (
   token: string,
@@ -29,8 +30,8 @@ export const getProductsByBusiness = async (
   return result
 }
 
-export const createProduct = async (token: string, data: FormData) => {
-  const response = await fetch(`${API_URL}/products/admin`, {
+export const createProduct = async (data: FormData) => {
+  const response = await fetchAuth(`${API_URL}/products/admin`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -44,12 +45,8 @@ export const createProduct = async (token: string, data: FormData) => {
   return result
 }
 
-export const updateProduct = async (
-  token: string,
-  productId: number,
-  data: FormData,
-) => {
-  const response = await fetch(`${API_URL}/products/admin/${productId}`, {
+export const updateProduct = async (productId: number, data: FormData) => {
+  const response = await fetchAuth(`${API_URL}/products/admin/${productId}`, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -63,8 +60,8 @@ export const updateProduct = async (
   return result
 }
 
-export const deleteProduct = async (token: string, productId: number) => {
-  const response = await fetch(`${API_URL}/products/admin/${productId}`, {
+export const deleteProduct = async (productId: number) => {
+  const response = await fetchAuth(`${API_URL}/products/admin/${productId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -74,4 +71,43 @@ export const deleteProduct = async (token: string, productId: number) => {
     const result = await response.json().catch(() => null)
     throw new Error(result?.message || 'Error deleting product')
   }
+
+  return true
+}
+
+export const toggleProductStatusAdmin = async (
+  productId: number,
+  status: boolean,
+) => {
+  const response = await fetchAuth(`${API_URL}/products/admin/${productId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Error actualizando estado')
+  }
+
+  return result
+}
+
+export const getOwnerProductById = async (
+  productId: number,
+): Promise<Product> => {
+  const response = await fetchAuth(`${API_URL}/products/${productId}`, {
+    cache: 'no-store',
+  })
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Error fetching product')
+  }
+
+  return result
 }

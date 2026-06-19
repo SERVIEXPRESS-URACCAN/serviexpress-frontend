@@ -1,34 +1,35 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { UpdateProductInput } from '@/schemas/products.schema'
+import { UpdateProductAdminInput } from '@/schemas/products.schema'
 import { updateProduct } from '@/services/products.service'
 import { CategoryProduct } from '@/types/categories-products'
 import { Product } from '@/types/products.type'
-import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
 import { EditProductAdminForm } from './edit-product-admin-form'
 
 type Props = {
   product: Product
+  businessId: number
   categories: CategoryProduct[]
   open: boolean
   onOpenChangeAction: (open: boolean) => void
+  refreshAction?: () => Promise<void>
 }
 
 export const EditProductAdminDialog = ({
   product,
   categories,
+  businessId,
   open,
   onOpenChangeAction,
+  refreshAction,
 }: Props) => {
-  const router = useRouter()
   const { session } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -38,9 +39,7 @@ export const EditProductAdminDialog = ({
     onOpenChangeAction(value)
   }
 
-  const onSubmit = async (data: UpdateProductInput) => {
-    console.log('status:', data.status)
-    console.log('status string:', data.status ? 'true' : 'false')
+  const onSubmit = async (data: UpdateProductAdminInput) => {
     if (!session) return
 
     try {
@@ -48,15 +47,17 @@ export const EditProductAdminDialog = ({
       const formData = new FormData()
       formData.append('name', data.name || '')
       formData.append('price', String(data.price))
+
       data.categoryIds?.forEach((id) => {
-        formData.append('categoryIds[]', String(id))
+        formData.append('categoryIds', String(id))
       })
       formData.append('status', data.status ? 'true' : 'false')
+      formData.append('businessId', String(businessId))
       if (data.description) formData.append('description', data.description)
       if (data.image) formData.append('image', data.image)
 
-      await updateProduct(session.accessToken, product.id, formData)
-      router.refresh()
+      await updateProduct(product.id, formData)
+      await refreshAction?.()
       onOpenChangeAction(false)
     } catch (error) {
       const message =
@@ -76,11 +77,11 @@ export const EditProductAdminDialog = ({
       >
         <DialogHeader>
           <DialogTitle>Editar Producto</DialogTitle>
-          <DialogDescription>Editar Producto</DialogDescription>
         </DialogHeader>
         <EditProductAdminForm
           product={product}
           categories={categories}
+          businessId={businessId}
           onSubmitAction={onSubmit}
           isSubmitting={isSubmitting}
           error={error}

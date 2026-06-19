@@ -21,7 +21,7 @@ export default function MandaderoPage() {
           className='w-full max-w-6xl'
         />
 
-        <CreateMandaderoDialog />
+        <CreateMandaderoDialog refreshAction={fetchMandaderos}/>
       </div>
       {loading ? (
         <p>Cargando...</p>

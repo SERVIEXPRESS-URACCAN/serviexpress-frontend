@@ -19,6 +19,9 @@ type Props = {
   currentPage: number
   businessId: number
   categories: CategoryProduct[]
+  onPageChange?: (page: number) => void
+  onSearch?: (value: string) => void
+  refreshAction?: () => Promise<void>
 }
 
 export const BusinessProducts = ({
@@ -26,6 +29,7 @@ export const BusinessProducts = ({
   currentPage,
   businessId,
   categories,
+  refreshAction,
 }: Props) => {
   const { pagination } = products
 
@@ -40,6 +44,7 @@ export const BusinessProducts = ({
           <CreateProductAdminDialog
             businessId={businessId}
             categories={categories}
+            refreshAction={refreshAction}
           />
         </div>
       </CardHeader>
@@ -60,39 +65,50 @@ export const BusinessProducts = ({
             <TableBody>
               {products.data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className='h-24 text-center'>
+                  <TableCell colSpan={7} className='h-24 text-center'>
                     No hay productos registrados
                   </TableCell>
                 </TableRow>
               ) : (
-                products.data.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>{product.id}</TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.description ?? '-'}</TableCell>
-                    <TableCell>${product.price}</TableCell>
-                    <TableCell>
-                      {product.categories?.map((c) => c.name).join(', ') ?? '-'}
-                    </TableCell>
-                    <TableCell>
-                      {product.status ? (
-                        <span className='text-green-600 font-medium'>
-                          Activo
+                products.data.map((product) => {
+                  const isActive = product.status
+
+                  return (
+                    <TableRow key={product.id}>
+                      <TableCell>{product.id}</TableCell>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell>{product.description ?? '-'}</TableCell>
+                      <TableCell>${product.price}</TableCell>
+
+                      <TableCell>
+                        {product.categories?.length
+                          ? product.categories.map((c) => c.name).join(', ')
+                          : '-'}
+                      </TableCell>
+
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 rounded-full text-sm font-bold ${
+                            isActive
+                              ? 'bg-green-200 text-green-800'
+                              : 'bg-red-200 text-red-800'
+                          }`}
+                        >
+                          {isActive ? 'Activo' : 'Inactivo'}
                         </span>
-                      ) : (
-                        <span className='text-red-400 font-medium'>
-                          Inactivo
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <ProductActions
-                        product={product}
-                        categories={categories}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))
+                      </TableCell>
+
+                      <TableCell>
+                        <ProductActions
+                          product={product}
+                          businessId={businessId}
+                          categories={categories}
+                          refreshAction={refreshAction}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </Table>

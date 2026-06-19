@@ -1,8 +1,8 @@
+'use client'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/hooks/useAuth'
 import { deleteProduct } from '@/services/products.service'
 import { Product } from '@/types/products.type'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 
@@ -12,11 +12,10 @@ const fireSwal = (options: SweetAlertOptions) =>
   })
 type Props = {
   product: Product
+  refreshAction?:() => Promise<void>
 }
 
-export const DeleteProductDialog = ({ product }: Props) => {
-  const router = useRouter()
-  const { session } = useAuth()
+export const DeleteProductDialog = ({ product, refreshAction }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -36,9 +35,9 @@ export const DeleteProductDialog = ({ product }: Props) => {
 
     try {
       setIsLoading(true)
-      await deleteProduct(session!.accessToken, product.id)
+      await deleteProduct( product.id)
+      await refreshAction?.()
 
-      router.refresh()
       await fireSwal({
         title: 'Eliminado',
         text: 'El producto fue eliminado correctamente',

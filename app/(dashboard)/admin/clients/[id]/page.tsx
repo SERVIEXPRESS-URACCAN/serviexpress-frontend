@@ -3,10 +3,10 @@
 import { useParams } from 'next/navigation'
 
 import { ClientDetail } from '@/components/admin/clients/profile/client-detail'
-import { useClient } from '@/hooks/useClient'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import { useClient } from '@/hooks/useClient'
 import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 import Loading from '../loading'
 
 export default function ClientPage() {
@@ -17,10 +17,10 @@ export default function ClientPage() {
   const { client, loading } = useClient(id)
 
   if (loading || !client) {
-    return <Loading/>
+    return <Loading />
   }
 
- return (
+  return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" asChild>
@@ -29,9 +29,7 @@ export default function ClientPage() {
           </Link>
         </Button>
 
-        <h1 className="text-xl font-bold">
-          Detalle del Cliente
-        </h1>
+        <h1 className="text-xl font-bold">Detalle del Cliente</h1>
       </div>
 
       <ClientDetail client={client} />

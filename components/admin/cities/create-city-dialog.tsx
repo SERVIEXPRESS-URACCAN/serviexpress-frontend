@@ -17,11 +17,12 @@ import { createCity } from '@/services/city.service'
 
 import { CityForm } from './city-form'
 
-export const CreateCityDialog = () => {
-  const router = useRouter()
+type Props = {
+  refreshAction?: () => Promise<void>
+}
 
+export const CreateCityDialog = ({ refreshAction }: Props) => {
   const [open, setOpen] = useState(false)
-
   const [isLoading, setIsLoading] = useState(false)
 
   const handleCreate = async (data: { name: string }) => {
@@ -32,7 +33,9 @@ export const CreateCityDialog = () => {
 
       setOpen(false)
 
-      router.refresh()
+      await refreshAction?.()
+    } catch (error) {
+      throw error
     } finally {
       setIsLoading(false)
     }
