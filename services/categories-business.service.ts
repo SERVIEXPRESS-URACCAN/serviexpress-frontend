@@ -5,19 +5,18 @@ import {
   CategoryBusiness,
   CategoryBusinessResponse,
   CreateCategoryBusinessDto,
-  UpdateCategoryBusinessDto,
+  UpdateCategoryBusinessDto
 } from '@/types/categories-business'
 
 export const getCategoryBusiness = async (
-  token: string,
   page = 1,
-  search?: string,
+  search?: string
 ): Promise<CategoryBusinessResponse> => {
   const response = await fetchAuth(
     `${API_URL}/categories-business?page=${page}&limit=10${search ? `&search=${search}` : ''}`,
     {
-      cache: 'no-store',
-    },
+      cache: 'no-store'
+    }
   )
 
   if (!response.ok) {
@@ -27,16 +26,14 @@ export const getCategoryBusiness = async (
 }
 
 export const createCategoryBusiness = async (
-  data: CreateCategoryBusinessDto,
-  token: string,
+  data: CreateCategoryBusinessDto
 ): Promise<CategoryBusiness> => {
   const response = await fetchAuth(`${API_URL}/categories-business`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
 
   if (!response.ok) {
@@ -45,24 +42,22 @@ export const createCategoryBusiness = async (
     throw new CategoryConflictException({
       message: errorData.message,
       canRestore: errorData.canRestore,
-      id: errorData.id,
+      id: errorData.id
     })
   }
   return response.json()
 }
 export const restoreCategoryBusiness = async (
-  id: number,
-  token: string,
+  id: number
 ): Promise<{ message: string; id: number }> => {
   const response = await fetchAuth(
     `${API_URL}/categories-business/${id}/restore`,
     {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    },
+        'Content-Type': 'application/json'
+      }
+    }
   )
 
   if (!response.ok) {
@@ -73,16 +68,14 @@ export const restoreCategoryBusiness = async (
 }
 export const updateCategoryBusiness = async (
   id: number,
-  data: UpdateCategoryBusinessDto,
-  token: string,
+  data: UpdateCategoryBusinessDto
 ): Promise<CategoryBusiness> => {
   const response = await fetchAuth(`${API_URL}/categories-business/${id}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
 
   if (!response.ok) {
@@ -101,16 +94,13 @@ export const updateCategoryBusiness = async (
 
 export const deleteCategoryBusiness = async (id: number): Promise<void> => {
   const response = await fetchAuth(`${API_URL}/categories-business/${id}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    method: 'DELETE'
   })
 
   if (!response.ok) {
     const errorText = await response.text()
     throw new Error(
-      `Error deleting category business with id ${id}: ${errorText}`,
+      `Error deleting category business with id ${id}: ${errorText}`
     )
   }
   return response.json()

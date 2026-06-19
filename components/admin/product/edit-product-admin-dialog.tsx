@@ -2,7 +2,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
 import { UpdateProductAdminInput } from '@/schemas/products.schema'
@@ -72,7 +72,7 @@ export const EditProductAdminDialog = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className='max-h-[90vh] overflow-y-auto'
+        className="max-h-[90vh] overflow-y-auto"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>

@@ -1,9 +1,9 @@
+'use client'
 import { CitiesTable, CreateCityDialog } from '@/components/admin/cities'
+import { useCities } from '@/hooks/useCities'
 
-import { getCities } from '@/services/city.service'
-
-export default async function CitiesPage() {
-  const cities = await getCities()
+export default function CitiesPage() {
+  const { cities, fetchCities } = useCities()
 
   return (
     <div className="space-y-6">
@@ -12,10 +12,10 @@ export default async function CitiesPage() {
           <h1 className="text-2xl font-bold">Ciudades</h1>
         </div>
 
-        <CreateCityDialog />
+        <CreateCityDialog refreshAction={fetchCities} />
       </div>
 
-      <CitiesTable cities={cities} />
+      <CitiesTable cities={cities} refreashAction={fetchCities} />
     </div>
   )
 }

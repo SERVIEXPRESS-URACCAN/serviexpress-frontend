@@ -1,30 +1,44 @@
 'use client'
 
 import { getCategoryProducts } from '@/services/categories-products.service'
-import { CategoryProduct } from '@/types/categories-products'
-import { useEffect, useState } from 'react'
+import { CategoryProductResponse } from '@/types/categories-products'
+import { useSearchParams } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useCategoryProducts = () => {
-  const [categoryProducts, setCategoryProducts] = useState<CategoryProduct[]>([])
+  const [data, setData] = useState<CategoryProductResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
+
+  const searchParams = useSearchParams()
+
+  const search = searchParams.get('search') || undefined
+  const page = Number(searchParams.get('page')) || 1
+
+  const fetchCategoryProducts = useCallback(async () => {
+    setLoading(true)
+
+    try {
+      const response = await getCategoryProducts(page, search)
+
+      setData(response)
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Error inesperado'))
+    } finally {
+      setLoading(false)
+    }
+  }, [page, search])
 
   useEffect(() => {
-    const fetchCategoryProducts = async () => {
-      try {
-        const data = await getCategoryProducts()
-        setCategoryProducts(data.data)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCategoryProducts()
-  }, [])
+  }, [fetchCategoryProducts])
 
   return {
-    categoryProducts,
-    loading
+    data,
+    loading,
+    error,
+    fetchCategoryProducts
   }
 }

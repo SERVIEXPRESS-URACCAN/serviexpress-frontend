@@ -21,7 +21,7 @@ type Props = {
 export const CategoryBusinessActions = ({
   categoryBusiness,
   refreshAction,
-}: Props & { refreshAction?: () => Promise<void> }) => {
+}: Props) => {
   const [editOpen, setEditOpen] = useState(false)
 
   return (

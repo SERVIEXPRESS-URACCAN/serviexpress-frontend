@@ -12,9 +12,10 @@ import { CityActions } from './city-actions'
 
 type Props = {
   cities: City[]
+  refreashAction: ()=> Promise<void>
 }
 
-export const CitiesTable = ({ cities }: Props) => {
+export const CitiesTable = ({ cities, refreashAction }: Props) => {
   return (
     <div className="rounded-md border">
       <Table>
@@ -41,7 +42,9 @@ export const CitiesTable = ({ cities }: Props) => {
                 <TableCell>{city.name}</TableCell>
 
                 <TableCell>
-                  <CityActions city={city} />
+                  <CityActions
+                    city={city}
+                  refreshAction={refreashAction}/>
                 </TableCell>
               </TableRow>
             ))

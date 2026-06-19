@@ -37,7 +37,7 @@ export default function BusinessDetailPage() {
     products,
     loading: productsLoading,
     error,
-    fetchProducts,
+    fetchProducts
   } = useProductsByBusiness(id)
 
   useEffect(() => {
@@ -60,84 +60,84 @@ export default function BusinessDetailPage() {
   }
 
   return (
-    <div className='space-y-4'>
+    <div className="space-y-4">
       {isLoading && (
-        <div className='fixed inset-0 flex items-center justify-center '>
+        <div className="fixed inset-0 flex items-center justify-center ">
           <Loading />
         </div>
       )}
-      <div className='flex items-center gap-3'>
-        <Button variant='ghost' asChild>
-          <Link href='/admin/business'>
-            <ArrowLeft className='size-4' />
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" asChild>
+          <Link href="/admin/business">
+            <ArrowLeft className="size-4" />
           </Link>
         </Button>
 
-        <h1 className='text-xl font-bold'>Detalle del Negocio</h1>
+        <h1 className="text-xl font-bold">Detalle del Negocio</h1>
       </div>
 
-      <div className='grid grid-cols-[450px_1fr] gap-6 items-start'>
-        <Card className='h-full'>
+      <div className="grid grid-cols-[450px_1fr] gap-6 items-start">
+        <Card className="h-full">
           <CardHeader>
-            <div className='w-full h-32 bg-muted rounded-t-xl overflow-hidden'>
+            <div className="w-full h-32 bg-muted rounded-t-xl overflow-hidden">
               {busines?.bannerImage ? (
                 <Image
                   src={`${API_IMG_URL}/uploads/business/${busines.bannerImage}`}
-                  alt='Banner'
+                  alt="Banner"
                   width={800}
                   height={200}
                   unoptimized
-                  className='w-full h-full object-cover'
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <div className='w-full h-full bg-muted flex items-center justify-center'>
-                  <p className='text-sm text-muted-foreground'>Sin banner</p>
+                <div className="w-full h-full bg-muted flex items-center justify-center">
+                  <p className="text-sm text-muted-foreground">Sin banner</p>
                 </div>
               )}
             </div>
 
-            <div className='px-4 -mt-8 mb-2 flex justify-center'>
-              <div className='w-30 h-30 rounded-full border-4 border-background bg-muted overflow-hidden'>
+            <div className="px-4 -mt-8 mb-2 flex justify-center">
+              <div className="w-30 h-30 rounded-full border-4 border-background bg-muted overflow-hidden">
                 {busines?.logoImage ? (
                   <Image
                     src={`${API_IMG_URL}/uploads/business/${busines.logoImage}`}
-                    alt='Logo'
+                    alt="Logo"
                     width={120}
                     height={120}
                     unoptimized
-                    className='w-full h-full object-cover'
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className='w-full h-full flex items-center justify-center'>
-                    <p className='text-xs text-muted-foreground'>Logo</p>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <p className="text-xs text-muted-foreground">Logo</p>
                   </div>
                 )}
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className='space-y-6 '>
+          <CardContent className="space-y-6 ">
             {[
               {
                 label: 'Nombre',
-                value: busines?.name,
+                value: busines?.name
               },
               {
                 label: 'Teléfono',
-                value: busines?.phone,
+                value: busines?.phone
               },
               {
                 label: 'Dirección',
-                value: busines?.address,
+                value: busines?.address
               },
               {
                 label: 'Ciudad',
-                value: busines?.city?.name,
+                value: busines?.city?.name
               },
               {
                 label: 'Descripción',
-                value: busines?.description,
-              },
+                value: busines?.description
+              }
             ].map(({ label, value }) => (
               <div key={label}>
                 <FormField label={label}>
