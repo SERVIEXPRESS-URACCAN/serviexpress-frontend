@@ -274,20 +274,6 @@ POST   /api/v1/order
 
 ---
 
-## Compilación para Producción
-
-Generar el build:
-
-```bash
-npm run build
-```
-
-Ejecutar el proyecto compilado:
-
-```bash
-npm run start
-```
-
 ---
 
 ## Equipo de Desarrollo
