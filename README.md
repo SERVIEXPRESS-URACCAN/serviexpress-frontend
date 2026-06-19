@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logos/logo-light.png" alt="SERVIEXPRESS Logo" width="300">
+  <img src="public/logos/logo.png" alt="SERVIEXPRESS Logo" width="300">
 </p>
 
 <h1 align="center">SERVIEXPRESS Frontend</h1>
