@@ -53,8 +53,6 @@ export const CreateProductAdminForm = ({
   const {
     formState: { errors },
   } = form
-  console.log('BUSINESS ID PROP:', businessId)
-  console.log('TYPE:', typeof businessId)
   return (
     <form onSubmit={form.handleSubmit(onSubmitAction)} className='space-y-4'>
       <FormField label='Nombre' error={errors.name?.message}>
