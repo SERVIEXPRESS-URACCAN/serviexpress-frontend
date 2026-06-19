@@ -195,13 +195,13 @@ app/
 * Gestiona productos.
 * Gestiona pedidos asociados a su negocio.
 
-### Mandadero
+### Mandadero (Backend)
 
 * Visualiza pedidos disponibles.
 * Acepta pedidos.
 * Actualiza estados de entrega.
 
-### Cliente
+### Cliente (Backend)
 
 * Explora negocios.
 * Consulta catálogos.
