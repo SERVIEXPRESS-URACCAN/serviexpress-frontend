@@ -2,17 +2,19 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getGenders } from '@/services/genders.service'
 import { Gender } from '@/types/gender.type'
+import { useAuth } from './useAuth'
 
 export const useGenders = () => { 
+  const { session } = useAuth() 
 
   const [genders, setGenders] = useState<Gender[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
   const fetchGenders = useCallback(async () => {
-    setLoading(true)
+    if (!session?.accessToken) return;
     try {
-      const data = await getGenders();
+      const data = await getGenders(session.accessToken);
       if (data) setGenders(data);
       setError(null);
     } catch (err) {
@@ -20,10 +22,10 @@ export const useGenders = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [session]);
 
   useEffect(() => {
-    //eslint-disable-next-line react-hooks/set-state-in-effect
+    //eslint-disable-next-line
     fetchGenders();
   }, [fetchGenders]);
 

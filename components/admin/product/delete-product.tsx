@@ -1,5 +1,6 @@
 'use client'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { useAuth } from '@/hooks/useAuth'
 import { deleteProduct } from '@/services/products.service'
 import { Product } from '@/types/products.type'
 import { useState } from 'react'

@@ -70,7 +70,7 @@ export const ClientesActions = ({
         genders={genders}
         open={editOpen}
         onOpenChangeAction={setEditOpen}
-        onUpdatedAction={onUpdatedAction}
+        onUpdated={onUpdatedAction}
       />
     </>
   )

@@ -1,4 +1,3 @@
-'use client'
 import {
   Table,
   TableBody,
@@ -13,14 +12,11 @@ import { TablePaginationInput } from "@/components/shared/table-pagination";
 type Props = {
   categoryProduct: CategoryProductResponse;
   currentPage: number;
-  refreshAction?: () => Promise<void>
-
 };
 
 export const CategoriesProductsTable = ({
   categoryProduct,
-  currentPage,                                                   
-  refreshAction                         
+  currentPage,
 }: Props) => {
   const { pagination } = categoryProduct;
 
@@ -48,9 +44,7 @@ export const CategoriesProductsTable = ({
                   <TableCell>{cat.id}</TableCell>
                   <TableCell>{cat.name}</TableCell>
                   <TableCell>
-                    <CategoryProductActions
-                      categoryProduct={cat}
-                      refreshAction={refreshAction}/>
+                    <CategoryProductActions categoryProduct={cat} />
                   </TableCell>
                 </TableRow>
               ))

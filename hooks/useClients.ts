@@ -2,9 +2,11 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getClientes } from '@/services/clients.service'
 import { ClientsResponse } from '@/types/clients'
+import { useAuth } from './useAuth'
 import { useSearchParams } from 'next/navigation'
 
 export const useClients = () => {
+  const { session } = useAuth()
 
   const searchParams = useSearchParams()
   const search = searchParams.get('search') || undefined
@@ -15,8 +17,9 @@ export const useClients = () => {
   const [error, setError] = useState<Error | null>(null)
 
   const fetchClients = useCallback(async () => {
+    if (!session?.accessToken) return
     try {
-      const data = await getClientes(page, 10, search)
+      const data = await getClientes(session.accessToken, page, 10, search)
       if (data) setClients(data)
       setError(null)
     } catch (err) {
@@ -24,10 +27,10 @@ export const useClients = () => {
     } finally {
       setLoading(false)
     }
-  }, [ page, search])
+  }, [session, page, search])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line
     fetchClients()
   }, [fetchClients])
 

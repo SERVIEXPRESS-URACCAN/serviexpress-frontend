@@ -1,5 +1,4 @@
 import { API_URL } from "@/config/config";
-import { fetchAuth } from "@/lib/fetch-auth";
 import {
   CreateMandaderoAdminDto,
   Mandadero,
@@ -7,16 +6,18 @@ import {
 } from "@/types/mandadero.type";
 
 export const getMandaderos = async (
+  token: string,
   page = 1,
   search?: string,
 ): Promise<MandaderoResponse> => {
   const params = new URLSearchParams();
   params.append("status", "APPROVED");
 
-  const response = await fetchAuth(
+  const response = await fetch(
     `${API_URL}/mandadero?page=${page}&limit=10&${search ? `search=${search}&` : ""}${params.toString()}`,
     {
       headers: {
+        Authorization: `Bearer ${token}`,
       },
       cache: "no-store",
     },
@@ -29,9 +30,11 @@ export const getMandaderos = async (
 
 export const getMandaderoById = async (
   id: number,
+  token: string,
 ): Promise<Mandadero> => {
-  const response = await fetchAuth(`${API_URL}/mandadero/${id}`, {
+  const response = await fetch(`${API_URL}/mandadero/${id}`, {
     headers: {
+      Authorization: `Bearer ${token}`,
     },
     cache: "no-store",
   });
@@ -42,6 +45,7 @@ export const getMandaderoById = async (
 };
 
 export const createMandaderoAdmin = async (
+  token: string,
   data: CreateMandaderoAdminDto,
 ): Promise<Mandadero> => {
   const formData = new FormData();
@@ -62,8 +66,11 @@ export const createMandaderoAdmin = async (
   if (data.insuranceImage)
     formData.append("insuranceImage", data.insuranceImage);
 
-  const response = await fetchAuth(`${API_URL}/mandadero/admin`, {
+  const response = await fetch(`${API_URL}/mandadero/admin`, {
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: formData,
   });
   if (!response.ok) {
@@ -76,12 +83,14 @@ export const createMandaderoAdmin = async (
 
 export const updateMandaderoAvailability = async (
   id: number,
+  token: string,
   available: boolean,
 ): Promise<Mandadero> => {
-  const response = await fetchAuth(`${API_URL}/mandadero/${id}/availability`, {
+  const response = await fetch(`${API_URL}/mandadero/${id}/availability`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ available }),
   });
@@ -95,12 +104,14 @@ export const updateMandaderoAvailability = async (
 
 export const updateMandaderoActive = async (
   id: number,
+  token: string,
   isActive: boolean,
 ): Promise<Mandadero> => {
-  const response = await fetchAuth(`${API_URL}/mandadero/${id}/activate`, {
+  const response = await fetch(`${API_URL}/mandadero/${id}/activate`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ isActive }),
   });
@@ -114,6 +125,7 @@ export const updateMandaderoActive = async (
 
 export const updateMotorcycle = async (
   id: number,
+  token: string,
   data: {
     licensePlate?: string;
     brand?: string;
@@ -121,10 +133,11 @@ export const updateMotorcycle = async (
     color?: string;
   },
 ) => {
-  const response = await fetchAuth(`${API_URL}/motorcycles/${id}`, {
+  const response = await fetch(`${API_URL}/motorcycles/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   });
@@ -136,8 +149,10 @@ export const updateMotorcycle = async (
 };
 
 export const getUsers = async (
+  token: string,
 ): Promise<{ id: number; email: string }[]> => {
-  const response = await fetchAuth(`${API_URL}/users`, {
+  const response = await fetch(`${API_URL}/users`, {
+    headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
   if (!response.ok) {

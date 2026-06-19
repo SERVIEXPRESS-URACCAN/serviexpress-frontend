@@ -9,6 +9,7 @@ import {
 } from '@/types/categories-business'
 
 export const getCategoryBusiness = async (
+  token: string,
   page = 1,
   search?: string,
 ): Promise<CategoryBusinessResponse> => {
@@ -27,11 +28,13 @@ export const getCategoryBusiness = async (
 
 export const createCategoryBusiness = async (
   data: CreateCategoryBusinessDto,
+  token: string,
 ): Promise<CategoryBusiness> => {
   const response = await fetchAuth(`${API_URL}/categories-business`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
@@ -49,6 +52,7 @@ export const createCategoryBusiness = async (
 }
 export const restoreCategoryBusiness = async (
   id: number,
+  token: string,
 ): Promise<{ message: string; id: number }> => {
   const response = await fetchAuth(
     `${API_URL}/categories-business/${id}/restore`,
@@ -56,6 +60,7 @@ export const restoreCategoryBusiness = async (
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     },
   )
@@ -69,11 +74,13 @@ export const restoreCategoryBusiness = async (
 export const updateCategoryBusiness = async (
   id: number,
   data: UpdateCategoryBusinessDto,
+  token: string,
 ): Promise<CategoryBusiness> => {
   const response = await fetchAuth(`${API_URL}/categories-business/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
@@ -95,6 +102,9 @@ export const updateCategoryBusiness = async (
 export const deleteCategoryBusiness = async (id: number): Promise<void> => {
   const response = await fetchAuth(`${API_URL}/categories-business/${id}`, {
     method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
 
   if (!response.ok) {

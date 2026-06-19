@@ -19,6 +19,7 @@ import {
   type UpdateOwner
 } from '@/schemas/owner.schema'
 
+import { useAuth } from '@/hooks/useAuth'
 import { useGenders } from '@/hooks/useGenders'
 import { phoneKeyDown } from '@/lib/phone'
 
@@ -38,6 +39,7 @@ export const UpdateOwnerForm = ({
   onSubmitAction,
   isLoading
 }: Props) => {
+  const { session } = useAuth()
 
   const { genders } = useGenders()
 

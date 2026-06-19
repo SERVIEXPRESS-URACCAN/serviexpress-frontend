@@ -47,21 +47,25 @@ export const EditMandaderoDialog = ({
       setIsSubmitting(true)
       await updateMotorcycle(
         mandadero.motorcycle.id,
+        session.accessToken,
         data.motorcycle,
       )
 
       await updateMandaderoProfile(
         profileId,
+        session!.accessToken,
         data.profile,
       )
 
       await updateMandaderoActive(
         mandadero.id,
+        session!.accessToken,
         data.isActive,
       )
 
       await updateMandaderoAvailability(
         mandadero.id,
+        session!.accessToken,
         data.available,
       )
 

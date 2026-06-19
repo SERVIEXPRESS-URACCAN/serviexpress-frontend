@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@/hooks/useAuth'
 import { updateCategoryBusiness } from '@/services/categories-business.service'
 import {
   CategoryBusiness,
@@ -11,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { CategoryBusinessForm } from './categories-business-form'
 
@@ -26,6 +28,8 @@ export const EditCategorBusinessDialog = ({
   onOpenChangeAction,
   refreshAction,
 }: Props) => {
+  const router = useRouter()
+  const { session } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -45,6 +49,7 @@ export const EditCategorBusinessDialog = ({
       await updateCategoryBusiness(
         CategoryBusiness.id,
         data,
+        session!.accessToken,
       )
 
       onOpenChangeAction(false)

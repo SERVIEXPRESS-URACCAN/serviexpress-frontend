@@ -1,4 +1,3 @@
-'use client'
 import { InfoField } from '@/components/shared/Info-field'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

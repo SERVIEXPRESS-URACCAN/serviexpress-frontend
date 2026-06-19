@@ -1,9 +1,8 @@
 import { API_URL } from '@/config/config'
-import { fetchAuth } from '@/lib/fetch-auth'
 import { City, CreateCityDto, UpdateCityDto } from '@/types/city.types'
 
 export const getCities = async (): Promise<City[]> => {
-  const response = await fetchAuth(`${API_URL}/city`)
+  const response = await fetch(`${API_URL}/city`)
 
   if (!response.ok) {
     throw new Error(`Error fetching cities: `)
@@ -13,7 +12,7 @@ export const getCities = async (): Promise<City[]> => {
 }
 
 export const createCity = async (data: CreateCityDto): Promise<City> => {
-  const response = await fetchAuth(`${API_URL}/city`, {
+  const response = await fetch(`${API_URL}/city`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -33,7 +32,7 @@ export const updateCity = async (
   id: number,
   data: UpdateCityDto
 ): Promise<City> => {
-  const response = await fetchAuth(`${API_URL}/city/${id}`, {
+  const response = await fetch(`${API_URL}/city/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
