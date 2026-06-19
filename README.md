@@ -36,7 +36,7 @@ Frontend web de **SERVIEXPRESS**, una plataforma de delivery desarrollada con Ne
 
 ## Tecnologías Utilizadas
 
-* Next.js 15
+* Next.js 16
 * React
 * TypeScript
 * Tailwind CSS
