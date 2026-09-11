@@ -1,43 +1,36 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
-import { getRedirectByRole } from "./lib/redirect-by-role";
-import { Role } from "./constants/roles";
+import { auth } from '@/auth'
+import { NextResponse } from 'next/server'
+import { Role } from './constants/roles'
+import { getRedirectByRole } from './lib/redirect-by-role'
 
-const publicRoutes = ["/login"];
+const publicRoutes = ['/login']
 
 export const proxy = auth((req) => {
-  const { pathname } = req.nextUrl;
+  const { pathname } = req.nextUrl
 
-  if (req.nextUrl.searchParams.has("_rsc")) {
-    return;
+  if (req.nextUrl.searchParams.has('_rsc')) {
+    return
   }
 
-  const isPublic = publicRoutes.includes(pathname);
+  const isPublic = publicRoutes.includes(pathname)
 
-  if (pathname === "/login" && req.auth) {
-    const roles = req.auth.user?.roles as Role[];
+  if (pathname === '/login' && req.auth) {
+    const roles = req.auth.user?.roles as Role[]
 
     return NextResponse.redirect(
-      new URL(
-        getRedirectByRole(roles),
-        req.nextUrl.origin
-      )
-    );
+      new URL(getRedirectByRole(roles), req.nextUrl.origin)
+    )
   }
 
   if (isPublic) {
-    return;
+    return
   }
 
   if (!req.auth) {
-    return NextResponse.redirect(
-      new URL("/login", req.nextUrl.origin)
-    );
+    return NextResponse.redirect(new URL('/login', req.nextUrl.origin))
   }
-});
+})
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
-};
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|logos).*)']
+}
