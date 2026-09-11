@@ -1,35 +1,37 @@
-import { auth } from '@/auth'
-import { getMandaderoById } from '@/services/mandadero.service'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
-import { MandaderoInfo } from '@/components/admin/mandadero/details/mandadero-info'
-import { MandaderoPerfil } from '@/components/admin/mandadero/details/mandadero-perfil'
+'use client'
 import { MandaderoImages } from '@/components/admin/mandadero/details/mandadero-images'
+import { MandaderoInfo } from '@/components/admin/mandadero/details/mandadero-info'
 import { MandaderoMotorcycle } from '@/components/admin/mandadero/details/mandadero-moto'
+import { MandaderoPerfil } from '@/components/admin/mandadero/details/mandadero-perfil'
+import { Button } from '@/components/ui/button'
+import { useMandadero } from '@/hooks/useMandadero'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import Loading from '../loading'
 
-export default async function MandaderoDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const session = await auth()
-  const mandadero = await getMandaderoById(Number(id), session!.accessToken)
+export default function MandaderoDetailPage() {
+  const param = useParams()
+  const id = Number(param.id)
+  const { mandadero, loading } = useMandadero(id)
+
+  if (loading || !mandadero) {
+    return <Loading />
+  }
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center gap-3'>
-        <Button variant='ghost' asChild>
-          <Link href='/admin/mandaderos'>
-            <ArrowLeft className='size-4' />
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" asChild>
+          <Link href="/admin/mandaderos">
+            <ArrowLeft className="size-4" />
           </Link>
         </Button>
-        <h1 className='text-xl font-bold'>Detalle del Mandadero</h1>
+        <h1 className="text-xl font-bold">Detalle del Mandadero</h1>
       </div>
 
-      <div className=' space-y-8'>
-        <div className='grid grid-cols-[350px_1fr_1fr] gap-4 items-start'>
+      <div className=" space-y-8">
+        <div className="grid grid-cols-[350px_1fr_1fr] gap-4 items-start">
           <MandaderoPerfil mandadero={mandadero} />
           <MandaderoInfo mandadero={mandadero} />
           <MandaderoMotorcycle mandadero={mandadero} />

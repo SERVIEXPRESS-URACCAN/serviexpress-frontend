@@ -1,6 +1,5 @@
 'use client'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { useAuth } from '@/hooks/useAuth'
 import { deleteProduct } from '@/services/products.service'
 import { Product } from '@/types/products.type'
 import { useState } from 'react'
@@ -12,11 +11,10 @@ const fireSwal = (options: SweetAlertOptions) =>
   })
 type Props = {
   product: Product
-  refreshAction?:() => Promise<void>
+  refreshAction?: () => Promise<void>
 }
 
 export const DeleteProductDialog = ({ product, refreshAction }: Props) => {
-
   const [isLoading, setIsLoading] = useState(false)
 
   const handleDelete = async () => {
@@ -28,14 +26,14 @@ export const DeleteProductDialog = ({ product, refreshAction }: Props) => {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#dc2626',
-      theme: 'auto',
+      theme: 'auto'
     })
 
     if (!result.isConfirmed) return
 
     try {
       setIsLoading(true)
-      await deleteProduct( product.id)
+      await deleteProduct(product.id)
       await refreshAction?.()
 
       await fireSwal({
@@ -44,7 +42,7 @@ export const DeleteProductDialog = ({ product, refreshAction }: Props) => {
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
-        theme: 'auto',
+        theme: 'auto'
       })
     } catch (error) {
       await fireSwal({
@@ -53,7 +51,7 @@ export const DeleteProductDialog = ({ product, refreshAction }: Props) => {
         icon: 'error',
         timer: 2000,
         showConfirmButton: false,
-        theme: 'auto',
+        theme: 'auto'
       })
     } finally {
       setIsLoading(false)
@@ -64,7 +62,7 @@ export const DeleteProductDialog = ({ product, refreshAction }: Props) => {
     <DropdownMenuItem
       onClick={handleDelete}
       disabled={isLoading}
-      className='text-red-600'
+      className="text-red-600"
     >
       {isLoading ? 'Eliminando...' : 'Eliminar'}
     </DropdownMenuItem>

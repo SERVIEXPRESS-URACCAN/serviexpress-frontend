@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal, { SweetAlertOptions } from 'sweetalert2'
 
@@ -17,15 +16,13 @@ import {
 } from '@/types/categories-products'
 
 import {
-  updateCategoryProduct,
-  restoreCategoryProduct
+  restoreCategoryProduct,
+  updateCategoryProduct
 } from '@/services/categories-products.service'
 
 import { CategoryConflictException } from '@/types/api-errors.types'
 
 import { CategoryProductForm } from './categories-products-form'
-
-import { useAuth } from '@/hooks/useAuth'
 
 const fireSwal = (options: SweetAlertOptions) =>
   new Promise<Awaited<ReturnType<typeof Swal.fire>>>((resolve) => {
@@ -36,16 +33,15 @@ type Props = {
   categoryProduct: CategoryProduct
   open: boolean
   onOpenChangeAction: (open: boolean) => void
+  refreshAction?: () => Promise<void>
 }
 
 export const EditCategoryProductDialog = ({
   categoryProduct,
   open,
-  onOpenChangeAction
+  onOpenChangeAction,
+  refreshAction
 }: Props) => {
-  const router = useRouter()
-  const { session } = useAuth()
-
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -70,13 +66,9 @@ export const EditCategoryProductDialog = ({
     if (!result.isConfirmed) return
 
     try {
-      await restoreCategoryProduct(
-        error.data.id,
-        session!.accessToken
-      )
+      await restoreCategoryProduct(error.data.id)
 
-      router.refresh()
-
+      await refreshAction?.()
       await fireSwal({
         icon: 'success',
         title: 'Categoría restaurada',
@@ -99,22 +91,16 @@ export const EditCategoryProductDialog = ({
     }
   }
 
-  const handleUpdate = async (
-    data: UpdateCategoryProductDto
-  ) => {
+  const handleUpdate = async (data: UpdateCategoryProductDto) => {
     try {
       setIsLoading(true)
       setServerError(null)
 
-      await updateCategoryProduct(
-        categoryProduct.id,
-        data,
-        session!.accessToken
-      )
+      await updateCategoryProduct(categoryProduct.id, data)
 
       onOpenChangeAction(false)
 
-      router.refresh()
+      await refreshAction?.()
 
       await fireSwal({
         icon: 'success',
@@ -135,6 +121,8 @@ export const EditCategoryProductDialog = ({
           ? error.message
           : 'Error al actualizar la categoría'
 
+      setServerError(message)
+
       await fireSwal({
         icon: 'error',
         title: 'Error',
@@ -145,7 +133,7 @@ export const EditCategoryProductDialog = ({
       setIsLoading(false)
     }
   }
-    const handleOpenChange = (value: boolean) => {
+  const handleOpenChange = (value: boolean) => {
     onOpenChangeAction(value)
 
     if (!value) {
@@ -153,17 +141,11 @@ export const EditCategoryProductDialog = ({
     }
   }
 
-
   return (
-    <Dialog
-      open={open}
-      onOpenChange={handleOpenChange}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>
-            Editar categoría de producto
-          </DialogTitle>
+          <DialogTitle>Editar categoría de producto</DialogTitle>
         </DialogHeader>
 
         <CategoryProductForm

@@ -1,9 +1,9 @@
 'use client'
 
-import { ProductResponse } from '@/types/products.type'
-import { useCallback, useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { getProducts } from '@/services/owner/product-owner.service'
+import { ProductResponse } from '@/types/products.type'
+import { useSearchParams } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
 export const useProducts = () => {
   const searchParams = useSearchParams()
@@ -40,6 +40,6 @@ export const useProducts = () => {
     products,
     loading,
     error,
-    fetchProducts,
+    fetchProducts
   }
 }

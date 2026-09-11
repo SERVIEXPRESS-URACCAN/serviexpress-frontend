@@ -4,7 +4,7 @@ import { fetchAuth } from '@/lib/fetch-auth'
 export const getBusinessOrders = async (
   page = 1,
   status?: string,
-  search?: string,
+  search?: string
 ) => {
   const params = new URLSearchParams()
 
@@ -20,8 +20,8 @@ export const getBusinessOrders = async (
   const response = await fetchAuth(
     `${API_URL}/orders/business?${params.toString()}`,
     {
-      cache: 'no-store',
-    },
+      cache: 'no-store'
+    }
   )
 
   if (!response.ok) {
@@ -33,9 +33,9 @@ export const getBusinessOrders = async (
 export async function getBusinessOrderById(id: number) {
   const response = await fetchAuth(`${API_URL}/orders/${id}/business`, {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    cache: 'no-store',
+    cache: 'no-store'
   })
 
   if (!response.ok) {
@@ -49,11 +49,11 @@ export async function updateOrderStatus(id: number, status: string) {
   const response = await fetchAuth(`${API_URL}/orders/${id}/status`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      status,
-    }),
+      status
+    })
   })
 
   const data = await response.json()

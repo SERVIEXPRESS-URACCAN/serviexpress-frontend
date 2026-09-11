@@ -34,15 +34,15 @@ export default function OwnerOrderPage() {
   }
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center gap-3'>
-        <Button variant='ghost' asChild>
-          <Link href='/owner/pedidos'>
-            <ArrowLeft className='size-4' />
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" asChild>
+          <Link href="/owner/pedidos">
+            <ArrowLeft className="size-4" />
           </Link>
         </Button>
 
-        <h1 className='text-xl font-bold'>Detalle de la Orden #{order.id}</h1>
+        <h1 className="text-xl font-bold">Detalle de la Orden #{order.id}</h1>
       </div>
 
       <OrderOwnerInfo order={order} onChangeStatusAction={handleStatusChange} />

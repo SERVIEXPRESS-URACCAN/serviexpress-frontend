@@ -5,20 +5,17 @@ import { useCallback, useEffect, useState } from 'react'
 import { getClientById } from '@/services/clients.service'
 import { Clients } from '@/types/clients'
 
-import { useAuth } from './useAuth'
 
 export const useClient = (id: number) => {
-  const { session } = useAuth()
-
   const [client, setClient] = useState<Clients | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
 
-const fetchClient = useCallback(async () => {
-    if (!session?.accessToken) return;
+  const fetchClient = useCallback(async () => {
+   setLoading(true)
     try {
-      const data = await getClientById(session.accessToken, id);
+      const data = await getClientById(id);
       if (data) setClient(data);
       setError(null);
     } catch (err) {
@@ -26,10 +23,10 @@ const fetchClient = useCallback(async () => {
     } finally {
       setLoading(false);
     }
-  }, [session, id]);
+  }, [ id]);
 
 useEffect(() => {
-  //eslint-disable-next-line
+  //eslint-disable-next-line react-hooks/set-state-in-effect
   fetchClient()
 
 }, [fetchClient])

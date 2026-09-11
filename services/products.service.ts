@@ -3,10 +3,9 @@ import { fetchAuth } from '@/lib/fetch-auth'
 import { Product, ProductResponse } from '@/types/products.type'
 
 export const getProductsByBusiness = async (
-  token: string,
   businessId: number,
   page: number,
-  search?: string,
+  search?: string
 ): Promise<ProductResponse> => {
   const params = new URLSearchParams()
   params.set('page', String(page))
@@ -14,14 +13,11 @@ export const getProductsByBusiness = async (
   params.set('businessId', String(businessId))
   if (search) params.set('search', search)
 
-  const response = await fetch(
+  const response = await fetchAuth(
     `${API_URL}/products/admin?${params.toString()}`,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: 'no-store',
-    },
+      cache: 'no-store'
+    }
   )
   const result = await response.json()
   if (!response.ok) {
@@ -33,10 +29,7 @@ export const getProductsByBusiness = async (
 export const createProduct = async (data: FormData) => {
   const response = await fetchAuth(`${API_URL}/products/admin`, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: data,
+    body: data
   })
   const result = await response.json()
   if (!response.ok) {
@@ -48,10 +41,7 @@ export const createProduct = async (data: FormData) => {
 export const updateProduct = async (productId: number, data: FormData) => {
   const response = await fetchAuth(`${API_URL}/products/admin/${productId}`, {
     method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: data,
+    body: data
   })
   const result = await response.json()
   if (!response.ok) {
@@ -62,10 +52,7 @@ export const updateProduct = async (productId: number, data: FormData) => {
 
 export const deleteProduct = async (productId: number) => {
   const response = await fetchAuth(`${API_URL}/products/admin/${productId}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    method: 'DELETE'
   })
   if (!response.ok) {
     const result = await response.json().catch(() => null)
@@ -77,14 +64,14 @@ export const deleteProduct = async (productId: number) => {
 
 export const toggleProductStatusAdmin = async (
   productId: number,
-  status: boolean,
+  status: boolean
 ) => {
   const response = await fetchAuth(`${API_URL}/products/admin/${productId}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status })
   })
 
   const result = await response.json()
@@ -97,10 +84,10 @@ export const toggleProductStatusAdmin = async (
 }
 
 export const getOwnerProductById = async (
-  productId: number,
+  productId: number
 ): Promise<Product> => {
   const response = await fetchAuth(`${API_URL}/products/${productId}`, {
-    cache: 'no-store',
+    cache: 'no-store'
   })
 
   const result = await response.json()

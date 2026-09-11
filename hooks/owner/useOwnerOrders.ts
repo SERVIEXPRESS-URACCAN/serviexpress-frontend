@@ -40,6 +40,6 @@ export const useOwnerOrders = () => {
     data,
     loading,
     fetchOrders,
-    error,
+    error
   }
 }

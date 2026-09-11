@@ -1,24 +1,22 @@
 import { API_URL } from '@/config/config'
 import { Owner, OwnerResponse } from '@/types/owner.types'
 
+import { fetchAuth } from '@/lib/fetch-auth'
 import { CreateOwner, UpdateOwner } from '@/schemas/owner.schema'
 
 export const getOwner = async (
-  token: string,
   page = 1,
-  search?: string,
+  search?: string
 ): Promise<OwnerResponse> => {
   const params = new URLSearchParams({
     page: String(page),
     limit: String(10),
-    ...(search && { search }),
+    ...(search && { search })
   })
 
-  const response = await fetch(`${API_URL}/owner?${params}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
+  const response = await fetchAuth(`${API_URL}/owner?${params}`, {
+    headers: {},
+    cache: 'no-store'
   })
 
   const result = await response.json()
@@ -30,10 +28,7 @@ export const getOwner = async (
   return result
 }
 
-export const createOwner = async (
-  data: CreateOwner,
-  token: string,
-): Promise<Owner> => {
+export const createOwner = async (data: CreateOwner): Promise<Owner> => {
   const formData = new FormData()
 
   formData.append('razonSocial', data.razonSocial)
@@ -46,14 +41,12 @@ export const createOwner = async (
     formData.append('identificationCardImage', data.identificationCardImage)
   }
 
-  const response = await fetch(`${API_URL}/owner`, {
+  const response = await fetchAuth(`${API_URL}/owner`, {
     method: 'POST',
 
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: {},
 
-    body: formData,
+    body: formData
   })
 
   const result = await response.json()
@@ -67,8 +60,7 @@ export const createOwner = async (
 
 export const updateOwner = async (
   id: number,
-  data: UpdateOwner,
-  token: string,
+  data: UpdateOwner
 ): Promise<Owner> => {
   const formData = new FormData()
 
@@ -82,12 +74,9 @@ export const updateOwner = async (
     formData.append('identificationCardImage', data.identificationCardImage)
   }
 
-  const response = await fetch(`${API_URL}/owner/${id}`, {
+  const response = await fetchAuth(`${API_URL}/owner/${id}`, {
     method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
+    body: formData
   })
 
   const result = await response.json()
@@ -99,15 +88,9 @@ export const updateOwner = async (
   return result
 }
 
-export const getOwnerById = async (
-  token: string,
-  id: string,
-): Promise<Owner> => {
-  const response = await fetch(`${API_URL}/owner/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
+export const getOwnerById = async (id: number): Promise<Owner> => {
+  const response = await fetchAuth(`${API_URL}/owner/${id}`, {
+    cache: 'no-store'
   })
 
   const result = await response.json()

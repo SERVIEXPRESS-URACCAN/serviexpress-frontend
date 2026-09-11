@@ -1,22 +1,23 @@
 'use client'
 
-import { getMandaderoById } from '@/services/mandadero.service'
-import { Mandadero } from '@/types/mandadero.type'
+import { getOwnerById } from '@/services/owner.service'
+import { Owner } from '@/types/owner.types'
 import { useCallback, useEffect, useState } from 'react'
 
-export const useMandadero = (id: number) => {
-  const [mandadero, setMandadero] = useState<Mandadero | null>(null)
-
+export const useOwner = (id: number) => {
+  const [owner, setOwner] = useState<Owner | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
-  const fetchMandadero = useCallback(async () => {
+  const fetchOwner = useCallback(async () => {
+    if (!id) return
+
     try {
       setLoading(true)
 
-      const response = await getMandaderoById(id)
+      const response = await getOwnerById(id)
 
-      setMandadero(response)
+      setOwner(response)
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Error inesperado'))
@@ -27,13 +28,13 @@ export const useMandadero = (id: number) => {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchMandadero()
-  }, [fetchMandadero])
+    fetchOwner()
+  }, [fetchOwner])
 
   return {
-    mandadero,
+    owner,
     loading,
     error,
-    fetchMandadero
+    fetchOwner
   }
 }
