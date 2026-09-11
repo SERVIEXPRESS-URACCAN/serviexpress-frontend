@@ -1,10 +1,10 @@
+import { MotorcycleModel } from "./motorcycle-catalog.type";
 import { User } from "./user.type";
 
 export type Motorcycle = {
   id: number;
   licensePlate: string;
-  brand?: string;
-  model?: string;
+  model: MotorcycleModel;
   color?: string;
   circulationImage?: string;
   insuranceImage?: string;
@@ -52,8 +52,7 @@ export type CreateMandaderoAdminDto = {
   lastName: string;
   cellphone: string;
   licensePlate: string;
-  brand?: string;
-  model?: string;
+  modelId: number;
   color?: string;
   imageIdentification?: File;
   circulationImage?: File;

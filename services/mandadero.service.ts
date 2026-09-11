@@ -4,6 +4,7 @@ import {
   CreateMandaderoAdminDto,
   Mandadero,
   MandaderoResponse,
+  Motorcycle,
 } from "@/types/mandadero.type";
 
 export const getMandaderos = async (
@@ -51,9 +52,7 @@ export const createMandaderoAdmin = async (
   formData.append("lastName", data.lastName);
   formData.append("cellphone", data.cellphone);
   formData.append("licensePlate", data.licensePlate);
-
-  if (data.brand) formData.append("brand", data.brand);
-  if (data.model) formData.append("model", data.model);
+  formData.append("model_id", data.modelId.toString());
   if (data.color) formData.append("color", data.color);
   if (data.imageIdentification)
     formData.append("imageIdentification", data.imageIdentification);
@@ -116,11 +115,10 @@ export const updateMotorcycle = async (
   id: number,
   data: {
     licensePlate?: string;
-    brand?: string;
-    model?: string;
+    model_id?: number;
     color?: string;
   },
-) => {
+): Promise<Motorcycle> => {
   const response = await fetchAuth(`${API_URL}/motorcycles/${id}`, {
     method: "PATCH",
     headers: {
@@ -128,13 +126,17 @@ export const updateMotorcycle = async (
     },
     body: JSON.stringify(data),
   });
+
   if (!response.ok) {
     const error = await response.json().catch(() => null);
-    throw new Error(error?.message || "Error actualizando moto");
+
+    throw new Error(
+      error?.message || "Error actualizando moto",
+    );
   }
+
   return response.json();
 };
-
 export const getUsers = async (
 ): Promise<{ id: number; email: string }[]> => {
   const response = await fetchAuth(`${API_URL}/users`, {
