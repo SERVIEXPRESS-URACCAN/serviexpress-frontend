@@ -38,7 +38,6 @@ export const UpdateOwnerForm = ({
   onSubmitAction,
   isLoading
 }: Props) => {
-
   const { genders } = useGenders()
 
   const {
@@ -49,7 +48,10 @@ export const UpdateOwnerForm = ({
     formState: { errors }
   } = useForm<UpdateOwnerInput, unknown, UpdateOwner>({
     resolver: zodResolver(updateOwnerSchema),
-    defaultValues
+    defaultValues: {
+      ...defaultValues,
+      razonSocial: defaultValues?.razonSocial ?? undefined
+    }
   })
 
   return (
@@ -63,7 +65,7 @@ export const UpdateOwnerForm = ({
       >
         <Input
           id="razonSocial"
-          placeholder="Razón social"
+          placeholder="Sin razon social registrada"
           {...register('razonSocial')}
         />
       </FormField>
