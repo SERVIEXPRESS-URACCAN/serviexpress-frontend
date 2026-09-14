@@ -14,7 +14,7 @@ export const OwnerCirculationImage = ({ owner }: Props) => {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-bold uppercase tracking-wide">
-          Tarjeta de Circulación
+          Identificacion del propietario
         </CardTitle>
       </CardHeader>
 
