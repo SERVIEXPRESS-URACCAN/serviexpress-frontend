@@ -24,6 +24,7 @@ import { useCities } from '@/hooks/useCities'
 import { phoneKeyDown } from '@/lib/phone'
 import { User } from '@/types/user.type'
 
+import { useState } from 'react'
 import { FormError } from '../../shared/form-error'
 import { FormField } from '../../shared/form-field'
 import { FormSection } from '../../shared/form-section'
@@ -52,7 +53,7 @@ export const CreateOwnerForm = ({
   } = useForm<CreateOwnerInput, unknown, CreateOwner>({
     resolver: zodResolver(createOwnerSchema),
     defaultValues: {
-      razonSocial: '',
+      razonSocial: null,
       user: 0,
       business: {
         name: '',
@@ -63,8 +64,8 @@ export const CreateOwnerForm = ({
     }
   })
 
+  const [hasRazonSocial, setHasRazonSocial] = useState(false)
   const { cities } = useCities()
-
   return (
     <form onSubmit={handleSubmit(onSubmitAction)} className="space-y-4">
       <FormSection title="Propietario" />
@@ -85,17 +86,41 @@ export const CreateOwnerForm = ({
         <FormError message={errors.user?.message} />
       </div>
 
-      <FormField
-        label="Razón social"
-        htmlFor="razonSocial"
-        error={errors.razonSocial?.message}
-      >
-        <Input
-          id="razonSocial"
-          placeholder="Razón social"
-          {...register('razonSocial')}
-        />
-      </FormField>
+      <div className="space-y-3">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={hasRazonSocial}
+            onChange={(event) => {
+              const checked = event.target.checked
+
+              setHasRazonSocial(checked)
+
+              if (!checked) {
+                setValue('razonSocial', null, {
+                  shouldValidate: true
+                })
+              }
+            }}
+          />
+
+          <span>Tengo razón social</span>
+        </label>
+
+        {hasRazonSocial && (
+          <FormField
+            label="Razón social"
+            htmlFor="razonSocial"
+            error={errors.razonSocial?.message}
+          >
+            <Input
+              id="razonSocial"
+              placeholder="Ej. Comercial ABC S.A."
+              {...register('razonSocial')}
+            />
+          </FormField>
+        )}
+      </div>
 
       <FormSection title="Negocio" />
 
