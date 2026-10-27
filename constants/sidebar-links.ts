@@ -7,7 +7,8 @@ import {
   MapPinned,
   Motorbike,
   ReceiptText,
-  UserStar
+  UserStar,
+  ClipboardList,
 } from 'lucide-react'
 
 export const ADMIN_SIDEBAR_SECTIONS = [
@@ -19,16 +20,23 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         id: 'dashboard',
         title: 'Dashboard',
         href: '/admin',
-        icon: LayoutDashboard
+        icon: LayoutDashboard,
       },
 
       {
         id: 'orders',
         title: 'Pedidos',
         href: '/admin/orders',
-        icon: ReceiptText
-      }
-    ]
+        icon: ReceiptText,
+      },
+
+      {
+        id: 'solicitudes',
+        title: 'Solicitudes',
+        href: '/admin/solicitudes',
+        icon: ClipboardList,
+      },
+    ],
   },
 
   {
@@ -39,20 +47,20 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         id: 'businesses',
         title: 'Negocios',
         href: '/admin/business',
-        icon: BriefcaseBusiness
+        icon: BriefcaseBusiness,
       },
 
       {
         id: 'propietarios',
         title: 'Propietarios',
         href: '/admin/propietarios',
-        icon: UserStar
+        icon: UserStar,
       },
       {
         id: 'delivery-drivers',
         title: 'Mandaderos',
         href: '/admin/mandaderos',
-        icon: Motorbike
+        icon: Motorbike,
       },
 
       // {
@@ -65,9 +73,9 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         id: 'clientes',
         title: 'Clientes',
         href: '/admin/clients',
-        icon: CircleUser
-      }
-    ]
+        icon: CircleUser,
+      },
+    ],
   },
 
   {
@@ -78,22 +86,22 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         id: 'business-categories',
         title: 'Categorías de negocios',
         href: '/admin/categories-business',
-        icon: ChartBarStacked
+        icon: ChartBarStacked,
       },
 
       {
         id: 'product-categories',
         title: 'Categorías de productos',
         href: '/admin/categories-products',
-        icon: ChartColumnStacked
+        icon: ChartColumnStacked,
       },
 
       {
         id: 'cities',
         title: 'Ciudades',
         href: '/admin/cities',
-        icon: MapPinned
-      }
-    ]
-  }
+        icon: MapPinned,
+      },
+    ],
+  },
 ]
