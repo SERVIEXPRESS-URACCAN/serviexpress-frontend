@@ -1,148 +1,200 @@
-import { API_URL } from "@/config/config";
-import { fetchAuth } from "@/lib/fetch-auth";
+import { API_URL } from '@/config/config'
+import { fetchAuth } from '@/lib/fetch-auth'
 import {
   CreateMandaderoAdminDto,
   Mandadero,
   MandaderoResponse,
-} from "@/types/mandadero.type";
+} from '@/types/mandadero.type'
 
 export const getMandaderos = async (
   page = 1,
   search?: string,
 ): Promise<MandaderoResponse> => {
-  const params = new URLSearchParams();
-  params.append("status", "APPROVED");
+  const params = new URLSearchParams()
+  params.append('status', 'APPROVED')
 
   const response = await fetchAuth(
-    `${API_URL}/mandadero?page=${page}&limit=10&${search ? `search=${search}&` : ""}${params.toString()}`,
+    `${API_URL}/mandadero?page=${page}&limit=10&${search ? `search=${search}&` : ''}${params.toString()}`,
     {
-      headers: {
-      },
-      cache: "no-store",
+      headers: {},
+      cache: 'no-store',
     },
-  );
+  )
   if (!response.ok) {
-    throw new Error(`Error fetching mandaderos`);
+    throw new Error(`Error fetching mandaderos`)
   }
-  return response.json();
-};
+  return response.json()
+}
 
-export const getMandaderoById = async (
-  id: number,
-): Promise<Mandadero> => {
+export const getMandaderoById = async (id: number): Promise<Mandadero> => {
   const response = await fetchAuth(`${API_URL}/mandadero/${id}`, {
-    headers: {
-    },
-    cache: "no-store",
-  });
+    headers: {},
+    cache: 'no-store',
+  })
   if (!response.ok) {
-    throw new Error(`Error fetching mandadero`);
+    throw new Error(`Error fetching mandadero`)
   }
-  return response.json();
-};
+  return response.json()
+}
 
 export const createMandaderoAdmin = async (
   data: CreateMandaderoAdminDto,
 ): Promise<Mandadero> => {
-  const formData = new FormData();
+  const formData = new FormData()
 
-  formData.append("userId", data.userId.toString());
-  formData.append("name", data.name);
-  formData.append("lastName", data.lastName);
-  formData.append("cellphone", data.cellphone);
-  formData.append("licensePlate", data.licensePlate);
+  formData.append('userId', data.userId.toString())
+  formData.append('name', data.name)
+  formData.append('lastName', data.lastName)
+  formData.append('cellphone', data.cellphone)
+  formData.append('licensePlate', data.licensePlate)
 
-  if (data.brand) formData.append("brand", data.brand);
-  if (data.model) formData.append("model", data.model);
-  if (data.color) formData.append("color", data.color);
+  if (data.brand) formData.append('brand', data.brand)
+  if (data.model) formData.append('model', data.model)
+  if (data.color) formData.append('color', data.color)
   if (data.imageIdentification)
-    formData.append("imageIdentification", data.imageIdentification);
+    formData.append('imageIdentification', data.imageIdentification)
   if (data.circulationImage)
-    formData.append("circulationImage", data.circulationImage);
+    formData.append('circulationImage', data.circulationImage)
   if (data.insuranceImage)
-    formData.append("insuranceImage", data.insuranceImage);
+    formData.append('insuranceImage', data.insuranceImage)
 
   const response = await fetchAuth(`${API_URL}/mandadero/admin`, {
-    method: "POST",
+    method: 'POST',
     body: formData,
-  });
+  })
   if (!response.ok) {
-    const error = await response.json().catch(() => null);
+    const error = await response.json().catch(() => null)
 
-    throw new Error(error?.message || "Error creando mandadero");
+    throw new Error(error?.message || 'Error creando mandadero')
   }
-  return response.json();
-};
+  return response.json()
+}
 
 export const updateMandaderoAvailability = async (
   id: number,
   available: boolean,
 ): Promise<Mandadero> => {
   const response = await fetchAuth(`${API_URL}/mandadero/${id}/availability`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ available }),
-  });
+  })
   if (!response.ok) {
-    const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null)
 
-    throw new Error(data?.message || "Error actualizando disponibilidad");
+    throw new Error(data?.message || 'Error actualizando disponibilidad')
   }
-  return response.json();
-};
+  return response.json()
+}
 
 export const updateMandaderoActive = async (
   id: number,
   isActive: boolean,
 ): Promise<Mandadero> => {
   const response = await fetchAuth(`${API_URL}/mandadero/${id}/activate`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ isActive }),
-  });
+  })
   if (!response.ok) {
-    const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null)
 
-    throw new Error(data?.message || "Error updating active status");
+    throw new Error(data?.message || 'Error updating active status')
   }
-  return response.json();
-};
+  return response.json()
+}
 
 export const updateMotorcycle = async (
   id: number,
   data: {
-    licensePlate?: string;
-    brand?: string;
-    model?: string;
-    color?: string;
+    licensePlate?: string
+    brand?: string
+    model?: string
+    color?: string
   },
 ) => {
   const response = await fetchAuth(`${API_URL}/motorcycles/${id}`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  });
+  })
   if (!response.ok) {
-    const error = await response.json().catch(() => null);
-    throw new Error(error?.message || "Error actualizando moto");
+    const error = await response.json().catch(() => null)
+    throw new Error(error?.message || 'Error actualizando moto')
   }
-  return response.json();
-};
+  return response.json()
+}
 
-export const getUsers = async (
-): Promise<{ id: number; email: string }[]> => {
+export const getUsers = async (): Promise<{ id: number; email: string }[]> => {
   const response = await fetchAuth(`${API_URL}/users`, {
-    cache: "no-store",
-  });
+    cache: 'no-store',
+  })
   if (!response.ok) {
-    const error = await response.json().catch(() => null);
-    throw new Error(error?.message || "Error fetching users");
+    const error = await response.json().catch(() => null)
+    throw new Error(error?.message || 'Error fetching users')
   }
-  return response.json();
-};
+  return response.json()
+}
+
+export const getSolicitudMandadero = async (
+  page = 1,
+  search?: string,
+): Promise<MandaderoResponse> => {
+  const params = new URLSearchParams({
+    status: 'PENDING',
+    page: String(page),
+    limit: '10',
+  })
+  if (search) params.set('search', search)
+
+  const response = await fetchAuth(
+    `${API_URL}/mandadero?${params.toString()}`,
+    {
+      cache: 'no-store',
+    },
+  )
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => null)
+    throw new Error(error?.message || 'Error fetching mandadero requests')
+  }
+  return response.json()
+}
+
+export const aprobarSolicitudMandadero = async (
+  id: number,
+): Promise<Mandadero> => {
+  const response = await fetchAuth(`${API_URL}/mandadero/${id}/approve`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!response.ok) {
+    const error = await response.json().catch(() => null)
+    throw new Error(error?.message || 'Error approving mandadero request')
+  }
+  return response.json()
+}
+
+export const rechazarSolicitudMandadero = async (
+  id: number,
+): Promise<Mandadero> => {
+  const response = await fetchAuth(`${API_URL}/mandadero/${id}/reject`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!response.ok) {
+    const error = await response.json().catch(() => null)
+    throw new Error(error?.message || 'Error rejecting mandadero request')
+  }
+  return response.json()
+}
