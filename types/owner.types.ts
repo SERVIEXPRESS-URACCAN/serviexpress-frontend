@@ -1,6 +1,8 @@
 import { Business } from './business.type'
 import { User } from './user.type'
 
+export type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
 export type Owner = {
   id: number
 
@@ -10,6 +12,10 @@ export type Owner = {
   razonSocial: string
 
   identificationCardImage: string
+
+  status: ApprovalStatus
+  createdAt?: string
+  updatedAt?: string
 }
 
 export type OwnerResponse = {
@@ -22,3 +28,5 @@ export type OwnerResponse = {
     hasNextPage: boolean
   }
 }
+
+export type OwnerAplicationResponse = OwnerResponse
