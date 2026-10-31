@@ -76,7 +76,7 @@ export default function DetalleSolicitudPage() {
     <div className='w-full space-y-6'>
       <div className='flex items-center gap-3'>
         <Button variant='ghost' asChild>
-          <Link href='/admin/solicitudes'>
+          <Link href='/admin/solicitudes/mandaderos'>
             <ArrowLeft className='size-4' />
           </Link>
         </Button>
