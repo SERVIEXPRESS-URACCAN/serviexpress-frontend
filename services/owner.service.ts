@@ -1,22 +1,29 @@
 import { API_URL } from '@/config/config'
-import { Owner, OwnerResponse } from '@/types/owner.types'
+import {
+  ApprovalStatus,
+  Owner,
+  OwnerAplicationResponse,
+  OwnerResponse,
+} from '@/types/owner.types'
 
 import { fetchAuth } from '@/lib/fetch-auth'
 import { CreateOwner, UpdateOwner } from '@/schemas/owner.schema'
 
 export const getOwner = async (
   page = 1,
-  search?: string
+  search?: string,
+  status: ApprovalStatus = 'APPROVED',
 ): Promise<OwnerResponse> => {
   const params = new URLSearchParams({
     page: String(page),
     limit: String(10),
-    ...(search && { search })
+    status,
+    ...(search && { search }),
   })
 
   const response = await fetchAuth(`${API_URL}/owner?${params}`, {
     headers: {},
-    cache: 'no-store'
+    cache: 'no-store',
   })
 
   const result = await response.json()
@@ -46,7 +53,7 @@ export const createOwner = async (data: CreateOwner): Promise<Owner> => {
 
     headers: {},
 
-    body: formData
+    body: formData,
   })
 
   const result = await response.json()
@@ -60,7 +67,7 @@ export const createOwner = async (data: CreateOwner): Promise<Owner> => {
 
 export const updateOwner = async (
   id: number,
-  data: UpdateOwner
+  data: UpdateOwner,
 ): Promise<Owner> => {
   const formData = new FormData()
 
@@ -76,7 +83,7 @@ export const updateOwner = async (
 
   const response = await fetchAuth(`${API_URL}/owner/${id}`, {
     method: 'PATCH',
-    body: formData
+    body: formData,
   })
 
   const result = await response.json()
@@ -90,13 +97,66 @@ export const updateOwner = async (
 
 export const getOwnerById = async (id: number): Promise<Owner> => {
   const response = await fetchAuth(`${API_URL}/owner/${id}`, {
-    cache: 'no-store'
+    cache: 'no-store',
   })
 
   const result = await response.json()
 
   if (!response.ok) {
     throw new Error(result.message)
+  }
+
+  return result
+}
+
+export const getOwnerApplications = async (
+  page = 1,
+  status: ApprovalStatus = 'PENDING',
+): Promise<OwnerAplicationResponse> => {
+  const params = new URLSearchParams({
+    status,
+    page: String(page),
+    limit: String(10),
+  })
+
+  const response = await fetchAuth(`${API_URL}/owner/applications?${params}`, {
+    cache: 'no-store',
+  })
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Error al obtener las solicitudes')
+  }
+
+  return result
+}
+
+export const approveOwnerApplication = async (id: number) => {
+  const response = await fetchAuth(`${API_URL}/owner/${id}/approve`, {
+    method: 'PATCH',
+    cache: 'no-store',
+  })
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Error al aprobar la solicitud')
+  }
+
+  return result
+}
+
+export const rejectOwnerApplication = async (id: number) => {
+  const response = await fetchAuth(`${API_URL}/owner/${id}/reject`, {
+    method: 'PATCH',
+    cache: 'no-store',
+  })
+
+  const result = await response.json()
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Error al rechazar la solicitud')
   }
 
   return result
