@@ -74,7 +74,9 @@ export const SolicitudesTable = ({ solicitudes, currentPage }: Props) => {
                       type='button'
                       size='sm'
                       onClick={() =>
-                        router.push(`/admin/solicitudes/${solicitud.id}`)
+                        router.push(
+                          `/admin/solicitudes/mandaderos/${solicitud.id}`,
+                        )
                       }
                     >
                       Ver detalles
