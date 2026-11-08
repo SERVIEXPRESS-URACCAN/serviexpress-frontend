@@ -68,7 +68,9 @@ export const SolicitudDocuments = ({ mandadero }: Props) => {
 
               <TableBody>
                 <TableRow>
-                  <TableCell>{motorcycle.brand || 'No especificada'}</TableCell>
+                  <TableCell>
+                    {motorcycle.brand?.name || 'No especificada'}
+                  </TableCell>
                   <TableCell>{motorcycle.model || 'No especificado'}</TableCell>
                   <TableCell className='font-medium'>
                     {motorcycle.licensePlate || 'No especificada'}

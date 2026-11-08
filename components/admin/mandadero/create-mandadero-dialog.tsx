@@ -6,14 +6,14 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
 import { CreateMandaderoInput } from '@/schemas/mandaderos.schema'
 import {
   createMandaderoAdmin,
   getMandaderos,
-  getUsers
+  getUsers,
 } from '@/services/mandadero.service'
 import { CreateMandaderoAdminDto } from '@/types/mandadero.type'
 import { User } from '@/types/user.type'
@@ -21,6 +21,8 @@ import { useEffect, useState } from 'react'
 import { UseFormSetError } from 'react-hook-form'
 import Swal from 'sweetalert2'
 import { MandaderoForm } from './create-mandadero-form'
+import { MotorcycleBrand } from '@/types/motorcycle.types'
+import { getMotorcycleBrands } from '@/services/motorcycle-brand.service'
 
 type Props = {
   refreshAction?: () => Promise<void>
@@ -31,21 +33,23 @@ export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
   const [users, setUsers] = useState<User[]>([])
   const [error, setError] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
+  const [brands, setBrands] = useState<MotorcycleBrand[]>([])
 
   useEffect(() => {
     if (open && session) {
-      Promise.all([getUsers(), getMandaderos()]).then(
-        ([usersResponse, mandaderosResponse]) => {
+      Promise.all([getUsers(), getMandaderos(), getMotorcycleBrands()]).then(
+        ([usersResponse, mandaderosResponse, brandsResponse]) => {
           const allUsers = (usersResponse as unknown as { data: User[] }).data
 
           const mandaderoUserIds = new Set(
-            mandaderosResponse.data.map((mandadero) => mandadero.user.id)
+            mandaderosResponse.data.map((mandadero) => mandadero.user.id),
           )
           const filteredUsers = allUsers.filter(
-            (u) => !mandaderoUserIds.has(u.id)
+            (u) => !mandaderoUserIds.has(u.id),
           )
           setUsers(filteredUsers)
-        }
+          setBrands(brandsResponse)
+        },
       )
     }
   }, [open, session])
@@ -58,7 +62,7 @@ export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
   }, [open])
   const handleSubmit = async (
     data: CreateMandaderoAdminDto,
-    setFieldError: UseFormSetError<CreateMandaderoInput>
+    setFieldError: UseFormSetError<CreateMandaderoInput>,
   ) => {
     if (!session) return
     setError(null)
@@ -74,7 +78,7 @@ export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
         title: 'Mandadero creado',
         text: `Mandadero creado exitosamente.`,
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
       })
       setOpen(false)
     } catch (error: unknown) {
@@ -82,7 +86,7 @@ export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
         error instanceof Error ? error.message : 'Error al crear el mandadero'
       if (message.toLowerCase().includes('placa')) {
         setFieldError('licensePlate', {
-          message: 'Esta placa ya está registrada'
+          message: 'Esta placa ya está registrada',
         })
       } else {
         setError(message)
@@ -97,7 +101,7 @@ export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
         <Button>Crear Mandadero</Button>
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto"
+        className='max-h-[90vh] overflow-y-auto'
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
@@ -105,6 +109,7 @@ export const CreateMandaderoDialog = ({ refreshAction }: Props) => {
         </DialogHeader>
         <MandaderoForm
           users={users}
+          brands={brands}
           onSubmitAction={handleSubmit}
           isLoading={isLoading}
           error={error}
