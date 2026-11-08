@@ -102,6 +102,12 @@ export const ADMIN_SIDEBAR_SECTIONS = [
         href: '/admin/cities',
         icon: MapPinned,
       },
+      {
+        id: 'motorcycle-brands',
+        title: 'Marcas de motocicletas',
+        href: '/admin/motorcycle-brand',
+        icon: Motorbike,
+      },
     ],
   },
 ]
