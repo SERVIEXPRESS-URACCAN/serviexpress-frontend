@@ -48,7 +48,7 @@ export const createMandaderoAdmin = async (
   formData.append('cellphone', data.cellphone)
   formData.append('licensePlate', data.licensePlate)
 
-  if (data.brand) formData.append('brand', data.brand)
+  formData.append('brandId', data.brandId.toString())
   if (data.model) formData.append('model', data.model)
   if (data.color) formData.append('color', data.color)
   if (data.imageIdentification)
@@ -112,7 +112,7 @@ export const updateMotorcycle = async (
   id: number,
   data: {
     licensePlate?: string
-    brand?: string
+    brandId?: number
     model?: string
     color?: string
   },
