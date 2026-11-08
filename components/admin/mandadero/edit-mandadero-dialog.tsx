@@ -17,8 +17,10 @@ import {
 } from '@/services/mandadero.service'
 import { Mandadero } from '@/types/mandadero.type'
 import { UpdateMandaderoInput } from '@/schemas/mandaderos.schema'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EditMandaderoForm } from './edit-mandadero-form'
+import { MotorcycleBrand } from '@/types/motorcycle.types'
+import { getMotorcycleBrands } from '@/services/motorcycle-brand.service'
 
 type Props = {
   mandadero: Mandadero
@@ -36,7 +38,23 @@ export const EditMandaderoDialog = ({
   const { session } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [brands, setBrands] = useState<MotorcycleBrand[]>([])
 
+  useEffect(() => {
+    if (!open) return
+
+    const loadBrands = async () => {
+      try {
+        const data = await getMotorcycleBrands()
+        setBrands(data)
+      } catch (error) {
+        console.error('Error al cargar las marcas:', error)
+        setError('No se pudieron cargar las marcas de motocicletas')
+      }
+    }
+
+    loadBrands()
+  }, [open])
   const onSubmit = async (data: UpdateMandaderoInput) => {
     if (!session) return
 
@@ -45,25 +63,13 @@ export const EditMandaderoDialog = ({
 
     try {
       setIsSubmitting(true)
-      await updateMotorcycle(
-        mandadero.motorcycle.id,
-        data.motorcycle,
-      )
+      await updateMotorcycle(mandadero.motorcycle.id, data.motorcycle)
 
-      await updateMandaderoProfile(
-        profileId,
-        data.profile,
-      )
+      await updateMandaderoProfile(profileId, data.profile)
 
-      await updateMandaderoActive(
-        mandadero.id,
-        data.isActive,
-      )
+      await updateMandaderoActive(mandadero.id, data.isActive)
 
-      await updateMandaderoAvailability(
-        mandadero.id,
-        data.available,
-      )
+      await updateMandaderoAvailability(mandadero.id, data.available)
 
       onOpenChangeAction(false)
       await refreshAction?.()
@@ -94,6 +100,7 @@ export const EditMandaderoDialog = ({
           </DialogDescription>
         </DialogHeader>
         <EditMandaderoForm
+          brands={brands}
           mandadero={mandadero}
           onSubmitAction={onSubmit}
           isSubmitting={isSubmitting}
