@@ -6,18 +6,19 @@ import { getMandaderos } from '@/services/mandadero.service'
 import { useSearchParams } from 'next/navigation'
 
 export const useMandaderos = () => {
-
   const [mandaderos, setMandaderos] = useState<MandaderoResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
   const searchParams = useSearchParams()
   const search = searchParams.get('search') || undefined
-  const[error, setError] = useState<Error | null>(null)
+  const currentPage = Number(searchParams.get('page')) || 1
+
+  const [error, setError] = useState<Error | null>(null)
   const fetchMandaderos = useCallback(async () => {
     try {
       setLoading(true)
 
-      const response = await getMandaderos(1, search)
+      const response = await getMandaderos(currentPage, search)
       if (response) setMandaderos(response)
       setError(null)
     } catch (err) {
@@ -25,7 +26,7 @@ export const useMandaderos = () => {
     } finally {
       setLoading(false)
     }
-  }, [search])
+  }, [currentPage, search])
   useEffect(() => {
     //eslint-disable-next-line react-hooks/set-state-in-effect
     fetchMandaderos()
@@ -35,6 +36,6 @@ export const useMandaderos = () => {
     mandaderos,
     loading,
     fetchMandaderos,
-    error
+    error,
   }
 }
